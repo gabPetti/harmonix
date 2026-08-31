@@ -24,13 +24,14 @@
         # Host-specific OS configuration
         ./hosts/laptop/configuration.nix
 
-	# Home Manager as a NixOS module
+	      # Home Manager as a NixOS module
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
           home-manager.users.gabpetti = {
             imports = [
               ./modules/home/neovim/default.nix
+              ./modules/home/firefox/default.nix
             ];
 
             home.stateVersion = "26.11"; # NixOS version
