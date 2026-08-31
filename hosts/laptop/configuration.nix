@@ -6,6 +6,7 @@
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
     ../../modules/core/fonts.nix
+    ../../modules/core/zsh.nix
     ../../modules/home/git/default.nix
   ];
 
@@ -15,7 +16,6 @@
   boot.loader.systemd-boot.enable = true; boot.loader.efi.canTouchEfiVariables = true;
 
   networking.hostName = "laptop"; # Define your hostname.
-  # networking.wireless.enable = true; # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary networking.proxy.default = "http://user:password@proxy:port/"; networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
@@ -61,13 +61,14 @@
   # Enable touchpad support (enabled default in most desktopManager). services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users."gabpetti" = { isNormalUser = true; description = "Gabriel Petti Tavares"; extraGroups = [ "networkmanager" "wheel" ]; packages = with pkgs; [
-    #  thunderbird
+  users.users."gabpetti" = {
+    isNormalUser = true;
+    description = "Gabriel Petti Tavares";
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+      # thunderbird
     ];
   };
-
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;

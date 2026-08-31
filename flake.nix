@@ -32,6 +32,7 @@
             imports = [
               ./modules/home/neovim/default.nix
               ./modules/home/firefox/default.nix
+              ./modules/home/starship/default.nix
             ];
 
             home.stateVersion = "26.11"; # NixOS version
