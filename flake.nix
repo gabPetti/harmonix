@@ -4,27 +4,39 @@
   inputs = {
     # Pin to nixos-unstable (or use nixos-24.05 / nixos-24.11 for stable channels)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, ... }@inputs: {
-    nixosConfigurations = {
-      # Target hostname matching your directory convention
-      laptop = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+    nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
+      system = "x86_64-linux";
         
-        # Propagate flake inputs to downstream modules
-        specialArgs = { inherit inputs; };
+      # Propagate flake inputs to downstream modules
+      specialArgs = { inherit inputs; };
 
-        modules = [
-          # Hardware abstraction layer
-          ./hosts/laptop/hardware-configuration.nix
+      modules = [
+        # Hardware abstraction layer
+        ./hosts/laptop/hardware-configuration.nix
 
-          # Host-specific OS configuration
-          ./hosts/laptop/configuration.nix
+        # Host-specific OS configuration
+        ./hosts/laptop/configuration.nix
 
-          # Shared/reusable module imports (example: ./modules/desktop.nix or inline imports)
-        ];
-      };
+	# Home Manager as a NixOS module
+        home-manager.nixosModules.home-manager {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+          home-manager.users.gabpetti = {
+            imports = [
+              ./modules/home/neovim/default.nix
+            ];
+
+            home.stateVersion = "26.11"; # NixOS version
+          };
+        }
+      ];
     };
   };
 }

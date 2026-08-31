@@ -5,7 +5,6 @@
 {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    ../../modules/neovim.nix
     ../../modules/home/git/default.nix
   ];
 
