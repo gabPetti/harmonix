@@ -33,6 +33,7 @@
               ./modules/home/neovim/default.nix
               ./modules/home/firefox/default.nix
               ./modules/home/starship/default.nix
+              ./modules/home/vscode
             ];
 
             home.stateVersion = "26.11"; # NixOS version
