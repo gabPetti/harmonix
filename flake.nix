@@ -27,7 +27,6 @@
           home-manager.useUserPackages = true;
           home-manager.users = {
             gabpetti = import ./users/gabpetti/home.nix;
-            gargaroth = import ./users/gargaroth/home.nix;
           };
         }
       ];
