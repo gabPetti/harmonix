@@ -1,93 +1,122 @@
-{ pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   programs.neovim = {
     enable = true;
-    defaultEditor = true;
-
-    # Core build dependencies required by LazyVim plugins & Mason/Treesitter
     extraPackages = with pkgs; [
-      # LazyVim core CLI dependencies
-      git
+      # LazyVim
+      lua-language-server
+      stylua
+      # Telescope
       ripgrep
-      fd
-      fzf
-
-      # Native compilers & build tools for Tree-sitter parsers
-      gcc
-      gnumake
-      unzip
-      wget
-      curl
-      tree-sitter
-
-      # Common Language runtimes (Mason needs these to run LSPs/linters)
-      nodejs
-      python3
-      lua5_1
-      luajitPackages.luarocks
     ];
+
+    plugins = with pkgs.vimPlugins; [
+      lazy-nvim
+    ];
+
+    extraLuaConfig =
+      let
+        plugins = with pkgs.vimPlugins; [
+          # LazyVim
+          LazyVim
+          bufferline-nvim
+          cmp-buffer
+          cmp-nvim-lsp
+          cmp-path
+          cmp_luasnip
+          conform-nvim
+          dashboard-nvim
+          dressing-nvim
+          flash-nvim
+          friendly-snippets
+          gitsigns-nvim
+          indent-blankline-nvim
+          lualine-nvim
+          neo-tree-nvim
+          neoconf-nvim
+          neodev-nvim
+          noice-nvim
+          nui-nvim
+          nvim-cmp
+          nvim-lint
+          nvim-lspconfig
+          nvim-notify
+          nvim-spectre
+          nvim-treesitter
+          nvim-treesitter-context
+          nvim-treesitter-textobjects
+          nvim-ts-autotag
+          nvim-ts-context-commentstring
+          nvim-web-devicons
+          persistence-nvim
+          plenary-nvim
+          telescope-fzf-native-nvim
+          telescope-nvim
+          todo-comments-nvim
+          tokyonight-nvim
+          trouble-nvim
+          vim-illuminate
+          vim-startuptime
+          which-key-nvim
+          { name = "LuaSnip"; path = luasnip; }
+          { name = "catppuccin"; path = catppuccin-nvim; }
+          { name = "mini.ai"; path = mini-nvim; }
+          { name = "mini.bufremove"; path = mini-nvim; }
+          { name = "mini.comment"; path = mini-nvim; }
+          { name = "mini.indentscope"; path = mini-nvim; }
+          { name = "mini.pairs"; path = mini-nvim; }
+          { name = "mini.surround"; path = mini-nvim; }
+        ];
+        mkEntryFromDrv = drv:
+          if lib.isDerivation drv then
+            { name = "${lib.getName drv}"; path = drv; }
+          else
+            drv;
+        lazyPath = pkgs.linkFarm "lazy-plugins" (builtins.map mkEntryFromDrv plugins);
+      in
+      ''
+        require("lazy").setup({
+          defaults = {
+            lazy = true,
+          },
+          dev = {
+            -- reuse files from pkgs.vimPlugins.*
+            path = "${lazyPath}",
+            patterns = { "" },
+            -- fallback to download
+            fallback = true,
+          },
+          spec = {
+            { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+            -- The following configs are needed for fixing lazyvim on nix
+            -- force enable telescope-fzf-native.nvim
+            { "nvim-telescope/telescope-fzf-native.nvim", enabled = true },
+            -- disable mason.nvim, use programs.neovim.extraPackages
+            { "mason-org/mason-lspconfig.nvim", enabled = false },
+            { "mason-org/mason.nvim", enabled = false },
+            -- import/override with your plugins
+            { import = "plugins" },
+            -- treesitter handled by xdg.configFile."nvim/parser", put this line at the end of spec to clear ensure_installed
+            { "nvim-treesitter/nvim-treesitter", opts = { ensure_installed = {} } },
+          },
+        })
+      '';
   };
 
-  # Bootstrap LazyVim configuration files
-  xdg.configFile."nvim/init.lua".text = ''
-    -- Bootstrap lazy.nvim
-    local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-    if not (vim.uv or vim.loop).fs_stat(lazypath) then
-      local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-      local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-      if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-          { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-          { out, "WarningMsg" },
-          { "\nPress any key to exit..." },
-        }, true, {})
-        vim.fn.getchar()
-        os.exit(1)
-      end
-    end
-    vim.opt.rtp:prepend(lazypath)
+  # https://github.com/nvim-treesitter/nvim-treesitter#i-get-query-error-invalid-node-type-at-position
+  xdg.configFile."nvim/parser".source =
+    let
+      parsers = pkgs.symlinkJoin {
+        name = "treesitter-parsers";
+        paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+          c
+          lua
+        ])).dependencies;
+      };
+    in
+    "${parsers}/parser";
 
-    -- Setup LazyVim
-    require("lazy").setup({
-      spec = {
-        { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-        -- Import your custom plugins from lua/plugins/*.lua
-        -- { import = "plugins" },
-      },
-      defaults = {
-        lazy = false,
-        version = false,
-      },
-      checker = { enabled = true },
-      performance = {
-        rtp = {
-          disabled_plugins = {
-            "gzip",
-            "tarPlugin",
-            "tohtml",
-            "tutor",
-            "zipPlugin",
-          },
-        },
-      },
-    })
-  '';
-
-  # LazyVim options configuration
-  xdg.configFile."nvim/lua/config/options.lua".text = ''
-    -- Global options (LazyVim defaults are already set, add your overrides here)
-    vim.g.mapleader = " "
-    vim.g.maplocalleader = "\\"
-  '';
-
-  # LazyVim keymaps configuration
-  xdg.configFile."nvim/lua/config/keymaps.lua".text = ''
-    -- Custom keymaps go here
-  '';
-
-  # LazyVim autocmds configuration
-  xdg.configFile."nvim/lua/config/autocmds.lua".text = ''
-    -- Custom autocmds go here
-  '';
+  # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
+  xdg.configFile."nvim/lua".source = ./lua;
 }
