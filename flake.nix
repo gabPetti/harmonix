@@ -1,5 +1,5 @@
 {
-  description = "System configuration flake for my laptop";
+  description = "Harmonix: brain-machine operating system";
 
   inputs = {
     # Pin to nixos-unstable or nixos-24.11 for stable channels

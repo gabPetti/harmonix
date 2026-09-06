@@ -8,19 +8,14 @@
     ./hardware-configuration.nix
     ../../users/default.nix
     ../../modules/core/default.nix
-    ../../modules/system/gnome.nix
+    ../../modules/system/hyprland.nix
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Allow unfree packages
-  nixpkgs.config.allowUnfree = true;
+  services.power-profiles-daemon.enable = true;
 
-  # List packages installed in system profile. To search, run: $ nix search wget
-  environment.systemPackages = with pkgs; [
-    fastfetch
-    vim
-  ];
+  nixpkgs.config.allowUnfree = true;
 
   system.stateVersion = "26.11";
 }
