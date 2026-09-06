@@ -9,6 +9,7 @@
       discord-ptb
       thunderbird
       gh # GitHub CLI
+      nodejs
     ];
   };
 }
