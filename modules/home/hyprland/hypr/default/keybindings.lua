@@ -92,6 +92,9 @@ hl.bind(
 	{ description = "Decrease brightness", locked = true }
 )
 
+-- ==> HYPRLOCK
+hl.bind("SUPER + ALT + L", hl.dsp.exec_cmd("hyprlock"), { description = "Lock the system" })
+
 -- ==> WINDOW BINDS
 hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Close window" })
 hl.bind("SUPER + SHIFT + Q", hl.dsp.window.kill(), { description = "Kill window" })

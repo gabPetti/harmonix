@@ -11,5 +11,7 @@
     waybar
     rofi
     hyprpaper
+    hyprlock
+    brightnessctl
   ];
 }

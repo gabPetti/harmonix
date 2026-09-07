@@ -8,6 +8,7 @@
     ../../modules/home/vscode
     ../../modules/home/obsidian
     ../../modules/home/hyprland
+    ../../modules/home/waybar
   ];
 
   home.stateVersion = "26.11";

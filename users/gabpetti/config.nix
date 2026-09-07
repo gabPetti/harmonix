@@ -4,7 +4,7 @@
   users.users."gabpetti" = {
     isNormalUser = true;
     description = "Gabriel Petti Tavares";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "input"];
     packages = with pkgs; [
       vim
       fastfetch
