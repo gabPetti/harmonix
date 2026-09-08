@@ -17,18 +17,19 @@
 }
 
 window#waybar {
-  background-color: @theme_base01;
+  /* background-color: @background; */
+  background-color: #101010;
   transition-property: background-color;
   transition-duration: .5s;
   border-radius: 32px;
 }
 
 window#waybar.empty #window {
-  /* background: transparent; */
-  /* background-color: transparent; */
+  background: transparent;
+  background-color: transparent;
   border: none;
   border-radius: 0;
-  /* color: transparent; */
+  color: transparent;
   padding: 0;
   margin: 0;
 }
