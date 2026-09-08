@@ -1,18 +1,4 @@
-local home = os.getenv("HOME")
--- local colors = dofile(home .. "/.cache/wal/colors-hyprland.lua")
-local shader_path = home .. "/archaic/themes/dynamic/hypr/rounded-corners.glsl"
-
--- ==> AUTOSTART
-
--- hl.on("hyprland.start", function()
--- 	hl.exec_cmd("systemctl --user start hyprland-session.target")
--- 	hl.exec_cmd("hyprpaper")
--- 	hl.exec_cmd("waybar")
--- end)
---
--- hl.on("hyprland.shutdown", function()
--- 	os.execute("pkill hyprpaper; pkill waybar; systemctl --user stop hyprland-session.target && sleep 0.1")
--- end)
+local shader_path = os.getenv("HOME") .. "/archaic/themes/dynamic/hypr/rounded-corners.glsl"
 
 -- ==> ANIMATIONS
 
@@ -118,10 +104,10 @@ hl.config({
 	},
 })
 
-hl.on("config.reloaded", function()
-	hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 20")
-	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'")
-	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 20")
-	hl.exec_cmd("gsettings set org.gnome.desktop.interface icon-theme 'Tela-circle-dracula'")
-	hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
-end)
+-- hl.on("config.reloaded", function()
+-- 	hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 20")
+-- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'")
+-- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 20")
+-- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface icon-theme 'Tela-circle-dracula'")
+-- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
+-- end)
