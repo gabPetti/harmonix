@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 {
-  programs.firefox = {
+  programs.kitty = {
     enable = true;
   };
 }

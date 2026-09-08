@@ -10,6 +10,7 @@ _:
     ./internationalisation.nix
     ./network.nix
     ./printing.nix
+    ./stylix.nix
     ./zsh.nix
   ];
 }
