@@ -1,6 +1,8 @@
 { config, pkgs, ... }:
 
 {
+  services.power-profiles-daemon.enable = true;
+
   programs.hyprland = {
     enable = true;
     withUWSM = false;
@@ -13,7 +15,6 @@
 
   environment.systemPackages = with pkgs; [
     kitty
-    rofi
     hyprpaper
     hyprlock
     brightnessctl

@@ -1,8 +1,6 @@
 { config, pkgs, ... }:
 
 {
-  services.power-profiles-daemon.enable = true;
-
   home.packages = with pkgs; [
     hyprpaper
     hyprshot
