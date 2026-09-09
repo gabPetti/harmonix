@@ -10,7 +10,7 @@ local bin = os.getenv("ARCHAIC_BIN") or (os.getenv("HOME") .. "/bin")
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
 hl.bind("SUPER + L", hl.dsp.focus({ workspace = "empty" }), { description = "Open first empty workspace" })
 hl.bind("SUPER + Print", hl.dsp.exec_cmd("sh " .. bin .. "/screenshot.sh"), { description = "Take screenshot GUI" })
-hl.bind("Print", hl.dsp.exec_cmd("grimblast --freeze copy area"), { description = "Take screenshot" })
+hl.bind("Print", hl.dsp.exec_cmd("hyprshot -z --clipboard-only -m region"), { description = "Take screenshot" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -f hex -a"), { description = "Pick color" })
 hl.bind("SUPER + N", hl.dsp.exec_cmd("swaync-client -t"), { description = "Toggle Sway notification manager" })
 

@@ -1,54 +1,20 @@
 { config, pkgs, ... }:
 
-let
-  c = config.lib.stylix.colors;
-in
 {
-  # home.pointerCursor = {
-  #   enable = true;
-  #   gtk.enable = true;
-  #   # x11.enable = true;
-  #   package = pkgs.bibata-cursors;
-  #   name = "Bibata-Modern-Classic";
-  #   size = 16;
-  # };
+  home.packages = with pkgs; [
+    hyprpaper
+    hyprshot
+    hyprlock
+    hyprland-qt-support
+  ];
 
-  gtk = {
-    enable = true;
+  xdg.configFile."hypr".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/hyprland/config";
 
-    # theme = {
-    #   package = pkgs.flat-remix-gtk;
-    #   name = "Flat-Remix-GTK-Grey-Darkest";
-    # };
-
-    iconTheme = {
-      package = pkgs.adwaita-icon-theme;
-      name = "Adwaita";
-    };
-
-    # font = {
-    #   name = "Sans";
-    #   size = 11;
-    # };
+  # Only environment variables directly dictating Hyprland's execution belong here
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    XDG_CURRENT_DESKTOP = "Hyprland";
+    XDG_SESSION_TYPE = "wayland";
+    XDG_SESSION_DESKTOP = "Hyprland";
   };
-
-  xdg.portal = {
-    enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-      pkgs.xdg-desktop-portal-hyprland
-    ];
-    config = {
-      common = {
-        default = [ "gtk" ];
-      };
-      hyprland = {
-        default = [ "hyprland" "gtk" ];
-      };
-    };
-  };
-
-  stylix.targets.hyprland.enable = true;
-
-  home.file.".config/hypr".source = ./hypr;
 }

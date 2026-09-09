@@ -1,4 +1,4 @@
-local shader_path = os.getenv("HOME") .. "/archaic/themes/dynamic/hypr/rounded-corners.glsl"
+local shader_path = os.getenv("HOME") .. "/harmonix/modules/home/hyprland/config/default/rounded-corners.glsl"
 
 -- ==> ANIMATIONS
 
