@@ -1,9 +1,9 @@
-{ config, pkgs, symlinkRoot, ... }:
+{ pkgs, config, ... }:
 
-let
-  link = config.lib.file.mkOutOfStoreSymlink;
-  toSrcFile = name: "${symlinkRoot}/${name}";
-in
 {
-  home.file.".config/waybar".source = link "/home/gabpetti/harmonix/modules/home/waybar/waybar";
+  home.packages = with pkgs; [
+    waybar
+  ];
+
+  xdg.configFile."waybar".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/waybar/config";
 }
