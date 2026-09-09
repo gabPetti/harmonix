@@ -3,14 +3,14 @@ _:
 {
   imports = [
     ./audio.nix
+    ./bluetooth.nix
     ./boot.nix
     ./firewall.nix
     ./fonts.nix
     ./git.nix
     ./internationalisation.nix
     ./network.nix
-    ./printing.nix
-    ./stylix.nix
+    ./xdg.nix
     ./zsh.nix
   ];
 }
