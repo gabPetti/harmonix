@@ -11,6 +11,7 @@
     ../../modules/home/waybar
     ../../modules/home/kitty
     ../../modules/home/yazi
+    ../../modules/home/rofi
   ];
 
   home.stateVersion = "26.11";
