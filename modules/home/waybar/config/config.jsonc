@@ -1,79 +1,74 @@
 {
-  "layer": "top",
-  "position": "top",
-  "height": 28,
-  "spacing": 0,
-  "modules-left": [
-    "hyprland/workspaces",
-    "hyprland/window"
-  ],
-  "modules-center": [
-    "custom/ticker"
-  ],
-  "modules-right": [
-    "custom/pomodoro",
-    "cpu",
-    "memory",
-    "network",
-    "pulseaudio",
-    "clock",
-    "custom/power"
-  ],
+	"mode": "dock",
+	"position": "top",
+	"layer": "top",
+	"width": 0,
+	"height": 0,
+	"margin": 0,
+	"spacing": 0,
+	"reload_style_on_change": true,
 
-  "hyprland/workspaces": {
-    "format": "{id}",
-    "on-click": "activate"
-  },
+	"include": [
+		"~/.config/waybar/modules/custom/*.jsonc",
+		"~/.config/waybar/modules/hyprland/*.jsonc",
+		"~/.config/waybar/modules/optional/*.jsonc",
+		"~/.config/waybar/modules/*.jsonc"
+	],
 
-  "hyprland/window": {
-    "format": "// {title}",
-    "max-length": 40
-  },
+	"modules-left": [
+		"custom/user",
 
-  "cpu": {
-    "format": "CPU {usage}%",
-    "interval": 3
-  },
+		"custom/left#bg-1",
+		"hyprland/workspaces",
+		"custom/right#bg-1",
 
-  "memory": {
-    "format": "MEM {percentage}%",
-    "interval": 3
-  },
+		"hyprland/window"
+	],
 
-  "network": {
-    "format-wifi": "NET {essid}",
-    "format-ethernet": "ETH {ifname}",
-    "format-disconnected": "NET --",
-    "tooltip-format": "{ipaddr}"
-  },
+	"modules-center": [
+		"custom/space",
 
-  "pulseaudio": {
-    "format": "VOL {volume}%",
-    "format-muted": "VOL --",
-    "on-click": "pavucontrol"
-  },
+		"custom/left#bg-1",
+		"temperature",
 
-  "clock": {
-    "format": "{:%H:%M}",
-    "format-alt": "{:%Y/%m/%d}",
-    "tooltip-format": "{:%A %d %B %Y}"
-  },
+		"custom/left#bg-2",
+		"memory",
 
-  "custom/ticker": {
-    "exec": "echo '接続中 // SCANNING // データ処理 // SYS:ACTIVE // NR-2B@ARCH // 全システム正常 // 起動完了 //'",
-    "interval": 60,
-    "format": "{}"
-  },
+		"custom/left#bg-3",
+		"cpu",
+		"custom/left#inverse",
 
-  "custom/pomodoro": {
-    "exec": "~/.config/waybar/scripts/pomodoro.sh",
-    "interval": 1,
-    "format": "{}",
-    "on-click": "~/.config/waybar/scripts/pomodoro_toggle.sh"
-  },
+		"custom/left#accent",
+		"custom/distro",
+		"custom/right#accent",
 
-  "custom/power": {
-    "format": "⏻",
-    "on-click": "hyprctl dispatch exit"
-  }
+		"custom/right#inverse",
+		"idle_inhibitor",
+		"clock#time",
+		"custom/right#bg-3",
+
+		"clock#date",
+		"custom/right#bg-2",
+
+		"network",
+		"bluetooth",
+		"custom/update",
+		"custom/right#bg-1"
+	],
+
+	"modules-right": [
+		"mpris",
+
+		"custom/left#bg-1",
+		"group/pulseaudio",
+
+		"custom/left#bg-2",
+		"backlight",
+
+		"custom/left#bg-3",
+		"battery",
+		"custom/left#inverse",
+
+		"custom/power"
+	]
 }
