@@ -16,4 +16,11 @@
       };
     };
   };
+
+  # dconf.settings = {
+  #   "org/gnome/desktop/interface" = {
+  #     color-scheme = "prefer-dark";
+  #     font-name = "JetBrainsMono Nerd Font 10";
+  #   };
+  # };
 }

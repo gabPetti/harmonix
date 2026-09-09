@@ -12,6 +12,7 @@
       thunderbird
       gh # GitHub CLI
       nodejs
+      libnotify
     ];
   };
 }

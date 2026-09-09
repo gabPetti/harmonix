@@ -43,7 +43,7 @@
 		"custom/right#accent",
 
 		"custom/right#inverse",
-		"idle_inhibitor",
+		// "idle_inhibitor",
 		"clock#time",
 		"custom/right#bg-3",
 
@@ -52,7 +52,7 @@
 
 		"network",
 		"bluetooth",
-		"custom/update",
+		// "custom/update",
 		"custom/right#bg-1"
 	],
 

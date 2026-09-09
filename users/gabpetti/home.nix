@@ -4,6 +4,7 @@
   imports = [
     ../../modules/home/neovim
     ../../modules/home/firefox
+    ../../modules/home/gtk
     ../../modules/home/starship
     ../../modules/home/vscode
     ../../modules/home/obsidian
@@ -13,6 +14,8 @@
     ../../modules/home/yazi
     ../../modules/home/rofi
   ];
+
+  services.playerctld.enable = true;
 
   home.stateVersion = "26.11";
 }
