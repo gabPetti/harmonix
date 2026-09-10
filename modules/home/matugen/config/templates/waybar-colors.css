@@ -88,16 +88,16 @@
 @define-color crust        #11111b;
 
 /* Base colors */
-@define-color accent       {{colors.primary.dark.hex}};
-@define-color fg           {{colors.on_background.dark.hex}};
-@define-color bg-0         {{colors.background.dark.hex}};
-@define-color bg-1         rgba({{colors.primary_container.dark.red}}, {{colors.primary_container.dark.green}}, {{colors.primary_container.dark.blue}}, 0.2);
-@define-color bg-2         rgba({{colors.primary_container.dark.red}}, {{colors.primary_container.dark.green}}, {{colors.primary_container.dark.blue}}, 0.6);
-@define-color bg-3         rgba({{colors.primary_container.dark.red}}, {{colors.primary_container.dark.green}}, {{colors.primary_container.dark.blue}}, 1);
-/* @define-color bg-2         {{colors.secondary_container.dark.hex}}; */
-/* @define-color bg-3         {{colors.tertiary_container.dark.hex}}; */
-@define-color br           {{colors.outline.dark.hex}};
-@define-color shadow       {{colors.shadow.dark.hex}};
+@define-color accent       {{colors.primary.default.hex}};
+@define-color fg           {{colors.on_background.default.hex}};
+@define-color bg-0         {{colors.background.default.hex}};
+@define-color bg-1         rgba({{colors.primary_container.default.red}}, {{colors.primary_container.default.green}}, {{colors.primary_container.default.blue}}, 0.2);
+@define-color bg-2         rgba({{colors.primary_container.default.red}}, {{colors.primary_container.default.green}}, {{colors.primary_container.default.blue}}, 0.6);
+@define-color bg-3         rgba({{colors.primary_container.default.red}}, {{colors.primary_container.default.green}}, {{colors.primary_container.default.blue}}, 1);
+/* @define-color bg-2         {{colors.secondary_container.default.hex}}; */
+/* @define-color bg-3         {{colors.tertiary_container.default.hex}}; */
+@define-color br           {{colors.outline.default.hex}};
+@define-color shadow       {{colors.shadow.default.hex}};
 
 /* States */
 @define-color warning      @yellow;

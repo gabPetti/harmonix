@@ -14,6 +14,7 @@
     ../../modules/home/yazi
     ../../modules/home/rofi
     ../../modules/home/matugen
+    ../../modules/home/swaync
   ];
 
   services.playerctld.enable = true;

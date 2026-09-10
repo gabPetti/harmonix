@@ -4,12 +4,10 @@
 
 -- ==> GLOBAL VARIABLES
 local term = "kitty"
-local bin = os.getenv("ARCHAIC_BIN") or (os.getenv("HOME") .. "/bin")
 
 -- ==> SYSTEM BINDS
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
 hl.bind("SUPER + L", hl.dsp.focus({ workspace = "empty" }), { description = "Open first empty workspace" })
-hl.bind("SUPER + Print", hl.dsp.exec_cmd("sh " .. bin .. "/screenshot.sh"), { description = "Take screenshot GUI" })
 hl.bind("Print", hl.dsp.exec_cmd("hyprshot -z --clipboard-only -m region"), { description = "Take screenshot" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -f hex -a"), { description = "Pick color" })
 hl.bind("SUPER + N", hl.dsp.exec_cmd("swaync-client -t"), { description = "Toggle Sway notification manager" })
@@ -36,34 +34,34 @@ end, { auto_consuming = true })
 hl.bind("SUPER + A", hl.dsp.exec_cmd("rofi -show drun"), { description = "Open Rofi" })
 hl.bind(
 	"SUPER + ALT + W",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/wallpaper-selector.sh"),
+	hl.dsp.exec_cmd("sh /home/gabpetti/harmonix/modules/home/hyprland/config/scripts/rofi-wallpaper.sh"),
 	{ description = "Open wallpaper menu" }
 )
-hl.bind(
-	"SUPER + ALT + T",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/theme-selector.sh"),
-	{ description = "Open theme menu" }
-)
-hl.bind(
-	"SUPER + ALT + V",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/clipboard-manager.sh"),
-	{ description = "Open clipboard manager" }
-)
-hl.bind(
-	"SUPER + ALT + P",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/powermenu.sh"),
-	{ description = "Open power manager" }
-)
-hl.bind(
-	"SUPER + ALT + N",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/network-manager.sh"),
-	{ description = "Open network manager" }
-)
-hl.bind(
-	"SUPER + ALT + E",
-	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/rofimoji.sh"),
-	{ description = "Open network manager" }
-)
+-- hl.bind(
+-- 	"SUPER + ALT + T",
+-- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/theme-selector.sh"),
+-- 	{ description = "Open theme menu" }
+-- )
+-- hl.bind(
+-- 	"SUPER + ALT + V",
+-- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/clipboard-manager.sh"),
+-- 	{ description = "Open clipboard manager" }
+-- )
+-- hl.bind(
+-- 	"SUPER + ALT + P",
+-- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/powermenu.sh"),
+-- 	{ description = "Open power manager" }
+-- )
+-- hl.bind(
+-- 	"SUPER + ALT + N",
+-- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/network-manager.sh"),
+-- 	{ description = "Open network manager" }
+-- )
+-- hl.bind(
+-- 	"SUPER + ALT + E",
+-- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/rofimoji.sh"),
+-- 	{ description = "Open network manager" }
+-- )
 
 -- ==> SYSTEM CONTROLS
 hl.bind(
@@ -83,7 +81,7 @@ hl.bind(
 )
 hl.bind(
 	"XF86AudioMicMute",
-	hl.dsp.exec_cmd("sh " .. bin .. "/volume.sh --device input --action toggle"),
+	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
 	{ description = "Toggle microphone mute", locked = true }
 )
 hl.bind(
