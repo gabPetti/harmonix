@@ -3,22 +3,18 @@ version_check = false
 
 [templates.hyprland]
 input_path = '~/.config/matugen/templates/hyprland-colors.lua'
-output_path = '~/.config/matugen/generated/hyprland-colors.lua'
+output_path = '~/.config/hypr/default/matugen-colors.lua'
 post_hook = "hyprctl reload"
 
 [templates.hyprlock]
 input_path = '~/.config/matugen/templates/hyprlock-colors.conf'
-output_path = '~/.config/matugen/generated/hyprlock-colors.conf'
+output_path = '~/.config/hypr/hyprlock/matugen-colors.conf'
 
 [templates.css]
 input_path = '~/.config/matugen/templates/colors.css'
-output_path = '~/.config/matugen/generated/colors.css'
+output_path = '~/.config/waybar/matugen-colors.css'
 post_hook = "systemctl --user restart waybar"
 
-# [templates.hyprlock]
-# input_path = '~/.config/matugen/templates/hyprland/hyprlock-colors.conf'
-# output_path = '~/.config/hypr/hyprlock/colors.conf'
-#
 # [templates.gtk3]
 # input_path = '~/.config/matugen/templates/gtk-3.0/gtk.css'
 # output_path = '~/.config/gtk-3.0/gtk.css'

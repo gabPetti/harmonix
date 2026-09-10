@@ -14,9 +14,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    kitty
-    hyprpaper
-    hyprlock
     brightnessctl
   ];
 }
