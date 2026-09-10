@@ -4,7 +4,8 @@
  */
 * { all: initial; }
 
-@import "themes/catppuccin-mocha.css";
+/* @import "themes/catppuccin-mocha.css"; */
+@import "/home/gabpetti/.config/matugen/generated/colors.css";
 
 * {
 	font-family: "GoogleSansCode Nerd Font";

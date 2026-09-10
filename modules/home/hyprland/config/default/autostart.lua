@@ -2,8 +2,8 @@
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("systemctl --user start hyprland-session.target")
-	hl.exec_cmd("hyprpaper")
-	hl.exec_cmd("waybar")
+	hl.exec_cmd("systemctl --user start hyprpaper")
+	hl.exec_cmd("systemctl --user start waybar")
 end)
 
 hl.on("hyprland.shutdown", function()

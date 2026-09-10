@@ -13,6 +13,7 @@
     ../../modules/home/kitty
     ../../modules/home/yazi
     ../../modules/home/rofi
+    ../../modules/home/matugen
   ];
 
   services.playerctld.enable = true;

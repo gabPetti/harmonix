@@ -27,7 +27,7 @@
 @define-color crust        #11111b;
 
 /* Base colors */
-@define-color accent       @lavender;
+@define-color accent       @flamingo;
 @define-color fg           @text;
 @define-color bg-0         @crust;
 @define-color bg-1         @mantle;
