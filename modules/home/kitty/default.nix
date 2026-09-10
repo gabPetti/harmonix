@@ -1,11 +1,9 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
-  programs.kitty = {
-    enable = true;
-    extraConfig = ''
-      window_padding_width 10
-      confirm_os_window_close 0
-    '';
-  };
+  home.packages = with pkgs; [
+    kitty
+  ];
+
+  xdg.configFile."kitty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/kitty/config";
 }
