@@ -14,7 +14,6 @@
     ../../modules/home/yazi
     ../../modules/home/rofi
     ../../modules/home/matugen
-    ../../modules/home/vivaldi
   ];
 
   services.playerctld.enable = true;
