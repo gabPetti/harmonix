@@ -14,6 +14,24 @@ hl.bind("Print", hl.dsp.exec_cmd("hyprshot -z --clipboard-only -m region"), { de
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -f hex -a"), { description = "Pick color" })
 hl.bind("SUPER + N", hl.dsp.exec_cmd("swaync-client -t"), { description = "Toggle Sway notification manager" })
 
+-- ==> FIREFOX BINDS
+hl.bind("CTRL + J", function()
+	local window = hl.get_active_window()
+	if window and window.class == "firefox" then
+		hl.dispatch(hl.dsp.send_shortcut({ mods = "CTRL", key = "Tab", window = "activewindow" }))
+	else
+		return { ok = false }
+	end
+end, { auto_consuming = true })
+hl.bind("CTRL + K", function()
+	local window = hl.get_active_window()
+	if window and window.class == "firefox" then
+		hl.dispatch(hl.dsp.send_shortcut({ mods = "CTRL + SHIFT", key = "Tab", window = "activewindow" }))
+	else
+		return { ok = false }
+	end
+end, { auto_consuming = true })
+
 -- ==> ROFI MENUS
 hl.bind("SUPER + A", hl.dsp.exec_cmd("rofi -show drun"), { description = "Open Rofi" })
 hl.bind(
