@@ -7,7 +7,6 @@
     extraGroups = [ "networkmanager" "wheel" "input"];
     packages = with pkgs; [
       vim
-      fastfetch
       discord-ptb
       thunderbird
       gh # GitHub CLI

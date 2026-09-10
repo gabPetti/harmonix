@@ -15,6 +15,7 @@
     ../../modules/home/rofi
     ../../modules/home/matugen
     ../../modules/home/swaync
+    ../../modules/home/fastfetch
   ];
 
   services.playerctld.enable = true;

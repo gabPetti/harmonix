@@ -4,6 +4,7 @@
   home.packages = with pkgs; [
     hyprpaper
     hyprshot
+    hyprsunset
     hyprlock
     hyprland-qt-support
   ];
