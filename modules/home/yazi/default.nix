@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 
 {
   # Install Yazi and CLI preview tools
@@ -14,10 +14,5 @@
     zoxide           # Smart directory jump integration
   ];
 
-  # Enable the official Home Manager Yazi module (manages yazi.toml configs)
-  programs.yazi = {
-    enable = true;
-    enableBashIntegration = true; # Changes shell directory on exit
-    enableZshIntegration = true;  # (If using zsh)
-  };
+  xdg.configFile."yazi".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/yazi/config";
 }
