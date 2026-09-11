@@ -13,22 +13,14 @@
       gtk-application-prefer-dark-theme = 1;
     };
 
-    # System-wide UI font declaration
-    font = {
-      name = "JetBrainsMono Nerd Font";
-      size = 10;
-    };
+    # Import Matugen's dynamically generated CSS file
+    gtk3.extraCss = ''
+      @import url("file://${config.xdg.configHome}/gtk-3.0/matugen-colors.css");
+    '';
 
-    # Default fallback dark theme (Adwaita-dark is built into GTK)
-    theme = {
-      name = "Adwaita-dark";
-      package = pkgs.gnome-themes-extra;
-    };
-
-    iconTheme = {
-      name = "Adwaita";
-      package = pkgs.adwaita-icon-theme;
-    };
+    gtk4.extraCss = ''
+      @import url("file://${config.xdg.configHome}/gtk-4.0/matugen-colors.css");
+    '';
   };
 
   # 3. Force dark mode via XDG Desktop Portal (crucial for modern GTK4 / Libadwaita apps)
