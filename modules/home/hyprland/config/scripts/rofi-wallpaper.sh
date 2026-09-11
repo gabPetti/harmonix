@@ -2,6 +2,7 @@
 
 # Directory containing your wallpapers
 WALLPAPER_DIR="$HOME/harmonix/wallpapers"
+SYMLINK_PATH="$WALLPAPER_DIR/wallpaper"
 
 # Supported image extensions
 VALID_EXTS="png|jpg|jpeg|webp"
@@ -13,6 +14,7 @@ if [ ! -d "$WALLPAPER_DIR" ]; then
 fi
 
 # 1. List wallpapers and select via Rofi
+# Note: The grep filter safely excludes your extensionless symlink from the Rofi list
 SELECTED_WALLPAPER=$(find -L "$WALLPAPER_DIR" -type f | grep -E "\.(${VALID_EXTS})$" | rofi -dmenu -i -show-icons -p "Select Wallpaper:")
 
 # Exit if no selection was made (e.g., user pressed Esc)
@@ -20,15 +22,18 @@ if [ -z "$SELECTED_WALLPAPER" ]; then
     exit 0
 fi
 
-echo $SELECTED_WALLPAPER
+# 2. Update the symlink on the fly
+ln -sf "$SELECTED_WALLPAPER" "$SYMLINK_PATH"
 
-# 2. Update hyprpaper via IPC
-hyprctl hyprpaper preload "$SELECTED_WALLPAPER"
-hyprctl hyprpaper wallpaper ",$SELECTED_WALLPAPER"
+# 3. Update hyprpaper via IPC using the SYMLINK
+# We must unload the symlink path first so Hyprpaper clears the old image from memory
+hyprctl hyprpaper unload "$SYMLINK_PATH"
+hyprctl hyprpaper preload "$SYMLINK_PATH"
+hyprctl hyprpaper wallpaper ",$SYMLINK_PATH"
 hyprctl hyprpaper unload unused
 
-# 3. Generate color palette with matugen
-matugen image "$SELECTED_WALLPAPER" -m smart --prefer less-saturation
+# 4. Generate color palette with matugen using the SYMLINK
+matugen image "$SYMLINK_PATH" -m smart --prefer less-saturation
 
-# 4. Notify success
-notify-send "Wallpaper Updated" "Applied $(basename "$SELECTED_WALLPAPER")"
+# 5. Notify success
+notify-send "Wallpaper Updated" "Applied $(basename "$SELECTED_WALLPAPER") via symlink"
