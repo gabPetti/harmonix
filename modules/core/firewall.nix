@@ -7,7 +7,7 @@
     # Deny unsolicited incoming connections by default.
     # Outgoing connections are allowed.
     allowedTCPPorts = [
-      22 # SSH
+      # 22 # SSH
     ];
 
     allowedUDPPorts = [
