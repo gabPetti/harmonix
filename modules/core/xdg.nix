@@ -31,6 +31,10 @@
       "text/markdown" = "nvim-term.desktop";
       "application/json" = "nvim-term.desktop";
       "text/x-shellscript" = "nvim-term.desktop";
+      "application/pdf" = [ "org.pwmt.zathura.desktop" ];
+      "application/postscript" = [ "org.pwmt.zathura.desktop" ];
+      "application/x-cbz" = [ "org.pwmt.zathura.desktop" ];
+      "image/vnd.djvu" = [ "org.pwmt.zathura.desktop" ];
     };
   };
 }

@@ -16,6 +16,7 @@
     ../../modules/home/matugen
     ../../modules/home/swaync
     ../../modules/home/fastfetch
+    ../../modules/home/zathura
   ];
 
   services.playerctld.enable = true;

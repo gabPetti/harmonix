@@ -9,6 +9,13 @@ _:
     "pt_BR.UTF-8"; LC_PAPER = "pt_BR.UTF-8"; LC_TELEPHONE = "pt_BR.UTF-8"; LC_TIME = "pt_BR.UTF-8";
   };
 
-  # Configure console keymap
-  console.keyMap = "br-abnt2";
+  services.xserver.xkb = {
+    layout = "br";
+    variant = "abnt2";
+    options = "ctrl:swapcaps";
+  };
+
+  console = {
+    useXkbConfig = true;
+  };
 }

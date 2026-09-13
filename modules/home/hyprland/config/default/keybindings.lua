@@ -4,6 +4,7 @@
 
 -- ==> GLOBAL VARIABLES
 local term = "kitty"
+local scripts_path = os.getenv("HOME") .. "/.config/hypr/scripts"
 
 -- ==> SYSTEM BINDS
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
@@ -47,21 +48,21 @@ hl.bind(
 -- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/clipboard-manager.sh"),
 -- 	{ description = "Open clipboard manager" }
 -- )
--- hl.bind(
--- 	"SUPER + ALT + P",
--- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/powermenu.sh"),
--- 	{ description = "Open power manager" }
--- )
--- hl.bind(
--- 	"SUPER + ALT + N",
--- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/network-manager.sh"),
--- 	{ description = "Open network manager" }
--- )
--- hl.bind(
--- 	"SUPER + ALT + E",
--- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/rofimoji.sh"),
--- 	{ description = "Open network manager" }
--- )
+hl.bind(
+	"SUPER + ALT + P",
+	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/power"),
+	{ description = "Open power manager" }
+)
+hl.bind(
+	"SUPER + ALT + N",
+	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/network"),
+	{ description = "Open network manager" }
+)
+hl.bind(
+	"SUPER + ALT + B",
+	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/bluetooth"),
+	{ description = "Open bluetooth manager" }
+)
 
 -- ==> SYSTEM CONTROLS
 hl.bind(

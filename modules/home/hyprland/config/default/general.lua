@@ -6,6 +6,8 @@ hl.config({
 		touchpad = {
 			natural_scroll = true,
 		},
+		repeat_delay = 250,
+		repeat_rate = 30,
 	},
 
 	-- ##==> Layouts
