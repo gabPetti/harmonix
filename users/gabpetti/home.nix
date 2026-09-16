@@ -17,6 +17,7 @@
     ../../modules/home/swaync
     ../../modules/home/fastfetch
     ../../modules/home/zathura
+    ../../modules/home/calcure
   ];
 
   services.playerctld.enable = true;

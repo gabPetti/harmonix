@@ -8,8 +8,7 @@
     packages = with pkgs; [
       vim
       discord-ptb
-      thunderbird
-      gh # GitHub CLI
+      gh
       nodejs
       libnotify
     ];
