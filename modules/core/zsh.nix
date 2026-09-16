@@ -1,6 +1,10 @@
 { pkgs, config, lib, ... }:
 
 {
+  environment.systemPackages = with pkgs; [
+    eza
+  ];
+
   programs.zsh = {
     enable = true;
     enableCompletion = true;
@@ -20,14 +24,8 @@
     ];
   };
 
-  environment.systemPackages = with pkgs; [
-    eza
-  ];
-
   programs.zoxide = {
     enable = true;
     enableZshIntegration = true;
   };
-
-  users.users.gabpetti.shell = pkgs.zsh;
 }

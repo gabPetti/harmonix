@@ -18,6 +18,7 @@
     ../../modules/home/fastfetch
     ../../modules/home/zathura
     ../../modules/home/calcure
+    ../../modules/home/cursor
   ];
 
   services.playerctld.enable = true;
