@@ -4,10 +4,11 @@
   users.users."gabpetti" = {
     isNormalUser = true;
     description = "Gabriel Petti Tavares";
-    extraGroups = [ "networkmanager" "wheel" "input" "docker"];
+    extraGroups = [ "networkmanager" "wheel" "input" "docker" "libvirtd"];
     shell = pkgs.zsh;
     packages = with pkgs; [
       vim
+      unzip
       discord-ptb
       gh
       nodejs
@@ -16,6 +17,8 @@
       gnuplot
       btop
       google-cloud-sdk
+      vagrant
+      steam-run
     ];
   };
 }

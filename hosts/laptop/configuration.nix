@@ -20,8 +20,5 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  virtualisation.docker.enable = true;
-  virtualisation.vmware.host.enable = true;
-
   system.stateVersion = "26.11";
 }
