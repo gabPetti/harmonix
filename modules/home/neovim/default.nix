@@ -1,13 +1,22 @@
 { config, lib, pkgs, ... }:
 
 {
+  home.packages = with pkgs; [
+    # Formatters
+    stylua # Lua
+    black # Python
+    shfmt # Shell / Bash
+    nixpkgs-fmt # Nix
+    prettierd # JS / TS / Web
+    google-java-format # Java
+  ];
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     extraPackages = with pkgs; [
       # LazyVim
       lua-language-server
-      stylua
       # Telescope
       ripgrep
     ];
@@ -26,7 +35,6 @@
           cmp-nvim-lsp
           cmp-path
           cmp_luasnip
-          conform-nvim
           dashboard-nvim
           dressing-nvim
           flash-nvim

@@ -1,17 +1,17 @@
 return {
-  {
-    "saghen/blink.cmp",
-    opts = {
-      completion = {
-        list = {
-          selection = { preselect = false, auto_insert = false },
-        },
-      },
-      keymap = {
-        ["<Tab>"] = { "select_next", "fallback" },
-        ["<S-Tab>"] = { "select_prev", "fallback" },
-        ["<CR>"] = { "accept", "fallback" },
-      },
-    },
-  },
+	{
+		"saghen/blink.cmp",
+		opts = {
+			completion = {
+				list = {
+					selection = { preselect = false, auto_insert = false },
+				},
+			},
+			keymap = {
+				["<Tab>"] = { "select_next", "fallback" },
+				["<S-Tab>"] = { "select_prev", "fallback" },
+				["<CR>"] = { "accept", "fallback" },
+			},
+		},
+	},
 }
