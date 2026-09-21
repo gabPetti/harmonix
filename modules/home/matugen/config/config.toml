@@ -31,6 +31,10 @@ output_path = '~/.config/gtk-4.0/matugen-colors.css'
 input_path = '~/.config/matugen/templates/yazi-colors.toml'
 output_path = '~/.config/yazi/theme.toml'
 
+[templates.swaync]
+input_path = '~/.config/matugen/templates/swaync-colors.css'
+output_path = '~/.config/swaync/matugen-colors.css'
+
 # [templates.kde_colors]
 # input_path = '~/.config/matugen/templates/kde/color.txt'
 # output_path = '~/.local/state/quickshell/user/generated/color.txt'
