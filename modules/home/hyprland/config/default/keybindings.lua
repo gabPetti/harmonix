@@ -55,34 +55,34 @@ hl.bind(
 )
 hl.bind(
 	"SUPER + ALT + N",
-	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/network"),
+	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/network menu"),
 	{ description = "Open network manager" }
 )
 hl.bind(
 	"SUPER + ALT + B",
-	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/bluetooth"),
+	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/bluetooth menu"),
 	{ description = "Open bluetooth manager" }
 )
 
 -- ==> SYSTEM CONTROLS
 hl.bind(
 	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"),
+	hl.dsp.exec_cmd("swayosd-client --output-volume raise"),
 	{ description = "Increase volume", repeating = true, locked = true }
 )
 hl.bind(
 	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+	hl.dsp.exec_cmd("swayosd-client --output-volume lower"),
 	{ description = "Decrease volume", repeating = true, locked = true }
 )
 hl.bind(
 	"XF86AudioMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
+	hl.dsp.exec_cmd("swayosd-client --output-volume mute-toggle"),
 	{ description = "Toggle audio mute", locked = true }
 )
 hl.bind(
 	"XF86AudioMicMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
+	hl.dsp.exec_cmd("swayosd-client --input-volume mute-toggle"),
 	{ description = "Toggle microphone mute", locked = true }
 )
 hl.bind(
@@ -100,12 +100,12 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { description = 
 hl.bind("XF86AudioStop", hl.dsp.exec_cmd("playerctl stop"), { description = "Stop playback", locked = true })
 hl.bind(
 	"XF86MonBrightnessUp",
-	hl.dsp.exec_cmd("brightnessctl set +5%"),
+	hl.dsp.exec_cmd("swayosd-client --brightness raise"),
 	{ description = "Increase brightness", locked = true }
 )
 hl.bind(
 	"XF86MonBrightnessDown",
-	hl.dsp.exec_cmd("brightnessctl set 5%-"),
+	hl.dsp.exec_cmd("swayosd-client --brightness lower"),
 	{ description = "Decrease brightness", locked = true }
 )
 
@@ -134,9 +134,22 @@ hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move window 
 hl.bind("SUPER + CTRL + K", hl.dsp.focus({ direction = "up" }), { description = "Next workspace" })
 hl.bind("SUPER + CTRL + J", hl.dsp.focus({ direction = "down" }), { description = "Previous workspace" })
 hl.bind("SUPER + CTRL + H", hl.dsp.focus({ direction = "left" }), { description = "Next workspace" })
-hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description = "Previous workspace" })
-hl.bind("SUPER + K", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
-hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
+hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description = "Previous workspace" }) -- hl.bind("SUPER + K", function() hl.dsp.focus({ workspace = "e+1" }) hl.dsp.exec_cmd("swayosd-client --custom-message 'Workspace " .. tostring(1) .. "'") end, { auto_consuming = true, description = "Scroll workspaces forward" })
+-- hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
+-- Scroll Workspaces Forward
+hl.bind("SUPER + K", function()
+	hl.dispatch(hl.dsp.focus({ workspace = "e+1" }))
+	local ws = hl.get_active_workspace().id
+	hl.dispatch(hl.dsp.exec_cmd("swayosd-client --custom-message '" .. tostring(ws) .. "'"))
+end, { auto_consuming = true, description = "Next workspace" })
+
+-- Scroll Workspaces Backward
+hl.bind("SUPER + J", function()
+	hl.dispatch(hl.dsp.focus({ workspace = "e-1" }))
+	local ws = hl.get_active_workspace().id
+	hl.dispatch(hl.dsp.exec_cmd("swayosd-client --custom-message '" .. tostring(ws) .. "'"))
+end, { auto_consuming = true, description = "Previous workspace" })
+
 hl.bind("SUPER + Tab", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
 hl.bind("SUPER + S", hl.dsp.workspace.toggle_special(), { description = "Show special workspace" })
 hl.bind(

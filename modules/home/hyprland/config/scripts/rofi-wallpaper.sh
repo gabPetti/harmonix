@@ -9,8 +9,8 @@ VALID_EXTS="png|jpg|jpeg|webp"
 
 # Check if directory exists
 if [ ! -d "$WALLPAPER_DIR" ]; then
-    notify-send "Wallpaper Error" "Directory $WALLPAPER_DIR does not exist."
-    exit 1
+  notify-send "Wallpaper Error" "Directory $WALLPAPER_DIR does not exist."
+  exit 1
 fi
 
 # 1. List wallpapers and select via Rofi
@@ -19,7 +19,7 @@ SELECTED_WALLPAPER=$(find -L "$WALLPAPER_DIR" -type f | grep -E "\.(${VALID_EXTS
 
 # Exit if no selection was made (e.g., user pressed Esc)
 if [ -z "$SELECTED_WALLPAPER" ]; then
-    exit 0
+  exit 0
 fi
 
 # 2. Update the symlink on the fly
@@ -33,7 +33,7 @@ hyprctl hyprpaper wallpaper ",$SYMLINK_PATH"
 hyprctl hyprpaper unload unused
 
 # 4. Generate color palette with matugen using the SYMLINK
-matugen image "$SYMLINK_PATH" -m smart --prefer less-saturation
+matugen image "$SYMLINK_PATH" -m smart --prefer darkness -t scheme-content
 
 # 5. Notify success
 notify-send "Wallpaper Updated" "Applied $(basename "$SELECTED_WALLPAPER") via symlink"

@@ -15,6 +15,11 @@ hl.config({
 		layout = "master",
 	},
 
+	master = {
+		mfact = 0.5,
+		new_status = "slave",
+	},
+
 	-- ##==> Misc
 	misc = {
 		vrr = 0,

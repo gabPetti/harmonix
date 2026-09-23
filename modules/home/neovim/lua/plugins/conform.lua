@@ -3,7 +3,7 @@ return {
 	opts = {
 		formatters_by_ft = {
 			lua = { "stylua" },
-			-- java = { "google-java-format" },
+			java = { "google-java-format" },
 			nix = { "nixpkgs-fmt" },
 			python = { "black" },
 			javascript = { "prettierd" },

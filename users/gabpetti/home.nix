@@ -20,9 +20,12 @@
     ../../modules/home/calcure
     ../../modules/home/cursor
     ../../modules/home/stremio
+    ../../modules/home/intellij
+    ../../modules/home/swayosd
   ];
 
   services.playerctld.enable = true;
+  modules.swayosd.enable = true;
 
   home.stateVersion = "26.11";
 }
