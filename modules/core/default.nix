@@ -11,6 +11,7 @@ _:
     ./git.nix
     ./internationalisation.nix
     ./network.nix
+    ./nix-ld.nix
     ./virtualization.nix
     ./xdg.nix
     ./zsh.nix
