@@ -4,7 +4,7 @@
   users.users."gabpetti" = {
     isNormalUser = true;
     description = "Gabriel Petti Tavares";
-    extraGroups = [ "networkmanager" "wheel" "input" "docker" "libvirtd"];
+    extraGroups = [ "networkmanager" "wheel" "input" "docker" "libvirtd" ];
     shell = pkgs.zsh;
     packages = with pkgs; [
       vim
@@ -13,6 +13,7 @@
       gh
       nodejs
       python3
+      python3Packages.pip
       libnotify
       gnuplot
       btop
