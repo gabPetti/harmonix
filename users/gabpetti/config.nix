@@ -14,6 +14,8 @@
       nodejs
       python3
       python3Packages.pip
+      jdk
+      maven
       libnotify
       gnuplot
       btop
