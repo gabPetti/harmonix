@@ -3,3 +3,4 @@
 wallpapers/wallpaper
 modules/home/yazi/config/theme.toml
 .env
+.aider*

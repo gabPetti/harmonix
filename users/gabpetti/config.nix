@@ -9,11 +9,13 @@
     packages = with pkgs; [
       vim
       unzip
+      psmisc
       discord-ptb
       gh
       nodejs
       python3
       python3Packages.pip
+      python3Packages.holidays
       jdk
       maven
       libnotify
@@ -22,6 +24,7 @@
       google-cloud-sdk
       vagrant
       steam-run
+      aider-chat
     ];
   };
 }

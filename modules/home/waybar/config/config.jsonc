@@ -1,74 +1,74 @@
 {
-	"mode": "dock",
-	"position": "top",
-	"layer": "top",
-	"width": 0,
-	"height": 0,
-	"margin": 0,
-	"spacing": 0,
-	"reload_style_on_change": true,
+  "mode": "dock",
+  "position": "top",
+  "layer": "top",
+  "width": 0,
+  "height": 0,
+  "margin": 0,
+  "spacing": 0,
+  "reload_style_on_change": true,
 
-	"include": [
-		"~/.config/waybar/modules/custom/*.jsonc",
-		"~/.config/waybar/modules/hyprland/*.jsonc",
-		"~/.config/waybar/modules/optional/*.jsonc",
-		"~/.config/waybar/modules/*.jsonc"
-	],
+  "include": [
+    "~/.config/waybar/modules/custom/*.jsonc",
+    "~/.config/waybar/modules/hyprland/*.jsonc",
+    "~/.config/waybar/modules/optional/*.jsonc",
+    "~/.config/waybar/modules/*.jsonc",
+  ],
 
-	"modules-left": [
-		"custom/user",
+  "modules-left": [
+    "custom/left#bg-1",
+    "hyprland/workspaces",
+    "custom/right#bg-1",
+    "custom/space",
+    "tray",
 
-		"custom/left#bg-1",
-		"hyprland/workspaces",
-		"custom/right#bg-1",
+    "hyprland/window",
+  ],
 
-		"hyprland/window"
-	],
+  "modules-center": [
+    "custom/left#bg-1",
+    "temperature",
 
-	"modules-center": [
-		"custom/space",
+    "custom/left#bg-2",
+    "memory",
 
-		"custom/left#bg-1",
-		"temperature",
+    "custom/left#bg-3",
+    "cpu",
+    "custom/left#inverse",
 
-		"custom/left#bg-2",
-		"memory",
+    "custom/left#accent",
+    "custom/distro",
+    "custom/right#accent",
 
-		"custom/left#bg-3",
-		"cpu",
-		"custom/left#inverse",
+    "custom/right#inverse",
+    "clock#time",
+    "custom/right#bg-3",
 
-		"custom/left#accent",
-		"custom/distro",
-		"custom/right#accent",
+    "clock#date",
+    "custom/right#bg-2",
 
-		"custom/right#inverse",
-		// "idle_inhibitor",
-		"clock#time",
-		"custom/right#bg-3",
+    "network",
+    "bluetooth",
+    "custom/right#bg-1",
+  ],
 
-		"clock#date",
-		"custom/right#bg-2",
+  "modules-right": [
+    "mpris",
 
-		"network",
-		"bluetooth",
-		// "custom/update",
-		"custom/right#bg-1"
-	],
+    "custom/left#bg-1",
+    "group/pulseaudio",
 
-	"modules-right": [
-		"mpris",
+    "custom/left#bg-2",
+    "backlight",
 
-		"custom/left#bg-1",
-		"group/pulseaudio",
+    "custom/left#bg-3",
+    "battery",
+    "custom/left#inverse",
 
-		"custom/left#bg-2",
-		"backlight",
-
-		"custom/left#bg-3",
-		"battery",
-		"custom/left#inverse",
-
-		"custom/power"
-	]
+    "custom/power",
+  ],
+  // "tray": {
+  //   "icon-size": 20,
+  //   "spacing": 10,
+  // },
 }
