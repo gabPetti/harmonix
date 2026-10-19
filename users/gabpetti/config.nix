@@ -25,6 +25,7 @@
       vagrant
       steam-run
       aider-chat
+      claude-code
     ];
   };
 }
