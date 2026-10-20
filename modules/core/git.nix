@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, vars, ... }:
 
 {
   # Install Git and CLI utilities system-wide
@@ -12,8 +12,8 @@
     enable = true;
     config = {
       user = {
-        name = "gabpetti";
-        email = "gabpettidev@gmail.com";
+        name = vars.username;
+        email = vars.email;
       };
       init = {
         defaultBranch = "main";

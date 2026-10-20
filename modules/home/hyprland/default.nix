@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -9,7 +9,7 @@
     hyprland-qt-support
   ];
 
-  xdg.configFile."hypr".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/hyprland/config";
+  harmonix.configLinks."hypr" = "hyprland";
 
   # Only environment variables directly dictating Hyprland's execution belong here
   home.sessionVariables = {

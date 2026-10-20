@@ -1,10 +1,20 @@
-{ libs, pkgs, ... }:
+{ config, lib, pkgs, vars, ... }:
 
+let
+  virt = config.harmonix.virtualisation;
+in
 {
-  users.users."gabpetti" = {
+  users.users.${vars.username} = {
     isNormalUser = true;
-    description = "Gabriel Petti Tavares";
-    extraGroups = [ "networkmanager" "wheel" "input" "docker" "libvirtd" ];
+    description = vars.fullName;
+
+    # The docker/libvirtd groups only exist when their daemon is enabled, so
+    # they follow the toggles in modules/core/virtualization.nix rather than
+    # being listed unconditionally.
+    extraGroups = [ "networkmanager" "wheel" "input" ]
+      ++ lib.optional virt.docker.enable "docker"
+      ++ lib.optional virt.libvirtd.enable "libvirtd";
+
     shell = pkgs.zsh;
     packages = with pkgs; [
       vim

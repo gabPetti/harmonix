@@ -1,11 +1,11 @@
 { pkgs, lib, config, ... }:
 
 {
-  options.modules.swayosd = {
+  options.harmonix.swayosd = {
     enable = lib.mkEnableOption "SwayOSD on-screen display daemon";
   };
 
-  config = lib.mkIf config.modules.swayosd.enable {
+  config = lib.mkIf config.harmonix.swayosd.enable {
     home.packages = with pkgs; [
       swayosd
     ];

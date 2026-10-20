@@ -1,4 +1,4 @@
-_:
+{ ... }:
 
 {
   time.timeZone = "Europe/Lisbon";
@@ -11,13 +11,15 @@ _:
     LC_MEASUREMENT = "pt_BR.UTF-8";
     LC_MONETARY = "pt_BR.UTF-8";
     LC_NAME = "pt_BR.UTF-8";
-    LC_NUMERIC =
-      "pt_BR.UTF-8";
+    LC_NUMERIC = "pt_BR.UTF-8";
     LC_PAPER = "pt_BR.UTF-8";
     LC_TELEPHONE = "pt_BR.UTF-8";
     LC_TIME = "pt_BR.UTF-8";
   };
 
+  # Single source of truth for the keyboard layout, for both the console and any
+  # X11/Wayland session. Desktop modules under modules/system must not redefine
+  # these.
   services.xserver.xkb = {
     layout = "br";
     variant = "abnt2";

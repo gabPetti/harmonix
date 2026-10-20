@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 
 {
   gtk = {
@@ -23,7 +23,7 @@
     '';
   };
 
-  # 3. Force dark mode via XDG Desktop Portal (crucial for modern GTK4 / Libadwaita apps)
+  # Force dark mode via XDG Desktop Portal (crucial for modern GTK4 / Libadwaita apps)
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";

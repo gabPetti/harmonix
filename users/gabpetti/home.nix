@@ -2,6 +2,9 @@
 
 {
   imports = [
+    # Shared option plumbing used by the app modules below.
+    ../../modules/home/config-links.nix
+
     ../../modules/home/neovim
     ../../modules/home/firefox
     ../../modules/home/gtk
@@ -25,8 +28,7 @@
   ];
 
   services.playerctld.enable = true;
-  modules.swayosd.enable = true;
+  harmonix.swayosd.enable = true;
 
   home.stateVersion = "26.11";
 }
-

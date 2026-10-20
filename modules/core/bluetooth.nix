@@ -5,15 +5,15 @@
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true; # Automatically power on the Bluetooth controller on boot
-    
+
     settings = {
       General = {
         # Shows battery status of connected Bluetooth devices (headphones, controllers)
         Experimental = true;
-        
+
         # FastConnectable improves re-connection speed for paired devices
         FastConnectable = true;
-        
+
         # Enables modern Bluetooth Low Energy (BLE) privacy/address randomization
         Privacy = "device";
       };
@@ -39,7 +39,7 @@
 
   # Install command-line tools for manual debugging/pairing
   environment.systemPackages = with pkgs; [
-    bluez         # Provides standard bluetoothctl CLI tool
-    bluez-tools   # Extra utility scripts
+    bluez # Provides standard bluetoothctl CLI tool
+    bluez-tools # Extra utility scripts
   ];
 }

@@ -12,7 +12,7 @@
   ];
 
   xdg = {
-    # 1. Enable and configure Desktop Portals
+    # Enable and configure Desktop Portals
     portal = {
       enable = true;
       extraPortals = with pkgs; [

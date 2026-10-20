@@ -1,9 +1,9 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
     kitty
   ];
 
-  xdg.configFile."kitty".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/kitty/config";
+  harmonix.configLinks."kitty" = "kitty";
 }

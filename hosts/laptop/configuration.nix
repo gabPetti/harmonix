@@ -1,8 +1,7 @@
-# manual page accessible by running ‘nixos-help’.
-{ config, pkgs, ... }:
+{ vars, ... }:
 
 {
-  networking.hostName = "laptop";
+  networking.hostName = vars.hostName;
 
   imports = [
     ./hardware-configuration.nix

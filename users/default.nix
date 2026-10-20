@@ -1,7 +1,7 @@
-_:
+{ vars, ... }:
 
 {
   imports = [
-    ./gabpetti/config.nix
+    ./${vars.username}/config.nix
   ];
 }

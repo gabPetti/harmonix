@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
@@ -8,7 +8,6 @@
 
     # Languages
     jdk
-    # nodejs
     jdt-language-server # Java Language Server
 
     # LSPs & Formatters
@@ -16,7 +15,6 @@
     black # Python
     shfmt # Shell / Bash
     nixpkgs-fmt # Nix
-    # prettierd # JS / TS / Web
     google-java-format # Java
     lua-language-server
 
@@ -27,5 +25,5 @@
     gnumake
   ];
 
-  xdg.configFile."nvim".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/harmonix/modules/home/neovim/config";
+  harmonix.configLinks."nvim" = "neovim";
 }
