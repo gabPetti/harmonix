@@ -63,7 +63,6 @@ return {
 		-- Allows using standard Neovim split movements (Ctrl + h/j/k/l) from inside terminal insert mode
 		function _G.set_terminal_keymaps()
 			local t_opts = { buffer = 0 }
-			vim.keymap.set("t", "<esc>", [[<C-\><C-n>]], t_opts)
 			vim.keymap.set("t", "jk", [[<C-\><C-n>]], t_opts)
 			vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]], t_opts)
 			vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]], t_opts)
