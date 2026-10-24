@@ -10,10 +10,9 @@ post_hook = "hyprctl reload"
 input_path = '~/.config/matugen/templates/hyprlock-colors.conf'
 output_path = '~/.config/hypr/hyprlock/matugen-colors.conf'
 
-[templates.waybar]
-input_path = '~/.config/matugen/templates/waybar-colors.css'
-output_path = '~/.config/waybar/matugen-colors.css'
-post_hook = "systemctl --user restart waybar"
+[templates.quickshell]
+input_path = '~/.config/matugen/templates/quickshell-colors.json'
+output_path = '~/.config/quickshell/harmonix/matugen-colors.json'
 
 [templates.kitty]
 input_path = '~/.config/matugen/templates/kitty-colors.conf'

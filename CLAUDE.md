@@ -51,9 +51,28 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 - `config.lib.file.mkOutOfStoreSymlink` should appear in exactly one place (`config-links.nix`). Don't reintroduce per-module call sites.
 - Because the symlink target is the checkout, the repo must live at `vars.repoPath`; move it and update that one line.
 
+### The Quickshell shell
+
+`modules/home/quickshell/config/harmonix` is the whole desktop shell: bar, its popups, and the application/wallpaper launcher that replaced rofi. It is split by concern, one directory per layer:
+
+- `theme/` — `Colors` (matugen palette), `Theme` (all sizes/spacing/durations), `Icons` (Nerd Font glyphs). Nothing else hardcodes a size, colour, or codepoint.
+- `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `Fuzzy`.
+- `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …).
+- `bar/`, `launcher/` — the actual widgets, composed from the above.
+
+**Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is *not* resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
+
+Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, and `brightnessctl` writes.
+
+Editing any `.qml` hot-reloads the running shell — watch `qs log --pid $(pgrep -x quickshell)` for errors. Changing `shell.qml`'s `//@ pragma UseQApplication` (needed for system-tray menus) requires `systemctl --user restart quickshell` instead.
+
+Hyprland reaches the launcher over IPC (`qs -c harmonix ipc call launcher apps|wallpapers|toggle|close`), wired to SUPER+A and SUPER+ALT+W in `modules/home/hyprland/config/default/keybindings.lua`.
+
 ### Theming via matugen
 
-`modules/home/matugen/config/templates/*` are Material-You templates matugen renders into `matugen-colors.*` files consumed by hyprland, waybar, kitty, swaync, gtk3/gtk4, hyprlock, yazi, and KDE. Those generated files are gitignored — never hand-edit them; edit the template.
+`modules/home/matugen/config/templates/*` are Material-You templates matugen renders into `matugen-colors.*` files consumed by hyprland, quickshell, kitty, swaync, gtk3/gtk4, hyprlock, and yazi. Those generated files are gitignored — never hand-edit them; edit the template.
+
+The quickshell template is JSON, and `harmonix/theme/Colors.qml` copies every key it recognises out of it at runtime (watching the file, so a new wallpaper re-themes the bar without a restart). Adding a colour therefore means adding it in **both** places: a key in the template and a matching `property string` in `Colors.qml`.
 
 ### Secrets
 

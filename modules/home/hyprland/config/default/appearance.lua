@@ -74,6 +74,10 @@ hl.config({
 	},
 	general = {
 		gaps_in = 3,
+		-- Quickshell's bar mirrors this as Theme.barMargin so it floats at the
+		-- same distance from the screen edge as the windows do. Change one and
+		-- change the other, or the gap above the bar stops matching the gap
+		-- below it.
 		gaps_out = 8,
 		border_size = 3,
 		-- col = {

@@ -12,10 +12,9 @@
     ../../modules/home/vscode
     ../../modules/home/obsidian
     ../../modules/home/hyprland
-    ../../modules/home/waybar
+    ../../modules/home/quickshell
     ../../modules/home/kitty
     ../../modules/home/yazi
-    ../../modules/home/rofi
     ../../modules/home/matugen
     ../../modules/home/swaync
     ../../modules/home/fastfetch

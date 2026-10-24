@@ -1,0 +1,67 @@
+#!/usr/bin/env bash
+#
+# Wallpaper source of truth for the Quickshell launcher's wallpaper mode.
+#
+# The live wallpaper is a symlink ($DIR/wallpaper) rather than a path, so
+# hyprpaper and matugen always point at one stable file and switching only has
+# to repoint the link.
+#
+# Dependencies:
+#   - hyprpaper (hyprctl)
+#   - matugen
+#
+# Usage:
+#   wallpaper list       List every wallpaper in the directory, one per line
+#   wallpaper current    Print what the symlink currently resolves to
+#   wallpaper set PATH   Repoint the symlink at PATH and re-theme the session
+
+set -euo pipefail
+
+# HARMONIX_WALLPAPERS is set by the quickshell systemd unit from vars.repoPath.
+DIR="${HARMONIX_WALLPAPERS:-$HOME/harmonix/wallpapers}"
+LINK="$DIR/wallpaper"
+
+list() {
+	# The extension filter also keeps the extensionless symlink out of the list.
+	find -L "$DIR" -type f \
+		\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) |
+		sort
+}
+
+current() {
+	if [[ -L $LINK ]]; then
+		readlink -f "$LINK"
+	fi
+}
+
+apply() {
+	local target=$1
+
+	if [[ ! -f $target ]]; then
+		notify-send "Wallpaper" "No such file: $target"
+		exit 1
+	fi
+
+	ln -sf "$target" "$LINK"
+
+	# hyprpaper resolves the symlink itself, so pointing it back at the same
+	# path picks up the new image. Only `wallpaper` is accepted over hyprctl in
+	# this build -- preload/unload/listloaded answer "invalid hyprpaper
+	# request" and a non-zero exit, which under `set -e` would abort here and
+	# leave the symlink changed but the screen untouched.
+	hyprctl hyprpaper wallpaper ",$LINK" >/dev/null
+
+	# Hand matugen the real file, not the symlink: `-m smart` needs an
+	# extension to work out the image format.
+	matugen image "$target" -m smart --prefer darkness -t scheme-content
+}
+
+case ${1:-} in
+	list) list ;;
+	current) current ;;
+	set) apply "${2:?usage: wallpaper set PATH}" ;;
+	*)
+		printf 'usage: %s <list|current|set PATH>\n' "${0##*/}" >&2
+		exit 1
+		;;
+esac

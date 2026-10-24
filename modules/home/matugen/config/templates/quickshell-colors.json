@@ -1,0 +1,14 @@
+{
+  "accent": "{{colors.primary.default.hex}}",
+  "fg": "{{colors.on_background.default.hex}}",
+  "fgDim": "{{colors.on_surface_variant.default.hex}}",
+  "bg0": "{{colors.background.default.hex}}",
+  "bg1": "{{colors.primary_container.default.hex}}",
+  "bg2": "{{colors.secondary_container.default.hex}}",
+  "outline": "{{colors.outline.default.hex}}",
+  "shadow": "{{colors.shadow.default.hex}}",
+  "warning": "{{colors.tertiary.dark.hex}}",
+  "critical": "{{colors.error.dark.hex}}",
+  "accentFg": "{{colors.on_primary.default.hex}}",
+  "hoverBg": "{{colors.surface_container_high.default.hex}}"
+}

@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+#
+# Toggle a warm color-temperature "night reading mode" via hyprsunset.
+#
+# Dependencies:
+#   - hyprsunset
+#
+# Usage:
+#   nightlight toggle   Flip night mode on/off
+#   nightlight status   Print "state=on" or "state=off"
+
+STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hyprsunset-night-mode"
+WARM_TEMP=3500
+
+status() {
+	if [[ -f $STATE_FILE ]]; then
+		printf 'state=on\n'
+	else
+		printf 'state=off\n'
+	fi
+}
+
+toggle() {
+	pkill -x hyprsunset
+
+	if [[ -f $STATE_FILE ]]; then
+		rm -f "$STATE_FILE"
+	else
+		setsid -f hyprsunset -t "$WARM_TEMP" >/dev/null 2>&1
+		touch "$STATE_FILE"
+	fi
+
+	status
+}
+
+case $1 in
+	toggle) toggle ;;
+	status) status ;;
+	*)
+		printf '%s: %s <toggle|status>\n' "${0##*/}" "${0##*/}" >&2
+		exit 1
+		;;
+esac

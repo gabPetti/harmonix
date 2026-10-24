@@ -126,12 +126,6 @@ hl.window_rule({ match = { class = "^([Xx]dg-desktop-portal-gtk)$" }, float = tr
 -- ##===> Layer rules
 -- ############################################
 hl.layer_rule({
-  match = { namespace = "rofi" },
-  blur = true,
-  ignore_alpha = 0
-})
-
-hl.layer_rule({
   match = { namespace = "notifications" },
   blur = true,
   ignore_alpha = 0
@@ -149,10 +143,12 @@ hl.layer_rule({
   ignore_alpha = 0
 })
 
+-- The bar surface is transparent outside its rounded body; ignore_alpha keeps
+-- the blur from spilling into those margins.
 hl.layer_rule({
-  match = { namespace = "waybar" },
+  match = { namespace = "quickshell:bar" },
   blur = true,
-  ignore_alpha = 0
+  ignore_alpha = 0.1
 })
 
 hl.layer_rule({

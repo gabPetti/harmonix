@@ -1,0 +1,11 @@
+StyledText 1.0 StyledText.qml
+PercentLabel 1.0 PercentLabel.qml
+SectionLabel 1.0 SectionLabel.qml
+BarPill 1.0 BarPill.qml
+BarGroup 1.0 BarGroup.qml
+BarPopup 1.0 BarPopup.qml
+Tooltip 1.0 Tooltip.qml
+ValueSlider 1.0 ValueSlider.qml
+ToggleSwitch 1.0 ToggleSwitch.qml
+ListRow 1.0 ListRow.qml
+IconButton 1.0 IconButton.qml

@@ -31,23 +31,14 @@ hl.bind("CTRL + K", function()
 	end
 end, { auto_consuming = true })
 
--- ==> ROFI MENUS
-hl.bind("SUPER + A", hl.dsp.exec_cmd("rofi -show drun"), { description = "Open Rofi" })
+-- ==> QUICKSHELL LAUNCHER
+-- Both modes live in the same Quickshell window; these just ask it to open.
+hl.bind("SUPER + A", hl.dsp.exec_cmd("qs -c harmonix ipc call launcher apps"), { description = "Open app launcher" })
 hl.bind(
 	"SUPER + ALT + W",
-	hl.dsp.exec_cmd("sh /home/gabpetti/harmonix/modules/home/hyprland/config/scripts/rofi-wallpaper.sh"),
-	{ description = "Open wallpaper menu" }
+	hl.dsp.exec_cmd("qs -c harmonix ipc call launcher wallpapers"),
+	{ description = "Open wallpaper picker" }
 )
--- hl.bind(
--- 	"SUPER + ALT + T",
--- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/theme-selector.sh"),
--- 	{ description = "Open theme menu" }
--- )
--- hl.bind(
--- 	"SUPER + ALT + V",
--- 	hl.dsp.exec_cmd("sh " .. bin .. "/rofi-menus/clipboard-manager.sh"),
--- 	{ description = "Open clipboard manager" }
--- )
 hl.bind(
 	"SUPER + ALT + P",
 	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/power"),
