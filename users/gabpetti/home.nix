@@ -23,11 +23,9 @@
     ../../modules/home/cursor
     ../../modules/home/stremio
     ../../modules/home/intellij
-    ../../modules/home/swayosd
   ];
 
   services.playerctld.enable = true;
-  harmonix.swayosd.enable = true;
 
   home.stateVersion = "26.11";
 }
