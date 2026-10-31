@@ -8,15 +8,14 @@ import "../services"
 BarPill {
   id: root
 
-  readonly property int percent: Math.round(Power.percent)
   readonly property string remaining: Power.formatDuration(Power.secondsRemaining)
 
   visible: Power.hasBattery
   active: popup.visible
   fill: Power.percent / 100
-  tooltipText: root.remaining === "" ? `Battery ${root.percent}%`
-    : Power.charging ? `${root.percent}%  ·  ${root.remaining} until full`
-    : `${root.percent}%  ·  ${root.remaining} left`
+  tooltipText: root.remaining === "" ? `Battery ${Power.percent}%`
+    : Power.charging ? `${Power.percent}%  ·  ${root.remaining} until full`
+    : `${Power.percent}%  ·  ${root.remaining} left`
 
   onClicked: popup.toggle()
   onRightClicked: Power.cycleProfile()
@@ -37,7 +36,7 @@ BarPill {
   }
 
   PercentLabel {
-    value: root.percent
+    value: Power.percent
     color: Power.critical ? Colors.critical : Power.low ? Colors.warning : Colors.fg
   }
 
@@ -67,7 +66,7 @@ BarPill {
         spacing: 0
 
         StyledText {
-          text: `${root.percent}%`
+          text: `${Power.percent}%`
           font.pixelSize: Theme.fontSizeLarge
           font.weight: Font.DemiBold
         }

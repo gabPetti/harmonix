@@ -12,7 +12,13 @@ QtObject {
   readonly property bool hasBattery: root.battery?.isLaptopBattery ?? false
   readonly property bool charging: root.battery?.state === UPowerDeviceState.Charging
     || root.battery?.state === UPowerDeviceState.FullyCharged
-  readonly property real percent: root.battery?.percentage ?? 0
+  // UPower reports the charge as a 0..1 fraction; everything downstream --
+  // the thresholds below, the pill's fill, Icons.battery's ten steps -- works
+  // in whole percent, so the conversion belongs here rather than at each of
+  // them. Reading the fraction as a percentage is what pinned the bar at 1%
+  // and, since 0.97 is under both thresholds, left the icon permanently
+  // critical.
+  readonly property int percent: Math.round((root.battery?.percentage ?? 0) * 100)
   readonly property bool low: root.hasBattery && !root.charging && root.percent <= 20
   readonly property bool critical: root.hasBattery && !root.charging && root.percent <= 10
 
