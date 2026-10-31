@@ -9,11 +9,14 @@
 # Dependencies:
 #   - hyprpaper (hyprctl)
 #   - matugen
+#   - curl, jq (fetch only)
 #
 # Usage:
-#   wallpaper list       List every wallpaper in the directory, one per line
-#   wallpaper current    Print what the symlink currently resolves to
-#   wallpaper set PATH   Repoint the symlink at PATH and re-theme the session
+#   wallpaper list         List every wallpaper in the directory, one per line
+#   wallpaper current      Print what the symlink currently resolves to
+#   wallpaper set PATH     Repoint the symlink at PATH and re-theme the session
+#   wallpaper fetch [Q]    Download a wallpaper matching Q (default: a random
+#                          one of the themes below) and apply it
 
 set -euo pipefail
 
@@ -21,47 +24,104 @@ set -euo pipefail
 DIR="${HARMONIX_WALLPAPERS:-$HOME/harmonix/wallpapers}"
 LINK="$DIR/wallpaper"
 
+# What `fetch` looks for when it isn't given a query. One is drawn at random
+# per call: a single fixed query returns the same handful of images however
+# the API is sorted, where a register of related ones keeps the results
+# varied without wandering out of the theme.
+THEMES=(
+  "dark fantasy"
+  "medieval castle"
+)
+
 list() {
-	# The extension filter also keeps the extensionless symlink out of the list.
-	find -L "$DIR" -type f \
-		\( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) |
-		sort
+  # The extension filter also keeps the extensionless symlink out of the list.
+  find -L "$DIR" -type f \
+    \( -iname '*.png' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.webp' \) |
+    sort
 }
 
 current() {
-	if [[ -L $LINK ]]; then
-		readlink -f "$LINK"
-	fi
+  if [[ -L $LINK ]]; then
+    readlink -f "$LINK"
+  fi
 }
 
 apply() {
-	local target=$1
+  local target=$1
 
-	if [[ ! -f $target ]]; then
-		notify-send "Wallpaper" "No such file: $target"
-		exit 1
-	fi
+  if [[ ! -f $target ]]; then
+    notify-send "Wallpaper" "No such file: $target"
+    exit 1
+  fi
 
-	ln -sf "$target" "$LINK"
+  ln -sf "$target" "$LINK"
 
-	# hyprpaper resolves the symlink itself, so pointing it back at the same
-	# path picks up the new image. Only `wallpaper` is accepted over hyprctl in
-	# this build -- preload/unload/listloaded answer "invalid hyprpaper
-	# request" and a non-zero exit, which under `set -e` would abort here and
-	# leave the symlink changed but the screen untouched.
-	hyprctl hyprpaper wallpaper ",$LINK" >/dev/null
+  # hyprpaper resolves the symlink itself, so pointing it back at the same
+  # path picks up the new image. Only `wallpaper` is accepted over hyprctl in
+  # this build -- preload/unload/listloaded answer "invalid hyprpaper
+  # request" and a non-zero exit, which under `set -e` would abort here and
+  # leave the symlink changed but the screen untouched.
+  hyprctl hyprpaper wallpaper ",$LINK" >/dev/null
 
-	# Hand matugen the real file, not the symlink: `-m smart` needs an
-	# extension to work out the image format.
-	matugen image "$target" -m smart --prefer darkness -t scheme-content
+  # Hand matugen the real file, not the symlink: `-m smart` needs an
+  # extension to work out the image format.
+  matugen image "$target" -m smart --prefer darkness -t scheme-content
+}
+
+# Wallhaven's search API is open for SFW results, so there is no key to keep
+# out of the repo. categories=100 is "general" (no anime, no people) and
+# purity=100 is SFW; sorting=random is what makes the button worth pressing
+# twice.
+fetch() {
+  local query=${1:-${THEMES[RANDOM % ${#THEMES[@]}]}}
+  local json url dest
+
+  if ! json=$(curl -fsSL --get "https://wallhaven.cc/api/v1/search" \
+    --data-urlencode "q=$query" \
+    --data-urlencode "categories=100" \
+    --data-urlencode "purity=100" \
+    --data-urlencode "sorting=random" \
+    --data-urlencode "atleast=1920x1080" \
+    --data-urlencode "ratios=16x9"); then
+    notify-send "Wallpaper" "Could not reach Wallhaven"
+    exit 1
+  fi
+
+  url=$(jq -r '.data[0].path // empty' <<<"$json")
+
+  if [[ -z $url ]]; then
+    notify-send "Wallpaper" "Nothing found for \"$query\""
+    exit 1
+  fi
+
+  # Downloaded beside the rest so the picker lists it like any other, under
+  # Wallhaven's own filename (already "wallhaven-<id>.<ext>", which doubles
+  # as the credit) and written through a .part file so a half-finished
+  # download can never be picked up as a wallpaper.
+  dest="$DIR/$(basename "$url")"
+
+  if ! curl -fsSL -o "$dest.part" "$url"; then
+    rm -f "$dest.part"
+    notify-send "Wallpaper" "Download failed"
+    exit 1
+  fi
+
+  mv "$dest.part" "$dest"
+
+  # stdout is the path and nothing else -- that is what the caller reads
+  # back -- so hyprpaper's and matugen's chatter is dropped here. Their
+  # stderr is left alone, so a real failure still surfaces.
+  apply "$dest" >/dev/null
+  printf '%s\n' "$dest"
 }
 
 case ${1:-} in
-	list) list ;;
-	current) current ;;
-	set) apply "${2:?usage: wallpaper set PATH}" ;;
-	*)
-		printf 'usage: %s <list|current|set PATH>\n' "${0##*/}" >&2
-		exit 1
-		;;
+list) list ;;
+current) current ;;
+set) apply "${2:?usage: wallpaper set PATH}" ;;
+fetch) fetch "${2:-}" ;;
+*)
+  printf 'usage: %s <list|current|set PATH|fetch [QUERY]>\n' "${0##*/}" >&2
+  exit 1
+  ;;
 esac

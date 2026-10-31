@@ -18,6 +18,7 @@ QtObject {
   property var files: []
   property string current: ""
   property bool applying: false
+  property bool fetching: false
 
   readonly property Process lister: Process {
     command: [root.script, "list"]
@@ -49,6 +50,37 @@ QtObject {
       if (exitCode !== 0) console.warn("wallpaper: apply failed with exit code", exitCode);
       root.currentQuery.running = true;
     }
+  }
+
+  // Downloads a wallpaper from Wallhaven and applies it. The script owns the
+  // search and the download; this only reports that one is in flight, so the
+  // launcher can show the button spinning.
+  readonly property Process fetcher: Process {
+    command: [root.script, "fetch"]
+
+    stdout: StdioCollector {
+      onStreamFinished: {
+        if (text.trim() !== "") root.current = text.trim();
+      }
+    }
+
+    stderr: StdioCollector {
+      onStreamFinished: {
+        if (text.trim() !== "") console.warn("wallpaper fetch:", text.trim());
+      }
+    }
+
+    onExited: exitCode => {
+      root.fetching = false;
+      if (exitCode !== 0) console.warn("wallpaper: fetch failed with exit code", exitCode);
+      root.refresh();
+    }
+  }
+
+  function fetch() {
+    if (root.fetching) return;
+    root.fetching = true;
+    root.fetcher.running = true;
   }
 
   function refresh() {

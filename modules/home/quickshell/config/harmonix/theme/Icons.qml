@@ -26,6 +26,7 @@ QtObject {
   readonly property string calendar: "󰸗"
   readonly property string nightLight: "󰖔"
   readonly property string wallpaper: "󰋩"
+  readonly property string download: "󰇚"
   readonly property string wired: "󰈀"
   readonly property string wifiOff: "󰤮"
   readonly property string bluetoothOff: "󰂲"

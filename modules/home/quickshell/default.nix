@@ -12,6 +12,11 @@ in
     # else (audio, network, bluetooth, battery) goes through PipeWire,
     # NetworkManager, BlueZ and UPower directly.
     pkgs.brightnessctl
+    # The wallpaper script's `fetch`: Wallhaven's search API over curl, read
+    # with jq. Everything else it needs (hyprpaper, matugen) comes from the
+    # modules that own those.
+    pkgs.curl
+    pkgs.jq
   ];
 
   harmonix.configLinks."quickshell" = "quickshell";
