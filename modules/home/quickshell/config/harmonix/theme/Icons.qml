@@ -16,6 +16,13 @@ QtObject {
   readonly property string cpu: "󰍛"
   readonly property string ram: "󰘚"
   readonly property string disk: "󰋊"
+
+  // Material Symbols are ligatures, not codepoints: the font renders the
+  // name itself, so these are only meaningful on a Text whose family is
+  // Theme.symbolFont. The two names are the ones end-4's bar uses for the
+  // same dials (dots-hyprland, modules/ii/bar/Resources.qml).
+  readonly property string cpuSymbol: "planner_review"
+  readonly property string ramSymbol: "memory"
   readonly property string calendar: "󰸗"
   readonly property string nightLight: "󰖔"
   readonly property string wallpaper: "󰋩"

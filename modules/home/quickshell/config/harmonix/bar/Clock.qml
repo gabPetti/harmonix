@@ -33,7 +33,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 276
+    contentWidth: 332
 
     onVisibleChanged: {
       if (popup.visible) month.reset();

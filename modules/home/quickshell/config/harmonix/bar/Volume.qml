@@ -34,7 +34,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 300
+    contentWidth: 360
 
     SectionLabel {
       text: "Output"
@@ -42,7 +42,7 @@ BarPill {
 
     RowLayout {
       Layout.fillWidth: true
-      spacing: 8
+      spacing: Theme.popupGap
 
       IconButton {
         icon: Icons.volume(root.percent, Audio.muted)
@@ -74,7 +74,7 @@ BarPill {
     RowLayout {
       Layout.fillWidth: true
       visible: Audio.source !== null
-      spacing: 8
+      spacing: Theme.popupGap
 
       IconButton {
         icon: Audio.micMuted ? "󰍭" : "󰍬"

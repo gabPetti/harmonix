@@ -49,11 +49,19 @@ Item {
           : Colors.outlineSoft
 
         Behavior on width {
-          NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+          NumberAnimation {
+            duration: Theme.animNormal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Theme.easeStandard
+          }
         }
 
         Behavior on height {
-          NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+          NumberAnimation {
+            duration: Theme.animNormal
+            easing.type: Easing.BezierSpline
+            easing.bezierCurve: Theme.easeStandard
+          }
         }
 
         Behavior on color {

@@ -144,11 +144,30 @@ hl.layer_rule({
 })
 
 -- The bar surface is transparent outside its rounded body; ignore_alpha keeps
--- the blur from spilling into those margins.
+-- the blur from spilling into those margins. The threshold sits just under
+-- the fill's own alpha (quickshell Theme.barOpacity) so that only solid
+-- interior pixels blur: an antialiased edge pixel is half transparent, and
+-- blurring it showed the full-strength xray wallpaper through the gap -- a
+-- bright hairline tracing every rounded corner wherever the surface happened
+-- to sit over something dark. Lower this below the fill alpha and that white
+-- rim comes back; raise it above and the blur goes altogether.
+--
+-- xray makes both of them blur the wallpaper alone, ignoring windows beneath.
+-- Without it the bar and its dropdowns are the same fill over different
+-- backdrops -- the bar over wallpaper, a panel over whatever window it hangs
+-- across -- so a panel dropped over a dark window read as a darker material
+-- than the bar it grew out of.
 hl.layer_rule({
   match = { namespace = "quickshell:bar" },
   blur = true,
-  ignore_alpha = 0.1
+  blur_popups = true,
+  xray = true,
+  ignore_alpha = 0.85,
+  -- No fade on map: a panel's own drawer does the opening, and Hyprland's
+  -- fade would ramp the surface alpha from 0 with the blur already at full
+  -- strength -- so the first frames are mostly bright blurred wallpaper and
+  -- the panel flashes before settling into its fill.
+  no_anim = true
 })
 
 hl.layer_rule({

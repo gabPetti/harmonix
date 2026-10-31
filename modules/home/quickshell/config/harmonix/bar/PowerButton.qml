@@ -21,7 +21,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 190
+    contentWidth: 228
 
     ListRow {
       icon: Icons.lockScreen

@@ -152,11 +152,19 @@ PanelWindow {
     scale: 0.97
 
     Behavior on opacity {
-      NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+      NumberAnimation {
+        duration: Theme.animNormal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Theme.easeStandard
+      }
     }
 
     Behavior on scale {
-      NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+      NumberAnimation {
+        duration: Theme.animNormal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Theme.easeStandard
+      }
     }
 
     ColumnLayout {

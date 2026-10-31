@@ -77,7 +77,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 320
+    contentWidth: 384
 
     onVisibleChanged: {
       if (!popup.visible) {
@@ -88,7 +88,7 @@ BarPill {
 
     RowLayout {
       Layout.fillWidth: true
-      spacing: 8
+      spacing: Theme.popupGap
 
       SectionLabel {
         text: "Wi-Fi"
@@ -158,7 +158,7 @@ BarPill {
         anchors.fill: parent
         anchors.leftMargin: 10
         anchors.rightMargin: 6
-        spacing: 8
+        spacing: Theme.popupGap
 
         StyledText {
           text: Icons.lock

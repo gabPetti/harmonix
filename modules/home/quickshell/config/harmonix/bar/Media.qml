@@ -63,7 +63,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 320
+    contentWidth: 384
 
     RowLayout {
       Layout.fillWidth: true
@@ -130,7 +130,7 @@ BarPill {
     RowLayout {
       Layout.fillWidth: true
       visible: root.player?.lengthSupported ?? false
-      spacing: 8
+      spacing: Theme.popupGap
 
       StyledText {
         text: root.formatTime(root.position)
@@ -155,7 +155,7 @@ BarPill {
 
     RowLayout {
       Layout.fillWidth: true
-      spacing: 8
+      spacing: Theme.popupGap
 
       Item {
         Layout.fillWidth: true

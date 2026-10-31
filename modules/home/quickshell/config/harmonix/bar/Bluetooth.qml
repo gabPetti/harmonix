@@ -53,11 +53,13 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 320
+    contentWidth: 384
+
+    Component.onCompleted: popup.open()
 
     RowLayout {
       Layout.fillWidth: true
-      spacing: 8
+      spacing: Theme.popupGap
 
       SectionLabel {
         text: root.adapter?.discovering ? "Bluetooth  ·  scanning" : "Bluetooth"

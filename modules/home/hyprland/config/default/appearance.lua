@@ -78,8 +78,8 @@ hl.config({
 		-- same distance from the screen edge as the windows do. Change one and
 		-- change the other, or the gap above the bar stops matching the gap
 		-- below it.
-		gaps_out = 8,
-		border_size = 3,
+		gaps_out = 10,
+		border_size = 2,
 		-- col = {
 		-- 	active_border = {
 		-- 		colors = { colors.color1, colors.color2 },
@@ -95,7 +95,7 @@ hl.config({
 		},
 		screen_shader = shader_path,
 		dim_special = 0.3,
-		rounding = 10,
+		rounding = 16,
 		blur = {
 			special = true,
 			enabled = true,

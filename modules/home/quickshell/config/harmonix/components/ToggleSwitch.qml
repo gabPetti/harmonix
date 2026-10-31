@@ -29,7 +29,11 @@ Rectangle {
     color: root.checked ? Colors.accentFg : Colors.fg
 
     Behavior on x {
-      NumberAnimation { duration: Theme.animFast; easing.type: Easing.OutCubic }
+      NumberAnimation {
+        duration: Theme.animNormal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Theme.easeStandard
+      }
     }
   }
 

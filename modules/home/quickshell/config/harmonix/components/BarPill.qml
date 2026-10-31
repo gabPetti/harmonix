@@ -13,7 +13,10 @@ Rectangle {
   property bool active: false
   property bool interactive: true
   property int spacing: Theme.contentSpacing
-  // 0..1 draws a progress fill behind the content; negative disables it.
+  // Overridable because a pill whose content is a shape rather than text
+  // carries its own optical margin and needs less.
+  property int padding: Theme.pillPadding
+  // 0..1 draws a level rule under the content; negative disables it.
   property real fill: -1
 
   readonly property bool hovered: hover.hovered
@@ -25,10 +28,9 @@ Rectangle {
   signal scrolled(int direction)
 
   Layout.alignment: Qt.AlignVCenter
-  implicitWidth: row.implicitWidth + Theme.pillPadding * 2
+  implicitWidth: row.implicitWidth + root.padding * 2
   implicitHeight: Theme.pillHeight
   radius: height / 2
-  clip: root.fill >= 0
 
   color: !root.interactive ? "transparent"
     : root.active ? Colors.accentSoft
@@ -39,19 +41,36 @@ Rectangle {
     ColorAnimation { duration: Theme.animFast }
   }
 
+  // Level readout -- volume, brightness, charge. A rule under the content
+  // rather than a filled capsule behind it: with the group backgrounds gone
+  // a full-height fill was the only solid blob left in the bar, and it read
+  // as one. Inset to the content's own width so it tracks the text instead
+  // of the pill's hover area.
   Rectangle {
     visible: root.fill >= 0
     anchors {
       left: parent.left
-      top: parent.top
+      leftMargin: root.padding
       bottom: parent.bottom
+      // Below the pill rather than inside it. At the current icon size a
+      // glyph's descender reaches the pill's bottom edge, so a rule drawn
+      // inside would run into it; the gutter the pill is already inset by
+      // (pillInset) is free space, and sitting there reads as an indicator
+      // under the pill instead of an underline through the icon.
+      bottomMargin: -(Theme.levelGap + Theme.levelHeight)
     }
-    width: parent.width * Math.max(0, Math.min(1, root.fill))
-    radius: parent.radius
-    color: Colors.fillSoft
+    width: (parent.width - root.padding * 2) * Math.max(0, Math.min(1, root.fill))
+    height: Theme.levelHeight
+    radius: height / 2
+    color: Colors.accent
+    opacity: 0.7
 
     Behavior on width {
-      NumberAnimation { duration: Theme.animNormal; easing.type: Easing.OutCubic }
+      NumberAnimation {
+        duration: Theme.animNormal
+        easing.type: Easing.BezierSpline
+        easing.bezierCurve: Theme.easeStandard
+      }
     }
   }
 

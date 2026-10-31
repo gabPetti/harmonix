@@ -28,7 +28,7 @@ BarPill {
     id: popup
 
     anchorItem: root
-    contentWidth: 260
+    contentWidth: 312
 
     SectionLabel {
       text: "Brightness"
@@ -36,7 +36,7 @@ BarPill {
 
     RowLayout {
       Layout.fillWidth: true
-      spacing: 8
+      spacing: Theme.popupGap
 
       StyledText {
         text: Icons.brightness(Backlight.percent)

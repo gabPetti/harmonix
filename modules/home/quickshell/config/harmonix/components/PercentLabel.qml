@@ -9,13 +9,16 @@ StyledText {
   id: root
 
   property int value: 0
+  // Droppable, because a reading that already sits inside a dial doesn't need
+  // a unit spelled out next to it.
+  property string suffix: "%"
 
   Layout.preferredWidth: metrics.width
-  text: `${root.value}%`
+  text: `${root.value}${root.suffix}`
 
   TextMetrics {
     id: metrics
     font: root.font
-    text: "100%"
+    text: `100${root.suffix}`
   }
 }

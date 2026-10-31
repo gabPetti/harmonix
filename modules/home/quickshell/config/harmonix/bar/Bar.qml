@@ -46,7 +46,18 @@ PanelWindow {
     // border.color: Colors.outlineSoft
   }
 
+  // How much width the centre section actually has. The sides are anchored to
+  // the bar's edges and the centre to its middle, so the layout itself does
+  // nothing to stop the three meeting -- the centre gets twice the distance
+  // to whichever side is nearer, and anything expendable in it yields once
+  // that runs out.
+  readonly property real centerRoom: 2 * Math.max(0, Math.min(
+    bar.width / 2 - (leftRow.x + leftRow.width),
+    rightRow.x - bar.width / 2) - Theme.groupSpacing)
+
   RowLayout {
+    id: leftRow
+
     anchors {
       left: parent.left
       leftMargin: Theme.barMargin + Theme.barEndPadding
@@ -55,6 +66,8 @@ PanelWindow {
     spacing: Theme.groupSpacing
 
     BarGroup {
+      id: launchGroup
+
       LauncherButton {}
 
       Workspaces {
@@ -62,20 +75,52 @@ PanelWindow {
       }
     }
 
+    BarDivider {
+      before: launchGroup
+      after: windowGroup
+    }
+
     BarGroup {
+      id: windowGroup
+
       ActiveWindow {}
     }
   }
 
-  BarGroup {
+  // Media collapses when nothing is playing, so the clock drifts back to dead
+  // centre on its own -- which is why the divider has to track it.
+  RowLayout {
     anchors.centerIn: parent
+    spacing: Theme.groupSpacing
 
-    Media {}
+    BarGroup {
+      id: mediaGroup
 
-    Clock {}
+      // The clock is the one thing in the bar that has to stay put, so when
+      // the centre runs out of room the now-playing readout is what gives.
+      // Measured against implicitWidth rather than width so hiding the group
+      // can't feed back into the test that hid it.
+      shown: mediaGroup.implicitWidth + clockGroup.implicitWidth
+        + Theme.groupSpacing * 2 + 1 <= bar.centerRoom
+
+      Media {}
+    }
+
+    BarDivider {
+      before: mediaGroup
+      after: clockGroup
+    }
+
+    BarGroup {
+      id: clockGroup
+
+      Clock {}
+    }
   }
 
   RowLayout {
+    id: rightRow
+
     anchors {
       right: parent.right
       rightMargin: Theme.barMargin + Theme.barEndPadding
@@ -84,34 +129,49 @@ PanelWindow {
     spacing: Theme.groupSpacing
 
     BarGroup {
+      id: trayGroup
+
       Tray {}
     }
 
-    BarGroup {
-      Cpu {}
+    BarDivider {
+      before: trayGroup
+      after: resourceGroup
     }
 
     BarGroup {
+      id: resourceGroup
+
+      Cpu {}
+
       Ram {}
-    }
-    
-    BarGroup {
+
       Disk {}
     }
 
+    BarDivider {
+      before: resourceGroup
+      after: toggleGroup
+    }
+
     BarGroup {
+      id: toggleGroup
+
       NightLightToggle {}
-    }
 
-    BarGroup {
       Brightness {}
-    }
 
-    BarGroup {
       Volume {}
     }
 
+    BarDivider {
+      before: toggleGroup
+      after: systemGroup
+    }
+
     BarGroup {
+      id: systemGroup
+
       Network {}
 
       Bluetooth {}
