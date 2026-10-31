@@ -26,10 +26,17 @@ BarPill {
   // The network waiting on a password, if any.
   property var pskTarget: null
 
+  // Quickshell reports signal strength as a 0..1 fraction; the readouts and
+  // Icons.wifi's four bars both work in whole percent. Reading the fraction
+  // as a percentage is what pinned every network at 0% or 1%.
+  function strength(network) {
+    return Math.round((network?.signalStrength ?? 0) * 100);
+  }
+
   active: popup.visible
   tooltipText: root.wiredUp ? `Wired  ·  ${root.wiredDevice.address}`
     : !root.wifiOn ? "Wi-Fi off"
-    : root.activeWifi ? `${root.activeWifi.name}  ·  ${Math.round(root.activeWifi.signalStrength)}%`
+    : root.activeWifi ? `${root.activeWifi.name}  ·  ${root.strength(root.activeWifi)}%`
     : "Not connected"
 
   onClicked: popup.toggle()
@@ -67,7 +74,7 @@ BarPill {
   StyledText {
     text: root.wiredUp ? Icons.wired
       : !root.wifiOn ? Icons.wifiOff
-      : root.activeWifi ? Icons.wifi(root.activeWifi.signalStrength)
+      : root.activeWifi ? Icons.wifi(root.strength(root.activeWifi))
       : Icons.wifi(0)
     color: root.wiredUp || root.activeWifi ? Colors.fg : Colors.outline
     font.pixelSize: Theme.iconSize
@@ -87,18 +94,10 @@ BarPill {
       }
     }
 
-    RowLayout {
-      Layout.fillWidth: true
-      spacing: Theme.popupGap
-
-      SectionLabel {
-        text: "Wi-Fi"
-      }
-
-      ToggleSwitch {
-        checked: root.wifiOn
-        onToggled: Net.Networking.wifiEnabled = !root.wifiOn
-      }
+    SectionToggle {
+      text: "Wi-Fi"
+      checked: root.wifiOn
+      onToggled: Net.Networking.wifiEnabled = !root.wifiOn
     }
 
     ListRow {
@@ -129,14 +128,14 @@ BarPill {
 
         active: modelData.connected
         busy: modelData.stateChanging
-        icon: Icons.wifi(modelData.signalStrength)
+        icon: Icons.wifi(root.strength(modelData))
         title: modelData.name || "(hidden)"
         subtitle: modelData.connected ? "Connected"
           : modelData.known ? "Saved"
           : modelData.security === Net.WifiSecurityType.Open ? "Open" : ""
         trailing: modelData.security === Net.WifiSecurityType.Open
-          ? `${Math.round(modelData.signalStrength)}%`
-          : `${Icons.lock} ${Math.round(modelData.signalStrength)}%`
+          ? `${root.strength(modelData)}%`
+          : `${Icons.lock} ${root.strength(modelData)}%`
         onClicked: root.activate(modelData)
         onRightClicked: {
           if (modelData.known) modelData.forget();

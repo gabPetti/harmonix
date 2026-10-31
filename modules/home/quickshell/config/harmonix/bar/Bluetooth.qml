@@ -56,19 +56,11 @@ BarPill {
     panelId: "bluetooth"
     contentWidth: 384
 
-    RowLayout {
-      Layout.fillWidth: true
-      spacing: Theme.popupGap
-
-      SectionLabel {
-        text: root.adapter?.discovering ? "Bluetooth  ·  scanning" : "Bluetooth"
-      }
-
-      ToggleSwitch {
-        checked: root.enabled
-        onToggled: {
-          if (root.adapter) root.adapter.enabled = !root.enabled;
-        }
+    SectionToggle {
+      text: root.adapter?.discovering ? "Bluetooth  ·  scanning" : "Bluetooth"
+      checked: root.enabled
+      onToggled: {
+        if (root.adapter) root.adapter.enabled = !root.enabled;
       }
     }
 

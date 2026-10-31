@@ -10,7 +10,6 @@ QtObject {
   // Percentages, 0..100.
   property real cpu: 0
   property real memory: 0
-  property real swap: 0
 
   property real memoryUsedGb: 0
   property real memoryTotalGb: 0
@@ -91,10 +90,6 @@ QtObject {
       root.memoryTotalGb = total / 1048576;
       root.memoryUsedGb = (total - available) / 1048576;
     }
-
-    const swapTotal = values.SwapTotal ?? 0;
-    const swapFree = values.SwapFree ?? 0;
-    root.swap = swapTotal > 0 ? 100 * (1 - swapFree / swapTotal) : 0;
   }
 
   function _updateDisk(content) {

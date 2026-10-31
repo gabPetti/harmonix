@@ -7,7 +7,6 @@ BarPill {
   id: root
 
   active: NightLight.active
-  tooltipText: NightLight.active ? "Night light on" : "Night light off"
 
   onClicked: NightLight.toggle()
 

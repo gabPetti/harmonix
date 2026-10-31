@@ -7,7 +7,6 @@ BarPill {
   id: root
 
   active: popup.visible
-  tooltipText: "Session"
 
   onClicked: popup.toggle()
 

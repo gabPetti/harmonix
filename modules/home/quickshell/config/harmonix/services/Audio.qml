@@ -10,13 +10,10 @@ QtObject {
   readonly property PwNode sink: Pipewire.defaultAudioSink
   readonly property PwNode source: Pipewire.defaultAudioSource
 
-  readonly property bool ready: root.sink?.ready ?? false
   readonly property real volume: root.sink?.audio?.volume ?? 0
   readonly property bool muted: root.sink?.audio?.muted ?? false
   readonly property real micVolume: root.source?.audio?.volume ?? 0
   readonly property bool micMuted: root.source?.audio?.muted ?? false
-
-  readonly property string sinkName: root.sink?.nickname || root.sink?.description || root.sink?.name || "No output"
 
   // Every real audio sink, for the output picker in the volume popup.
   readonly property list<var> sinks: Pipewire.nodes.values.filter(node => node.isSink && !node.isStream && node.audio)

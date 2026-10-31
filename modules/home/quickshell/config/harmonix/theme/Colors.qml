@@ -24,7 +24,6 @@ QtObject {
 
   // Translucent derivations, so widgets don't each invent their own alpha.
   readonly property color accentSoft: Qt.alpha(accent, 0.18)
-  readonly property color fillSoft: Qt.alpha(accent, 0.09)
   readonly property color hoverSoft: Qt.alpha(hoverBg, 0.55)
   readonly property color outlineSoft: Qt.alpha(outline, 0.35)
 

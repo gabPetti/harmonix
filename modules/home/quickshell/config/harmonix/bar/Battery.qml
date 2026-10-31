@@ -9,20 +9,19 @@ BarPill {
   id: root
 
   readonly property string remaining: Power.formatDuration(Power.secondsRemaining)
+  // Warning and critical colouring, which the icon and the readout share.
+  readonly property color tone: Power.critical ? Colors.critical : Power.low ? Colors.warning : Colors.fg
 
   visible: Power.hasBattery
   active: popup.visible
   fill: Power.percent / 100
-  tooltipText: root.remaining === "" ? `Battery ${Power.percent}%`
-    : Power.charging ? `${Power.percent}%  ·  ${root.remaining} until full`
-    : `${Power.percent}%  ·  ${root.remaining} left`
 
   onClicked: popup.toggle()
   onRightClicked: Power.cycleProfile()
 
   StyledText {
     text: Icons.battery(Power.percent, Power.charging)
-    color: Power.critical ? Colors.critical : Power.low ? Colors.warning : Colors.fg
+    color: root.tone
     font.pixelSize: Theme.iconSize
 
     SequentialAnimation on opacity {
@@ -37,7 +36,7 @@ BarPill {
 
   PercentLabel {
     value: Power.percent
-    color: Power.critical ? Colors.critical : Power.low ? Colors.warning : Colors.fg
+    color: root.tone
   }
 
   BarPopup {
@@ -57,7 +56,7 @@ BarPill {
 
       StyledText {
         text: Icons.battery(Power.percent, Power.charging)
-        color: Power.critical ? Colors.critical : Power.low ? Colors.warning : Colors.accent
+        color: Power.low ? root.tone : Colors.accent
         font.pixelSize: 26
       }
 

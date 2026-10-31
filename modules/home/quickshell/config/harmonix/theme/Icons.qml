@@ -8,13 +8,10 @@ QtObject {
   readonly property string distro: "󱄅"
   readonly property string search: "󰍉"
   readonly property string apps: "󰀻"
-  readonly property string close: "󰅖"
   readonly property string check: "󰄬"
   readonly property string chevronLeft: "󰅁"
   readonly property string chevronRight: "󰅂"
   readonly property string lock: "󰌾"
-  readonly property string cpu: "󰍛"
-  readonly property string ram: "󰘚"
   readonly property string disk: "󰋊"
 
   // Material Symbols are ligatures, not codepoints: the font renders the
@@ -32,6 +29,8 @@ QtObject {
   readonly property string bluetoothOff: "󰂲"
   readonly property string bluetoothOn: "󰂯"
   readonly property string bluetoothConnected: "󰂱"
+  readonly property string mic: "󰍬"
+  readonly property string micMuted: "󰍭"
   readonly property string note: "󰎆"
   readonly property string play: "󰐊"
   readonly property string pause: "󰏤"

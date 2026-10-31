@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 import "../theme"
 import "../components"
 import "../services"
@@ -12,7 +11,6 @@ BarPill {
 
   active: popup.visible
   fill: Audio.muted ? 0 : Audio.volume
-  tooltipText: Audio.muted ? "Muted" : `${Audio.sinkName}  ·  ${root.percent}%`
 
   onClicked: popup.toggle()
   onRightClicked: Audio.toggleMute()
@@ -41,30 +39,14 @@ BarPill {
       text: "Output"
     }
 
-    RowLayout {
-      Layout.fillWidth: true
-      spacing: Theme.popupGap
-
-      IconButton {
-        icon: Icons.volume(root.percent, Audio.muted)
-        active: Audio.muted
-        accentColor: Colors.critical
-        size: 30
-        onClicked: Audio.toggleMute()
-      }
-
-      ValueSlider {
-        value: Audio.volume
-        fillColor: Audio.muted ? Colors.outline : Colors.accent
-        onMoved: target => Audio.setVolume(target)
-      }
-
-      StyledText {
-        Layout.minimumWidth: 38
-        horizontalAlignment: Text.AlignRight
-        text: `${root.percent}%`
-        color: Colors.fgDim
-      }
+    SliderRow {
+      toggleable: true
+      icon: Icons.volume(root.percent, Audio.muted)
+      muted: Audio.muted
+      value: Audio.volume
+      label: `${root.percent}%`
+      onToggled: Audio.toggleMute()
+      onMoved: target => Audio.setVolume(target)
     }
 
     SectionLabel {
@@ -72,31 +54,15 @@ BarPill {
       text: "Input"
     }
 
-    RowLayout {
-      Layout.fillWidth: true
+    SliderRow {
       visible: Audio.source !== null
-      spacing: Theme.popupGap
-
-      IconButton {
-        icon: Audio.micMuted ? "󰍭" : "󰍬"
-        active: Audio.micMuted
-        accentColor: Colors.critical
-        size: 30
-        onClicked: Audio.toggleMicMute()
-      }
-
-      ValueSlider {
-        value: Audio.micVolume
-        fillColor: Audio.micMuted ? Colors.outline : Colors.accent
-        onMoved: target => Audio.setMicVolume(target)
-      }
-
-      StyledText {
-        Layout.minimumWidth: 38
-        horizontalAlignment: Text.AlignRight
-        text: `${root.micPercent}%`
-        color: Colors.fgDim
-      }
+      toggleable: true
+      icon: Audio.micMuted ? Icons.micMuted : Icons.mic
+      muted: Audio.micMuted
+      value: Audio.micVolume
+      label: `${root.micPercent}%`
+      onToggled: Audio.toggleMicMute()
+      onMoved: target => Audio.setMicVolume(target)
     }
 
     SectionLabel {

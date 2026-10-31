@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 import "../theme"
 
 // Round glyph button used inside popups (media transport, power actions).
