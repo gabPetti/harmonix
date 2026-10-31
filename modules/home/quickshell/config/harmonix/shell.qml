@@ -20,7 +20,12 @@ ShellRoot {
     }
   }
 
-  Launcher {}
+  // Two separate windows, one per mode: the app list is a search field with
+  // a list under it, the wallpaper picker is a grid driven by hjkl. Only the
+  // one matching LauncherState.mode is mapped.
+  AppLauncher {}
+
+  WallpaperPicker {}
 
   // Hyprland keybinds reach a bar panel through this, e.g.
   //   qs -c harmonix ipc call panels toggle bluetooth

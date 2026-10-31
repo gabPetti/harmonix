@@ -34,6 +34,20 @@ QtObject {
     return Math.max(total, 0.01);
   }
 
+  // Everything in `items` that matches, best first. `fields` turns one item
+  // into the strings worth matching against.
+  function rank(items, fields, query) {
+    const scored = [];
+
+    for (const item of items) {
+      const score = scoreAny(fields(item), query);
+      if (score > 0) scored.push({ item, score });
+    }
+
+    scored.sort((a, b) => b.score - a.score);
+    return scored.map(entry => entry.item);
+  }
+
   // Best score across several fields (name, generic name, keywords...).
   function scoreAny(fields, query) {
     let best = 0;
