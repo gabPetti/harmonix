@@ -63,6 +63,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "media"
     contentWidth: 384
 
     RowLayout {

@@ -21,6 +21,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "power"
     contentWidth: 228
 
     ListRow {

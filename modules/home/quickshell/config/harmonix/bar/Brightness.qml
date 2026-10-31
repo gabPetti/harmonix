@@ -28,6 +28,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "brightness"
     contentWidth: 312
 
     SectionLabel {

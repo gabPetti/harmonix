@@ -15,12 +15,23 @@ Rectangle {
 
   readonly property bool hovered: hover.hovered
 
+  // See ListRow: the same two properties are what the popup's hjkl
+  // navigation looks for.
+  readonly property bool navigable: true
+  property bool selected: false
+
   signal clicked
+
+  function activate(): void {
+    root.clicked();
+  }
 
   implicitWidth: root.size
   implicitHeight: root.size
   radius: width / 2
-  color: root.hovered ? Colors.hoverSoft : root.active ? Colors.accentSoft : Qt.alpha(Colors.bg1, 0.5)
+  color: root.hovered || root.selected ? Colors.hoverSoft : root.active ? Colors.accentSoft : Qt.alpha(Colors.bg1, 0.5)
+  border.width: root.selected ? 1 : 0
+  border.color: Colors.accent
 
   Behavior on color {
     ColorAnimation { duration: Theme.animFast }

@@ -12,7 +12,17 @@ Item {
   property color fillColor: Colors.accent
   property real step: 0.05
 
+  // See ListRow. This is the one component that answers h and l: with a
+  // slider selected they move the value rather than the selection, which is
+  // what makes volume and brightness adjustable from the keyboard.
+  readonly property bool navigable: true
+  property bool selected: false
+
   signal moved(real target)
+
+  function adjust(direction: int): void {
+    root.moved(Math.max(0, Math.min(1, root.value + direction * root.step)));
+  }
 
   Layout.fillWidth: true
   implicitHeight: 18
@@ -45,7 +55,7 @@ Item {
     height: 12
     radius: 6
     color: root.fillColor
-    scale: area.containsMouse || area.pressed ? 1.3 : 1
+    scale: area.containsMouse || area.pressed || root.selected ? 1.3 : 1
 
     Behavior on scale {
       NumberAnimation { duration: Theme.animFast }

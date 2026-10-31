@@ -77,6 +77,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "network"
     contentWidth: 384
 
     onVisibleChanged: {

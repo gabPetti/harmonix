@@ -53,9 +53,8 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "bluetooth"
     contentWidth: 384
-
-    Component.onCompleted: popup.open()
 
     RowLayout {
       Layout.fillWidth: true

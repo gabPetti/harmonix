@@ -33,6 +33,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "calendar"
     contentWidth: 332
 
     onVisibleChanged: {

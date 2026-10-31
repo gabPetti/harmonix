@@ -17,13 +17,25 @@ Rectangle {
 
   readonly property bool hovered: area.containsMouse
 
+  // Reachable by the popup's hjkl navigation (components/BarPopup.qml), and
+  // `selected` is where that navigation currently is -- drawn like a hover so
+  // the keyboard cursor and the pointer read the same.
+  readonly property bool navigable: true
+  property bool selected: false
+
   signal clicked
   signal rightClicked
+
+  function activate(): void {
+    root.clicked();
+  }
 
   Layout.fillWidth: true
   implicitHeight: root.subtitle === "" ? 34 : 44
   radius: 10
-  color: root.hovered ? Colors.hoverSoft : root.active ? Colors.accentSoft : "transparent"
+  color: root.hovered || root.selected ? Colors.hoverSoft : root.active ? Colors.accentSoft : "transparent"
+  border.width: root.selected ? 1 : 0
+  border.color: Colors.accent
 
   Behavior on color {
     ColorAnimation { duration: Theme.animFast }

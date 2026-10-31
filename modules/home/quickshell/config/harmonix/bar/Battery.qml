@@ -45,6 +45,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "battery"
     contentWidth: 324
 
     SectionLabel {

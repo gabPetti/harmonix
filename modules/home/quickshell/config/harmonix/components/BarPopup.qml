@@ -28,6 +28,9 @@ PanelWindow {
   property Item anchorItem: null
   property int contentWidth: Theme.popupWidth
   property int padding: Theme.popupPadding
+  // Name a panel answers to over IPC, so a Hyprland keybind can open it
+  // (services/Panels.qml, shell.qml). Panels without one are mouse-only.
+  property string panelId: ""
 
   default property alias content: column.data
 
@@ -67,7 +70,13 @@ PanelWindow {
   // mapToItem ten times a second, and only while something is open.
   onAnchorItemChanged: root.updateAnchor()
 
-  Component.onCompleted: root.updateAnchor()
+  Component.onCompleted: {
+    root.updateAnchor();
+    if (root.panelId !== "")
+      Panels.register(root);
+  }
+
+  Component.onDestruction: Panels.unregister(root)
 
   Timer {
     running: root.visible
@@ -81,9 +90,10 @@ PanelWindow {
 
   WlrLayershell.layer: WlrLayer.Top
   WlrLayershell.namespace: "quickshell:bar"
-  // Pointer events still arrive; the panel has no text input to focus, and
-  // taking the keyboard would pull it off the window underneath.
-  WlrLayershell.keyboardFocus: WlrKeyboardFocus.None
+  // Taken only while a panel is actually open, so the window underneath keeps
+  // the keyboard the rest of the time. Exclusive rather than on-demand: the
+  // panel is a menu, and hjkl has to reach it without a click first.
+  WlrLayershell.keyboardFocus: root.shouldShow ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
   // Ignore every exclusive zone rather than merely reserving none of its own:
   // the bar reserves barMargin + barHeight, and a panel that respects that
   // would have its top margin measured from the bottom of the reservation --
@@ -123,9 +133,119 @@ PanelWindow {
   }
 
   onShouldShowChanged: {
-    if (root.shouldShow)
+    if (root.shouldShow) {
       root.updateAnchor();
+      // Deferred: on a panel's first open its content hasn't been laid out
+      // yet, and the walk orders items by where they sit.
+      Qt.callLater(root.navFirst);
+    } else {
+      root.navSelect(null);
+    }
     root.extension = root.shouldShow ? 1 : 0;
+  }
+
+  // --- keyboard ----------------------------------------------------------
+  //
+  // j and k walk the panel's interactive pieces in reading order, h and l
+  // drive whatever the selection can adjust -- a volume or brightness slider
+  // -- Enter acts on it, and q or Escape closes. A piece joins the walk by
+  // declaring `navigable` and a `selected` flag; see components/ListRow.qml.
+  property Item navItem: null
+
+  // Rebuilt on every keypress rather than cached: these panels list networks,
+  // devices and sinks that appear and disappear underneath the selection.
+  function navItems(): var {
+    const found = [];
+    const walk = item => {
+      for (const child of item.children) {
+        if (!child.visible)
+          continue;
+        if (child.navigable === true)
+          found.push(child);
+        walk(child);
+      }
+    };
+    walk(column);
+    found.sort((a, b) => {
+      const pa = a.mapToItem(column, 0, 0);
+      const pb = b.mapToItem(column, 0, 0);
+      // Down the panel first, then across -- but only count a difference in
+      // y as a different row, or two things side by side in one row would
+      // sort by a pixel of mismatched baseline.
+      return Math.abs(pa.y - pb.y) > 2 ? pa.y - pb.y : pa.x - pb.x;
+    });
+    return found;
+  }
+
+  // Opening a panel puts the cursor on its first item, so j/k and Enter have
+  // somewhere to start without a keypress to get there.
+  function navFirst(): void {
+    const items = root.navItems();
+    root.navSelect(items.length > 0 ? items[0] : null);
+  }
+
+  function navSelect(item: Item): void {
+    root.navItem = item;
+    for (const candidate of root.navItems())
+      candidate.selected = candidate === item;
+  }
+
+  function navMove(delta: int): void {
+    const items = root.navItems();
+    if (items.length === 0)
+      return;
+    const at = items.indexOf(root.navItem);
+    // Nothing selected yet: j starts at the top of the panel, k at the end.
+    root.navSelect(at === -1 ? items[delta > 0 ? 0 : items.length - 1] : items[Math.max(0, Math.min(items.length - 1, at + delta))]);
+  }
+
+  function navAdjust(direction: int): void {
+    if (root.navItem && root.navItem.adjust)
+      root.navItem.adjust(direction);
+  }
+
+  function navActivate(): void {
+    if (root.navItem && root.navItem.activate)
+      root.navItem.activate();
+  }
+
+  Item {
+    anchors.fill: parent
+    focus: true
+
+    Keys.onPressed: event => {
+      switch (event.key) {
+      case Qt.Key_Escape:
+      case Qt.Key_Q:
+        root.close();
+        break;
+      case Qt.Key_J:
+      case Qt.Key_Down:
+        root.navMove(1);
+        break;
+      case Qt.Key_K:
+      case Qt.Key_Up:
+        root.navMove(-1);
+        break;
+      case Qt.Key_L:
+      case Qt.Key_Right:
+        root.navAdjust(1);
+        break;
+      case Qt.Key_H:
+      case Qt.Key_Left:
+        root.navAdjust(-1);
+        break;
+      case Qt.Key_Return:
+      case Qt.Key_Enter:
+      case Qt.Key_Space:
+        root.navActivate();
+        break;
+      default:
+        // Anything the panel has no use for stays unaccepted.
+        return;
+      }
+      event.accepted = true;
+    }
   }
 
   Behavior on extension {

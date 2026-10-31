@@ -22,6 +22,21 @@ ShellRoot {
 
   Launcher {}
 
+  // Hyprland keybinds reach a bar panel through this, e.g.
+  //   qs -c harmonix ipc call panels toggle bluetooth
+  // The id is the panel's own panelId; the one on the focused monitor wins.
+  IpcHandler {
+    target: "panels"
+
+    function toggle(id: string): void {
+      Panels.toggleNamed(id);
+    }
+
+    function close(): void {
+      Panels.close();
+    }
+  }
+
   // Hyprland keybinds reach the launcher through this, e.g.
   //   qs -c harmonix ipc call launcher apps
   IpcHandler {

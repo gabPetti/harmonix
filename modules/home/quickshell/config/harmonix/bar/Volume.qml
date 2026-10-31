@@ -34,6 +34,7 @@ BarPill {
     id: popup
 
     anchorItem: root
+    panelId: "volume"
     contentWidth: 360
 
     SectionLabel {

@@ -39,20 +39,35 @@ hl.bind(
 	hl.dsp.exec_cmd("qs -c harmonix ipc call launcher wallpapers"),
 	{ description = "Open wallpaper picker" }
 )
+
+-- ==> QUICKSHELL BAR PANELS
+-- The dropdowns the bar itself owns, by the panelId each one declares. The
+-- panel opens on whichever monitor has focus, and the same bind closes it;
+-- once open it takes the keyboard, so hjkl walks it and q leaves.
 hl.bind(
 	"SUPER + ALT + P",
-	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/power"),
-	{ description = "Open power manager" }
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle power"),
+	{ description = "Toggle power panel" }
 )
 hl.bind(
 	"SUPER + ALT + N",
-	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/network menu"),
-	{ description = "Open network manager" }
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle network"),
+	{ description = "Toggle network panel" }
 )
 hl.bind(
 	"SUPER + ALT + B",
-	hl.dsp.exec_cmd("kitty -e " .. scripts_path .. "/bluetooth menu"),
-	{ description = "Open bluetooth manager" }
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle bluetooth"),
+	{ description = "Toggle bluetooth panel" }
+)
+hl.bind(
+	"SUPER + ALT + C",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle calendar"),
+	{ description = "Toggle calendar panel" }
+)
+hl.bind(
+	"SUPER + ALT + V",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle volume"),
+	{ description = "Toggle volume panel" }
 )
 
 -- ==> SYSTEM CONTROLS
