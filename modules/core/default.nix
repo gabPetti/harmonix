@@ -7,6 +7,7 @@
     ./boot.nix
     ./display-manager.nix
     ./firewall.nix
+    ./flatpak.nix
     ./fonts.nix
     ./git.nix
     ./internationalisation.nix
