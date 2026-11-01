@@ -30,6 +30,10 @@ output_path = '~/.config/gtk-4.0/matugen-colors.css'
 input_path = '~/.config/matugen/templates/yazi-colors.toml'
 output_path = '~/.config/yazi/theme.toml'
 
+[templates.zathura]
+input_path = '~/.config/matugen/templates/zathura-colors.conf'
+output_path = '~/.config/zathura/matugen-colors.conf'
+
 [templates.swaync]
 input_path = '~/.config/matugen/templates/swaync-colors.css'
 output_path = '~/.config/swaync/matugen-colors.css'

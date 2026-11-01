@@ -1,11 +1,9 @@
-{ ... }:
+{ pkgs, ... }:
 
 {
-  programs.zathura = {
-    enable = true;
-    options = {
-      selection-clipboard = "clipboard";
-      recolor = "true"; # Toggle dark mode dynamically
-    };
-  };
+  home.packages = with pkgs; [
+    zathura
+  ];
+
+  harmonix.configLinks."zathura" = "zathura";
 }
