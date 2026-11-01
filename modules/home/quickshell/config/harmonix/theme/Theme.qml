@@ -40,6 +40,29 @@ QtObject {
   readonly property int pillHeight: groupHeight - pillInset * 2
   readonly property int pillPadding: 12
 
+  // Workspace dots. The row is drawn at a fixed length -- a dot per
+  // workspace up to workspaceCount whether Hyprland has created it or not --
+  // so that switching workspaces never shifts everything to its right.
+  readonly property int workspaceCount: 5
+  readonly property int workspaceDot: 10
+  // Empty workspaces read as a smaller dot, the focused one as a stretched
+  // one; only the width grows, so the row stays on one centreline.
+  readonly property int workspaceDotEmpty: 8
+  readonly property int workspaceDotActive: 24
+  readonly property int workspaceDotSpacing: 5
+  // How far the dots blur back behind a special workspace's name. Capped by
+  // the padding around the row, since a layer's blur is clipped to its
+  // item's bounds and would otherwise end in a visible straight edge.
+  readonly property int workspaceBlur: 12
+  // How far the dots drop back while the special workspace's name sits over
+  // them. Blur alone leaves the focused dot bright enough to fight the label
+  // for the same pixels, since both are drawn in the accent colour.
+  readonly property real workspaceSpecialDim: 0.45
+  // The chip carrying the special workspace's name. Short of pillHeight so
+  // it reads as something laid over the dots rather than as another pill in
+  // the group's own lane.
+  readonly property int specialChipHeight: fontSizeSmall + pillInset * 2
+
   // The level rule under a volume/brightness/battery pill. Thin enough to
   // read as an underline rather than as a second background.
   readonly property int levelHeight: 2
