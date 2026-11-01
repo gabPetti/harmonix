@@ -20,6 +20,10 @@ QtObject {
   // same dials (dots-hyprland, modules/ii/bar/Resources.qml).
   readonly property string cpuSymbol: "planner_review"
   readonly property string ramSymbol: "memory"
+  // The media panel's relative seek, used when the player publishes no track
+  // length to lay a scrub bar over.
+  readonly property string seekBackSymbol: "replay_10"
+  readonly property string seekForwardSymbol: "forward_10"
   readonly property string calendar: "󰸗"
   readonly property string nightLight: "󰖔"
   readonly property string wallpaper: "󰋩"

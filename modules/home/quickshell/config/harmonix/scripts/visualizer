@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#
+# Spectrum source for the bar's music visualizer.
+#
+# cava is the only thing here that can see the audio: Quickshell's PipeWire
+# bindings report volumes and devices, not samples, so there is nothing to run
+# an FFT over on the QML side. This wraps it into a line protocol the shell can
+# read -- one frame per line, `bars` levels of 0-100 separated by semicolons.
+#
+# Dependencies:
+#   - cava
+#
+# Usage:
+#   visualizer [BARS]      Stream frames until killed (default: 12 bars)
+
+set -euo pipefail
+
+BARS="${1:-12}"
+
+# cava only takes its settings from a file, so one is written per run rather
+# than shipped: the bar count is the shell's to decide, not this script's.
+# A fixed path in the runtime dir keeps it from accumulating temp files --
+# the directory is cleared when the session ends.
+CONFIG="${XDG_RUNTIME_DIR:-/tmp}/harmonix-cava.conf"
+
+cat > "$CONFIG" <<EOF
+[general]
+# Matched to the compositor rather than to cava's 60 default: frames the
+# shell never gets to draw are just wakeups on a laptop battery.
+framerate = 60
+bars = $BARS
+# Rescale to whatever is currently playing, so quiet tracks still move.
+autosens = 1
+
+[input]
+method = pulse
+source = auto
+
+[output]
+method = raw
+raw_target = /dev/stdout
+data_format = ascii
+# One frame per line, semicolon between bars -- ASCII rather than binary
+# because the shell reads this as text.
+ascii_max_range = 100
+bar_delimiter = 59
+frame_delimiter = 10
+EOF
+
+exec cava -p "$CONFIG"

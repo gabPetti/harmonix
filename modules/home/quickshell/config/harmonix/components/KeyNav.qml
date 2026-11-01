@@ -4,6 +4,10 @@ import QtQuick
 // in reading order, h and l drive whatever the selection can adjust (a volume
 // or brightness slider), Enter acts on it, q and Escape leave.
 //
+// A panel whose h and l mean something on their own -- the media panel, where
+// they step tracks -- sets `fallbackAdjust`, which takes the keypress
+// whenever the selected item has nothing of its own to vary.
+//
 // A piece joins the walk by declaring `navigable` and a `selected` flag, and
 // answering `activate()` or `adjust(direction)` -- see components/ListRow.qml.
 // Nothing here knows what any of them are.
@@ -12,6 +16,9 @@ Item {
 
   property Item container: null
   property Item current: null
+  // function(direction) run when h or l lands on an item that doesn't
+  // implement adjust(). Null leaves those keys inert, as before.
+  property var fallbackAdjust: null
 
   signal dismissed
 
@@ -65,6 +72,15 @@ Item {
     root.select(found.length > 0 ? found[0] : null);
   }
 
+  // h and l: the selected item first -- a slider must keep them -- then the
+  // panel's own meaning for them.
+  function adjust(direction: int): void {
+    if (root.current?.adjust)
+      root.current.adjust(direction);
+    else if (root.fallbackAdjust)
+      root.fallbackAdjust(direction);
+  }
+
   function move(delta: int): void {
     const found = root.items();
     if (found.length === 0)
@@ -92,11 +108,11 @@ Item {
       break;
     case Qt.Key_L:
     case Qt.Key_Right:
-      root.current?.adjust?.(1);
+      root.adjust(1);
       break;
     case Qt.Key_H:
     case Qt.Key_Left:
-      root.current?.adjust?.(-1);
+      root.adjust(-1);
       break;
     case Qt.Key_Return:
     case Qt.Key_Enter:

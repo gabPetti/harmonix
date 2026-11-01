@@ -17,6 +17,10 @@ in
     # modules that own those.
     pkgs.curl
     pkgs.jq
+    # The bar's music visualizer. Quickshell's PipeWire bindings expose
+    # devices and volumes but not samples, so the spectrum has to come from
+    # something that taps the sink monitor itself (scripts/visualizer).
+    pkgs.cava
   ];
 
   harmonix.configLinks."quickshell" = "quickshell";

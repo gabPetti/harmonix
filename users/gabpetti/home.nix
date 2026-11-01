@@ -22,7 +22,6 @@
     ../../modules/home/calcure
     ../../modules/home/cursor
     ../../modules/home/stremio
-    ../../modules/home/intellij
   ];
 
   services.playerctld.enable = true;

@@ -63,6 +63,17 @@ QtObject {
   // the group's own lane.
   readonly property int specialChipHeight: fontSizeSmall + pillInset * 2
 
+  // The music visualizer in the Media pill. Its width is fixed -- bars that
+  // are flat rather than absent when nothing plays -- so starting a track
+  // can't shove the clock off centre.
+  readonly property int visualizerBars: 12
+  readonly property int visualizerBarWidth: 3
+  readonly property int visualizerBarSpacing: 2
+  readonly property int visualizerHeight: 18
+  // What a bar collapses to at silence: a dot on the baseline, so a resting
+  // visualizer still reads as the thing that was moving a moment ago.
+  readonly property int visualizerBarMin: visualizerBarWidth
+
   // The level rule under a volume/brightness/battery pill. Thin enough to
   // read as an underline rather than as a second background.
   readonly property int levelHeight: 2
@@ -95,6 +106,9 @@ QtObject {
   // glyph leaves slack around itself -- so the same hole needs a noticeably
   // larger pixelSize in one font than the other.
   readonly property int ringSymbolSize: 20
+
+  // How far the media panel's relative-seek buttons jump, in seconds.
+  readonly property int mediaSeekStep: 10
 
   readonly property int popupRadius: 22
   // Radius of the concave corners where a panel leaves the bar. The panel is

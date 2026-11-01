@@ -5,9 +5,16 @@ import Quickshell.Services.Mpris
 import Quickshell.Widgets
 import "../theme"
 import "../components"
+import "../services"
 
-// Now-playing readout over MPRIS. Prefers whichever player is actually
+// The bar's music widget: a live spectrum over MPRIS, dropping a panel with
+// the transport and a seek bar. Prefers whichever player is actually
 // playing, so pausing Spotify to watch a video follows the video.
+//
+// Only the visualizer is in the bar. The track's text lives in the panel and
+// the tooltip instead: the pill sits beside ActiveWindow, which is already
+// showing the title of whatever is playing most of the time, and a widget
+// that changes width with every track would drag its neighbours with it.
 BarPill {
   id: root
 
@@ -27,7 +34,12 @@ BarPill {
 
   onClicked: popup.toggle()
   onMiddleClicked: root.player?.togglePlaying()
-  onScrolled: direction => {
+  onScrolled: direction => root.skip(direction)
+
+  // What h and l do anywhere in the panel, and what the pill's scroll wheel
+  // does: step tracks. Bound through the popup's fallbackAdjust, so the seek
+  // slider keeps h and l for scrubbing when the selection is on it.
+  function skip(direction) {
     if (direction > 0) root.player?.next();
     else root.player?.previous();
   }
@@ -51,12 +63,21 @@ BarPill {
     text: Icons.note
     color: root.player?.isPlaying ? Colors.accent : Colors.fgDim
     font.pixelSize: Theme.iconSize
+
+    Behavior on color {
+      ColorAnimation { duration: Theme.animNormal }
+    }
   }
 
-  StyledText {
-    Layout.maximumWidth: 190
-    text: root.label
-    elide: Text.ElideRight
+  // Keyed to the sound rather than to the player: Cava follows what is
+  // actually reaching the sink, so the bars light up for whatever is audible
+  // even when no player claims to be playing.
+  Visualizer {
+    color: Cava.audible ? Colors.accent : Colors.fgDim
+
+    Behavior on color {
+      ColorAnimation { duration: Theme.animNormal }
+    }
   }
 
   BarPopup {
@@ -65,6 +86,7 @@ BarPill {
     anchorItem: root
     panelId: "media"
     contentWidth: 384
+    fallbackAdjust: direction => root.skip(direction)
 
     RowLayout {
       Layout.fillWidth: true
@@ -162,6 +184,18 @@ BarPill {
         Layout.fillWidth: true
       }
 
+      // Firefox and other players that publish no mpris:length leave the
+      // scrub bar above with nothing to lay itself over, but MPRIS `Seek`
+      // takes a relative offset and works without a known length -- so
+      // these stand in as the only way to move within such a track.
+      IconButton {
+        visible: (root.player?.canSeek ?? false) && !(root.player?.lengthSupported ?? false)
+        icon: Icons.seekBackSymbol
+        symbol: true
+        tooltipText: "Back 10s"
+        onClicked: root.player?.seek(-Theme.mediaSeekStep)
+      }
+
       IconButton {
         icon: Icons.previous
         enabled: root.player?.canGoPrevious ?? false
@@ -183,6 +217,14 @@ BarPill {
         enabled: root.player?.canGoNext ?? false
         opacity: enabled ? 1 : 0.4
         onClicked: root.player?.next()
+      }
+
+      IconButton {
+        visible: (root.player?.canSeek ?? false) && !(root.player?.lengthSupported ?? false)
+        icon: Icons.seekForwardSymbol
+        symbol: true
+        tooltipText: "Forward 10s"
+        onClicked: root.player?.seek(Theme.mediaSeekStep)
       }
 
       Item {

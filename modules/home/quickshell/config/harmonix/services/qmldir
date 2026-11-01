@@ -7,3 +7,4 @@ singleton Wallpapers 1.0 Wallpapers.qml
 singleton Fuzzy 1.0 Fuzzy.qml
 singleton Panels 1.0 Panels.qml
 singleton LauncherState 1.0 LauncherState.qml
+singleton Cava 1.0 Cava.qml

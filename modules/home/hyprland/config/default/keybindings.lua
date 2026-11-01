@@ -4,7 +4,6 @@
 
 -- ==> GLOBAL VARIABLES
 local term = "kitty"
-local scripts_path = os.getenv("HOME") .. "/.config/hypr/scripts"
 
 -- ==> SYSTEM BINDS
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
@@ -68,6 +67,11 @@ hl.bind(
 	"SUPER + ALT + V",
 	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle volume"),
 	{ description = "Toggle volume panel" }
+)
+hl.bind(
+	"SUPER + ALT + M",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle media"),
+	{ description = "Toggle media panel" }
 )
 
 -- ==> SYSTEM CONTROLS

@@ -6,6 +6,9 @@ Rectangle {
   id: root
 
   property string icon: ""
+  // Whether `icon` is a Material Symbols ligature rather than a Nerd Font
+  // codepoint -- the symbol font renders the name itself.
+  property bool symbol: false
   property int size: 34
   property int iconSize: Theme.iconSize
   property bool active: false
@@ -40,7 +43,9 @@ Rectangle {
     anchors.centerIn: parent
     text: root.icon
     color: root.active || root.hovered ? root.accentColor : Colors.fg
+    font.family: root.symbol ? Theme.symbolFont : Theme.font
     font.pixelSize: root.iconSize
+    font.variableAxes: root.symbol ? ({ "FILL": 1, "opsz": root.iconSize }) : ({})
   }
 
   HoverHandler {

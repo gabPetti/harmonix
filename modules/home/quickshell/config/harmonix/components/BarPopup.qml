@@ -26,6 +26,8 @@ PanelWindow {
   // Name a panel answers to over IPC, so a Hyprland keybind can open it
   // (services/Panels.qml, shell.qml). Panels without one are mouse-only.
   property string panelId: ""
+  // See KeyNav: what h and l do when the selected item has nothing to vary.
+  property var fallbackAdjust: null
 
   default property alias content: column.data
 
@@ -131,6 +133,7 @@ PanelWindow {
     id: nav
 
     container: column
+    fallbackAdjust: root.fallbackAdjust
     onDismissed: root.close()
   }
 
