@@ -29,11 +29,8 @@ in
       jdk
       maven
       libnotify
-      gnuplot
       btop
-      google-cloud-sdk
       steam-run
-      aider-chat
       claude-code
     ];
   };
