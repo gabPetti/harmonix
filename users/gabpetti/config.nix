@@ -32,7 +32,6 @@ in
       gnuplot
       btop
       google-cloud-sdk
-      vagrant
       steam-run
       aider-chat
       claude-code

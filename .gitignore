@@ -6,3 +6,5 @@ modules/home/yazi/config/theme.toml
 .env.bak.*
 .aider*
 wallpapers/wallhaven-*
+# Compiled spell dictionaries; regenerated from the tracked .add files
+modules/home/neovim/config/spell/*.spl
