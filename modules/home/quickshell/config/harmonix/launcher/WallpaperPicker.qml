@@ -8,7 +8,7 @@ import "../services"
 // type here, so the grid holds the keyboard and hjkl moves through it the way
 // it moves through a bar panel: h/l by one, j/k by a row. Search is still
 // there, behind `/`, and gives the keys back on Enter or Escape.
-LauncherCard {
+LauncherPane {
   id: root
 
   readonly property int columns: 3
@@ -26,9 +26,10 @@ LauncherCard {
   mode: LauncherState.modeWallpapers
   status: Wallpapers.fetching ? "Fetching wallpaper…"
     : Wallpapers.applying ? "Applying wallpaper…"
-    : `${root.results.length} wallpaper${root.results.length === 1 ? "" : "s"}`
+    : Wallpapers.switchingMode ? `Switching to ${Wallpapers.light ? "dark" : "light"} mode…`
+    : `${root.results.length} wallpaper${root.results.length === 1 ? "" : "s"}  ·  ${Wallpapers.mode}`
   hint: root.searching ? "enter done  ·  esc back to grid"
-    : "hjkl move  ·  enter apply  ·  / search  ·  f fetch  ·  esc close"
+    : "hjkl move  ·  enter apply  ·  / search  ·  f fetch  ·  m light/dark  ·  esc close"
 
   onResultsChanged: root.selection = 0
 
@@ -133,6 +134,16 @@ LauncherCard {
         loops: Animation.Infinite
       }
     }
+
+    // Re-themes the whole session from the wallpaper that is already up,
+    // light or dark. Also on `m`.
+    IconButton {
+      icon: Wallpapers.light ? Icons.darkMode : Icons.lightMode
+      active: Wallpapers.switchingMode
+      tooltipText: Wallpapers.switchingMode ? "Re-theming…"
+        : `Switch to ${Wallpapers.light ? "dark" : "light"} mode`
+      onClicked: Wallpapers.toggleMode()
+    }
   }
 
   // The grid itself can't hold focus (it is inside the card's content item,
@@ -175,6 +186,9 @@ LauncherCard {
         break;
       case Qt.Key_F:
         Wallpapers.fetch();
+        break;
+      case Qt.Key_M:
+        Wallpapers.toggleMode();
         break;
       case Qt.Key_Tab:
         LauncherState.open(LauncherState.modeApps);

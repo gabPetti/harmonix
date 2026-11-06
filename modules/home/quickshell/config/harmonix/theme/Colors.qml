@@ -22,6 +22,14 @@ QtObject {
   property string critical: "#f38ba8"
   property string hoverBg: "#313244"
 
+  // Which half of the matugen palette the values above came from. Written by
+  // the same template, so widgets that need more than a colour to read right
+  // in both modes (an opacity, a border) can ask instead of guessing from the
+  // background's luminance. Switched with `M` in the launcher's wallpaper
+  // picker; see scripts/wallpaper.
+  property string mode: "dark"
+  readonly property bool light: root.mode === "light"
+
   // Translucent derivations, so widgets don't each invent their own alpha.
   readonly property color accentSoft: Qt.alpha(accent, 0.18)
   readonly property color hoverSoft: Qt.alpha(hoverBg, 0.55)

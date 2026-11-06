@@ -28,6 +28,10 @@ QtObject {
   readonly property string nightLight: "󰖔"
   readonly property string wallpaper: "󰋩"
   readonly property string download: "󰇚"
+  // The wallpaper picker's light/dark switch shows the mode it would move
+  // to, so the sun is the button in dark mode and the moon in light mode.
+  readonly property string lightMode: "󰖙"
+  readonly property string darkMode: "󰖔"
   readonly property string wired: "󰈀"
   readonly property string wifiOff: "󰤮"
   readonly property string bluetoothOff: "󰂲"

@@ -34,7 +34,7 @@ end, { auto_consuming = true })
 -- Both modes live in the same Quickshell window; these just ask it to open.
 hl.bind("SUPER + A", hl.dsp.exec_cmd("qs -c harmonix ipc call launcher apps"), { description = "Open app launcher" })
 hl.bind(
-	"SUPER + ALT + W",
+	"SUPER + W",
 	hl.dsp.exec_cmd("qs -c harmonix ipc call launcher wallpapers"),
 	{ description = "Open wallpaper picker" }
 )
@@ -149,21 +149,9 @@ hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { description = "Move window 
 hl.bind("SUPER + CTRL + K", hl.dsp.focus({ direction = "up" }), { description = "Next workspace" })
 hl.bind("SUPER + CTRL + J", hl.dsp.focus({ direction = "down" }), { description = "Previous workspace" })
 hl.bind("SUPER + CTRL + H", hl.dsp.focus({ direction = "left" }), { description = "Next workspace" })
-hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description = "Previous workspace" }) -- hl.bind("SUPER + K", function() hl.dsp.focus({ workspace = "e+1" }) hl.dsp.exec_cmd("swayosd-client --custom-message 'Workspace " .. tostring(1) .. "'") end, { auto_consuming = true, description = "Scroll workspaces forward" })
--- hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
--- Scroll Workspaces Forward
-hl.bind("SUPER + K", function()
-	hl.dispatch(hl.dsp.focus({ workspace = "e+1" }))
-	local ws = hl.get_active_workspace().id
-	hl.dispatch(hl.dsp.exec_cmd("swayosd-client --custom-message '" .. tostring(ws) .. "'"))
-end, { auto_consuming = true, description = "Next workspace" })
-
--- Scroll Workspaces Backward
-hl.bind("SUPER + J", function()
-	hl.dispatch(hl.dsp.focus({ workspace = "e-1" }))
-	local ws = hl.get_active_workspace().id
-	hl.dispatch(hl.dsp.exec_cmd("swayosd-client --custom-message '" .. tostring(ws) .. "'"))
-end, { auto_consuming = true, description = "Previous workspace" })
+hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description = "Previous workspace" })
+hl.bind("SUPER + K", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
+hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
 
 hl.bind("SUPER + Tab", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
 hl.bind("SUPER + S", hl.dsp.workspace.toggle_special(), { description = "Show special workspace" })

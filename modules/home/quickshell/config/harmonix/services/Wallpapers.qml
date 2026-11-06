@@ -17,8 +17,13 @@ QtObject {
 
   property var files: []
   property string current: ""
+  // "light" or "dark": which half of the matugen palette every template is
+  // rendered from. The script owns the stored value; this mirrors it.
+  property string mode: "dark"
+  readonly property bool light: root.mode === "light"
   property bool applying: false
   property bool fetching: false
+  property bool switchingMode: false
 
   readonly property Process lister: Process {
     command: [root.script, "list"]
@@ -33,6 +38,43 @@ QtObject {
     running: true
     stdout: StdioCollector {
       onStreamFinished: root.current = text.trim()
+    }
+  }
+
+  readonly property Process modeQuery: Process {
+    command: [root.script, "mode"]
+    running: true
+    stdout: StdioCollector {
+      onStreamFinished: {
+        if (text.trim() !== "") root.mode = text.trim();
+      }
+    }
+  }
+
+  // Re-themes the session from the wallpaper that is already up, so this is
+  // the same work as an apply -- every template re-rendered, every post_hook
+  // fired -- with only the light/dark half of the palette changed.
+  readonly property Process modeSetter: Process {
+    stdout: StdioCollector {
+      onStreamFinished: {
+        if (text.trim() !== "") root.mode = text.trim();
+      }
+    }
+
+    stderr: StdioCollector {
+      onStreamFinished: {
+        if (text.trim() !== "") console.warn("wallpaper mode:", text.trim());
+      }
+    }
+
+    onExited: exitCode => {
+      root.switchingMode = false;
+      if (exitCode !== 0) {
+        console.warn("wallpaper: mode switch failed with exit code", exitCode);
+        // The stored mode is what the script decided, not what was asked
+        // for: on a failure, read it back rather than keeping the guess.
+        root.modeQuery.running = true;
+      }
     }
   }
 
@@ -86,6 +128,19 @@ QtObject {
   function refresh() {
     root.lister.running = true;
     root.currentQuery.running = true;
+    root.modeQuery.running = true;
+  }
+
+  // `which` is "light", "dark" or "toggle".
+  function setMode(which) {
+    if (root.switchingMode) return;
+    root.switchingMode = true;
+    root.modeSetter.command = [root.script, "mode", which];
+    root.modeSetter.running = true;
+  }
+
+  function toggleMode() {
+    root.setMode("toggle");
   }
 
   function apply(path) {

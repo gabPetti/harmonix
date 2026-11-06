@@ -1,4 +1,5 @@
-LauncherCard 1.0 LauncherCard.qml
+LauncherPanel 1.0 LauncherPanel.qml
+LauncherPane 1.0 LauncherPane.qml
 AppLauncher 1.0 AppLauncher.qml
 WallpaperPicker 1.0 WallpaperPicker.qml
 AppResults 1.0 AppResults.qml

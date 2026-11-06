@@ -17,6 +17,7 @@ return {
         { "<leader>u", group = "ui/toggle" },
         { "<leader>w", group = "window" },
         { "<leader>x", group = "diagnostics/quickfix" },
+        { "gs", group = "surround" },
       },
     },
     keys = {
@@ -36,7 +37,21 @@ return {
     event = "VeryLazy",
     config = function()
       require("mini.pairs").setup() -- auto-close brackets and quotes
-      require("mini.surround").setup() -- sa/sd/sr to add, delete, replace surroundings
+
+      -- gs rather than mini's own s prefix: flash.nvim owns s as a motion
+      -- (lua/plugins/flash.lua), and with both bound every `s` would stall
+      -- for timeoutlen waiting to see whether a surround key followed. `gs`
+      -- is Vim's "sleep for count seconds", which is no loss.
+      require("mini.surround").setup({
+        mappings = {
+          add = "gsa", -- gsa<motion><char> to surround
+          delete = "gsd", -- gsd<char> to remove
+          replace = "gsr", -- gsr<from><to> to change
+          find = "gsf", -- jump to the next surrounding char
+          find_left = "gsF",
+          highlight = "gsh",
+        },
+      })
       require("mini.ai").setup() -- richer a/i textobjects, incl. tree-sitter ones
       require("mini.icons").setup() -- icon provider for snacks, lualine, …
       require("mini.icons").mock_nvim_web_devicons()

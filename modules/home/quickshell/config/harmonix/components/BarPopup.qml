@@ -28,6 +28,16 @@ PanelWindow {
   property string panelId: ""
   // See KeyNav: what h and l do when the selected item has nothing to vary.
   property var fallbackAdjust: null
+  // Whether the panel's own hjkl walk takes the keyboard. A panel whose
+  // content wants the keys raw -- the launcher, with a field to type into and
+  // a grid with its own idea of hjkl -- turns this off and focuses its own
+  // item instead.
+  property bool keyNav: true
+  // Drops from the middle of the bar rather than from the pill that opened
+  // it. For a panel too wide to read as hanging off a single pill -- the
+  // launcher is most of the bar wide, and under its own pill it would sit
+  // pinned to whichever end of the bar that pill happens to be at.
+  property bool centered: false
 
   default property alias content: column.data
 
@@ -94,11 +104,17 @@ PanelWindow {
     left: true
   }
 
-  // Centred under the pill that opened it, pulled back when the pill sits too
-  // close to an end to fit. The limits are where the bar's underside stops
-  // being straight: a fillet needs bar directly above it.
+  readonly property real barWidth: root.anchorWindow ? root.anchorWindow.width : 0
+
+  // Where the panel would put its left edge if there were room on both
+  // sides: under the middle of the pill, or under the middle of the bar.
+  readonly property real preferredX: (root.centered ? root.barWidth / 2 : root.anchorPoint.x) - root.implicitWidth / 2
+
+  // Pulled back when that lands too close to an end to fit. The limits are
+  // where the bar's underside stops being straight: a fillet needs bar
+  // directly above it.
   margins {
-    left: Math.round(Math.max(Theme.barMargin + Theme.barRadius, Math.min(root.anchorPoint.x - root.implicitWidth / 2, (root.anchorWindow ? root.anchorWindow.width : 0) - Theme.barMargin - Theme.barRadius - root.implicitWidth)))
+    left: Math.round(Math.max(Theme.barMargin + Theme.barRadius, Math.min(root.preferredX, root.barWidth - Theme.barMargin - Theme.barRadius - root.implicitWidth)))
     top: Math.round(root.anchorPoint.y) + Theme.popupAttach
   }
 
@@ -121,8 +137,9 @@ PanelWindow {
       root.updateAnchor();
       // Deferred: on a panel's first open its content hasn't been laid out
       // yet, and the walk orders items by where they sit.
-      Qt.callLater(nav.first);
-    } else {
+      if (root.keyNav)
+        Qt.callLater(nav.first);
+    } else if (root.keyNav) {
       nav.select(null);
     }
     root.extension = root.shouldShow ? 1 : 0;
@@ -132,6 +149,8 @@ PanelWindow {
   KeyNav {
     id: nav
 
+    // Leaves the focus to the content when the panel drives its own keys.
+    focus: root.keyNav
     container: column
     fallbackAdjust: root.fallbackAdjust
     onDismissed: root.close()

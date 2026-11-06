@@ -139,6 +139,13 @@ QtObject {
   readonly property int popupAttach: barPadding + pillInset - popupOverlap
   readonly property int popupWidth: 360
 
+  // The launcher panel (launcher/LauncherPanel.qml). Much wider than an
+  // ordinary bar panel -- it carries a three-column thumbnail grid -- and a
+  // fixed body height, so switching between the two modes doesn't resize the
+  // window and the drop animation has one distance to cover either way.
+  readonly property int launcherWidth: 820
+  readonly property int launcherHeight: 420
+
   readonly property int animFast: 110
   readonly property int animNormal: 190
   // For things that cover ground: a panel leaving the bar, a dial crossing to

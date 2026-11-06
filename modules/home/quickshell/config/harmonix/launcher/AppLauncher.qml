@@ -9,7 +9,7 @@ import "../services"
 // is the point here, so the search field keeps the focus and navigation is on
 // the arrow keys (or Ctrl+J/K) -- the wallpaper picker, where there is
 // nothing to type, is the one that gets plain hjkl.
-LauncherCard {
+LauncherPane {
   id: root
 
   readonly property string terminal: "kitty"

@@ -23,7 +23,10 @@
     '';
   };
 
-  # Force dark mode via XDG Desktop Portal (crucial for modern GTK4 / Libadwaita apps)
+  # Seeds dark mode via XDG Desktop Portal (crucial for modern GTK4 /
+  # Libadwaita apps). Only the starting point: scripts/wallpaper flips this
+  # same key at runtime when the light/dark mode is switched from the
+  # launcher's wallpaper picker, so a rebuild resets the session to dark.
   dconf.settings = {
     "org/gnome/desktop/interface" = {
       color-scheme = "prefer-dark";
