@@ -124,6 +124,17 @@ QtObject {
   // Zero at an integer scale: a panel placed on the body's edge lands on it.
   // Lapping onto the bar covers the hairline fractional scaling rounds into
   // the join, at the cost of a strip where both fills blend and read dark.
+  // The in-place number editor's two sizes (components/StepperRow.qml). The
+  // field is wide enough for three digits, so a value doesn't shift the
+  // buttons either side of it as it grows.
+  readonly property int stepperButton: 28
+  readonly property int stepperField: 54
+
+  // The pomodoro panel's clock. Deliberately the largest type in the shell:
+  // it is the one number the panel exists to show.
+  readonly property int pomodoroReadout: 38
+  readonly property int pomodoroTrack: 4
+
   readonly property int popupOverlap: 0
   readonly property int popupAttach: barPadding + pillInset - popupOverlap
   readonly property int popupWidth: 360

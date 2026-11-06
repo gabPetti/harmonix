@@ -79,13 +79,13 @@ PanelWindow {
 
     BarDivider {
       before: mediaGroup
-      after: windowGroup
+      after: focusGroup
     }
 
     BarGroup {
-      id: windowGroup
+      id: focusGroup
 
-      ActiveWindow {}
+      Pomodoro {}
     }
   }
 

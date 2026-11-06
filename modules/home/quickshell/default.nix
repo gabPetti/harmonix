@@ -21,6 +21,9 @@ in
     # devices and volumes but not samples, so the spectrum has to come from
     # something that taps the sink monitor itself (scripts/visualizer).
     pkgs.cava
+    # notify-send, for the pomodoro timer's end-of-phase notification
+    # (services/Pomodoro.qml). swaync is the daemon that renders it.
+    pkgs.libnotify
   ];
 
   harmonix.configLinks."quickshell" = "quickshell";

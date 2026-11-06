@@ -73,6 +73,11 @@ hl.bind(
 	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle media"),
 	{ description = "Toggle media panel" }
 )
+hl.bind(
+	"SUPER + ALT + H",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle pomodoro"),
+	{ description = "Toggle pomodoro panel" }
+)
 
 -- ==> SYSTEM CONTROLS
 hl.bind(

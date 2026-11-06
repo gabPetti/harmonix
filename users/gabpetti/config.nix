@@ -30,6 +30,7 @@ in
       maven
       libnotify
       btop
+      perl
       steam-run
       claude-code
     ];

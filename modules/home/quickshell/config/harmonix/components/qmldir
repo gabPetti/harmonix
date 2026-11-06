@@ -8,6 +8,7 @@ BarPopup 1.0 BarPopup.qml
 Tooltip 1.0 Tooltip.qml
 ValueSlider 1.0 ValueSlider.qml
 SliderRow 1.0 SliderRow.qml
+StepperRow 1.0 StepperRow.qml
 SectionToggle 1.0 SectionToggle.qml
 KeyNav 1.0 KeyNav.qml
 ToggleSwitch 1.0 ToggleSwitch.qml

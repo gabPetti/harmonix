@@ -145,6 +145,13 @@ PanelWindow {
     }
   }
 
+  // Handing the keyboard back after an inline editor has had it: KeyNav owns
+  // the panel's focus until a TextInput inside takes it (StepperRow), and
+  // nothing returns it on its own.
+  function refocus(): void {
+    nav.forceActiveFocus();
+  }
+
   function open() {
     Panels.open(root);
   }

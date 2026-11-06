@@ -47,6 +47,20 @@ QtObject {
   readonly property string lockScreen: "󰌾"
   readonly property string spinner: "󰔛"
 
+  // The pomodoro pill and its panel (bar/Pomodoro.qml), plus the stepper's
+  // two nudge buttons. Material Symbols rather than Nerd Font: these are
+  // drawn beside each other in one control row, and the two fonts carry
+  // visibly different weight at the same pixel size.
+  readonly property string timerSymbol: "timer"
+  readonly property string focusSymbol: "hourglass_top"
+  readonly property string breakSymbol: "coffee"
+  readonly property string playSymbol: "play_arrow"
+  readonly property string pauseSymbol: "pause"
+  readonly property string restartSymbol: "restart_alt"
+  readonly property string skipSymbol: "fast_forward"
+  readonly property string minus: "remove"
+  readonly property string plus: "add"
+
   readonly property var _battery: ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
   readonly property var _batteryCharging: ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰂊", "󰂋", "󰂅", "󰂅"]
   readonly property var _wifi: ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]

@@ -1,10 +1,10 @@
 Bar 1.0 Bar.qml
 LauncherButton 1.0 LauncherButton.qml
 Workspaces 1.0 Workspaces.qml
-ActiveWindow 1.0 ActiveWindow.qml
 Clock 1.0 Clock.qml
 MonthView 1.0 MonthView.qml
 Media 1.0 Media.qml
+Pomodoro 1.0 Pomodoro.qml
 UsagePill 1.0 UsagePill.qml
 Cpu 1.0 Cpu.qml
 Ram 1.0 Ram.qml
