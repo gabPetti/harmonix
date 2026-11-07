@@ -16,7 +16,7 @@ return {
         -- stays a newline until something is explicitly selected.
         list = { selection = { preselect = false, auto_insert = false } },
         documentation = { auto_show = true, auto_show_delay_ms = 200 },
-        ghost_text = { enabled = false },
+        ghost_text = { enabled = true },
       },
       -- Show the function signature while typing arguments.
       signature = { enabled = true },

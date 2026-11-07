@@ -41,7 +41,7 @@ return {
             end,
           },
         },
-        extensions = { "lazy", "trouble", "quickfix", "toggleterm", "man" },
+        extensions = { "lazy", "trouble", "quickfix", "man" },
       }
     end,
   },

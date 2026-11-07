@@ -26,6 +26,11 @@
     # yank silently stays inside neovim.
     wl-clipboard
 
+    # Backs snacks.nvim's image module (lua/plugins/snacks.lua), which shells
+    # out to `magick` to convert anything that is not a PNG before drawing it.
+    # It is currently only on PATH as another package's transitive dependency.
+    imagemagick
+
     # Search & Build utilities
     ripgrep
     fd

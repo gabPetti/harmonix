@@ -1,6 +1,6 @@
 -- snacks.nvim stands in for a pile of single-purpose plugins: the picker
--- (files/grep/symbols), the file explorer, dashboard, notifications, buffer
--- deletion that keeps the window layout, and the big-file guard.
+-- (files, grep, references), the file explorer, dashboard, notifications,
+-- buffer deletion that keeps the window layout, and the big-file guard.
 return {
   {
     "folke/snacks.nvim",
@@ -19,6 +19,9 @@ return {
       notifier = { enabled = true },
       indent = { enabled = true },
       input = { enabled = true },
+      -- Inline image previews in markdown, drawn with kitty's graphics
+      -- protocol. Needs imagemagick on PATH (this module's default.nix).
+      image = { enabled = true },
       scope = { enabled = true },
       words = { enabled = true },
       picker = {
@@ -54,21 +57,17 @@ $$$        $$$,     $$$ $$,    $$c$$$cc$$$c     `$$$"``$$$,     $$$`$$$"``$$$,  
       -- Find
       { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart find files" },
       { "<leader>ff", function() Snacks.picker.files() end, desc = "Find files" },
-      { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find git files" },
-      { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent files" },
       { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
       { "<leader>e", function() Snacks.explorer() end, desc = "File explorer" },
       -- Search
       { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
       { "<leader>sw", function() Snacks.picker.grep_word() end, mode = { "n", "x" }, desc = "Grep word/selection" },
       { "<leader>sb", function() Snacks.picker.lines() end, desc = "Grep buffer lines" },
-      { "<leader>sh", function() Snacks.picker.help() end, desc = "Help pages" },
-      { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
-      { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
       { "<leader>sr", function() Snacks.picker.resume() end, desc = "Resume last picker" },
       { "<leader>sn", function() Snacks.picker.notifications() end, desc = "Notification history" },
       -- Code
-      { "<leader>cS", function() Snacks.picker.lsp_symbols() end, desc = "LSP symbols" },
+      -- Overrides nvim 0.11's own grr, which sends references to the quickfix
+      -- list; the picker is the better surface for them.
       { "grr", function() Snacks.picker.lsp_references() end, desc = "LSP references" },
       -- Git
       { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git branches" },
@@ -78,6 +77,34 @@ $$$        $$$,     $$$ $$,    $$c$$$cc$$$c     `$$$"``$$$,     $$$`$$$"``$$$,  
       { "<leader>bD", function() Snacks.bufdelete() end, desc = "Delete buffer (keep layout)" },
       { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
       { "<leader>z", function() Snacks.zen() end, desc = "Toggle zen mode" },
+      -- Terminal
+      {
+        "<leader>tt",
+        function()
+          -- No cmd, so this is $SHELL. `count` is left to vim.v.count1, which
+          -- makes 2<leader>tt a second independent terminal, 3<leader>tt a
+          -- third, and so on.
+          Snacks.terminal.toggle(nil, {
+            win = { position = "bottom", height = 0.3 },
+          })
+        end,
+        desc = "Terminal (bottom)",
+      },
+      {
+        "<leader>tc",
+        function()
+          Snacks.terminal.toggle("claude", {
+            -- Both of these pin the terminal's identity so there is only ever
+            -- one Claude session: a fixed `count` keeps vim.v.count1 out of it
+            -- (a stray count would otherwise start a second one), and the
+            -- global cwd keeps a window-local `:lcd` from doing the same.
+            count = 99,
+            cwd = vim.fn.getcwd(-1, -1),
+            win = { position = "right", width = 0.3 },
+          })
+        end,
+        desc = "Claude Code (right)",
+      },
     },
   },
 }

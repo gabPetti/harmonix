@@ -107,11 +107,3 @@ hl.config({
 		},
 	},
 })
-
--- hl.on("config.reloaded", function()
--- 	hl.exec_cmd("hyprctl setcursor Bibata-Modern-Classic 20")
--- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-theme 'Bibata-Modern-Classic'")
--- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface cursor-size 20")
--- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface icon-theme 'Tela-circle-dracula'")
--- 	hl.exec_cmd("gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'")
--- end)

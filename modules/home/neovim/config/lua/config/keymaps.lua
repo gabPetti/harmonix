@@ -3,11 +3,15 @@ local map = vim.keymap.set
 -- Esc clears the search highlight on the way out.
 map("n", "<Esc>", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
 
--- Window navigation without the <C-w> prefix.
-map("n", "<C-h>", "<C-w>h", { desc = "Go to left window" })
-map("n", "<C-j>", "<C-w>j", { desc = "Go to lower window" })
-map("n", "<C-k>", "<C-w>k", { desc = "Go to upper window" })
-map("n", "<C-l>", "<C-w>l", { desc = "Go to right window" })
+-- Window navigation without the <C-w> prefix, in terminal mode as well as
+-- normal: <Cmd> runs the command from either mode, where <C-w>h would be sent
+-- to the shell instead. Means a terminal split can be left without pressing
+-- Esc Esc first -- at the cost of the readline bindings on the same keys
+-- inside the terminal (notably <C-l> to clear); <C-w> still reaches the shell.
+map({ "n", "t" }, "<C-h>", "<Cmd>wincmd h<CR>", { desc = "Go to left window" })
+map({ "n", "t" }, "<C-j>", "<Cmd>wincmd j<CR>", { desc = "Go to lower window" })
+map({ "n", "t" }, "<C-k>", "<Cmd>wincmd k<CR>", { desc = "Go to upper window" })
+map({ "n", "t" }, "<C-l>", "<Cmd>wincmd l<CR>", { desc = "Go to right window" })
 
 -- Window management
 map("n", "<leader>w-", "<C-w>s", { desc = "Split window below" })

@@ -76,10 +76,10 @@ vim.api.nvim_create_autocmd({ "FocusGained", "TermClose", "TermLeave" }, {
 -- covers them all.
 --
 -- 'spell' is window-local, and the window a buffer ends up in is not
--- necessarily the current one when the event fires (toggleterm spawns the job
--- before splitting, and opens a brand new float on every toggle). So the work
--- is deferred and applied to every window actually showing the buffer, rather
--- than to whatever window happens to be current.
+-- necessarily the current one when the event fires: a terminal job can be
+-- spawned before the window that shows it exists. So the work is deferred and
+-- applied to every window actually showing the buffer, rather than to whatever
+-- window happens to be current.
 vim.api.nvim_create_autocmd({ "TermOpen", "BufWinEnter", "WinEnter" }, {
   group = augroup("spell_only_in_files"),
   callback = function(event)

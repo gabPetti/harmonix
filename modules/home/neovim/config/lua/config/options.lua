@@ -34,6 +34,15 @@ opt.breakindent = true
 opt.virtualedit = "block" -- let visual-block selections past end of line
 opt.confirm = true -- ask instead of failing when quitting a dirty buffer
 
+-- Folding, driven by tree-sitter rather than indent or markers: the markdown
+-- parser's folds.scm (nvim's own runtime) makes every heading a fold, which is
+-- what gives notes collapsible sections. Filetypes without a parser get no
+-- folds instead of an error, so this is safe to set globally.
+opt.foldmethod = "expr"
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+opt.foldlevelstart = 99 -- everything open on open; zc/zM collapse on demand
+opt.foldtext = "" -- keep the folded line syntax-highlighted instead of plain
+
 -- Search
 opt.ignorecase = true
 opt.smartcase = true -- …unless the pattern has an uppercase letter
