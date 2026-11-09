@@ -62,7 +62,7 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 
 **Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is *not* resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
 
-Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, and `brightnessctl` writes.
+Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/claude-voice`, and `brightnessctl` writes.
 
 Editing any `.qml` hot-reloads the running shell — watch `qs log --pid $(pgrep -x quickshell)` for errors. Changing `shell.qml`'s `//@ pragma UseQApplication` (needed for system-tray menus) requires `systemctl --user restart quickshell` instead.
 

@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import "../theme"
 import "../components"
 
@@ -35,15 +36,21 @@ PanelWindow {
   WlrLayershell.layer: WlrLayer.Top
   WlrLayershell.namespace: "quickshell:bar"
 
-  Rectangle {
+  // A ClippingRectangle rather than a Rectangle because the wave inside it
+  // runs the full width: a plain Rectangle doesn't clip to its own radius,
+  // so the wave would square off the bar's rounded ends.
+  ClippingRectangle {
     id: body
 
     anchors.fill: parent
     anchors.margins: Theme.barMargin
     radius: Theme.barRadius
     color: Qt.alpha(Colors.bg0, Theme.barOpacity)
-    // border.width: 1
-    // border.color: Colors.outlineSoft
+
+    // First child, so it is behind every pill in the bar.
+    Wave {
+      anchors.fill: parent
+    }
   }
 
   RowLayout {
@@ -86,6 +93,8 @@ PanelWindow {
       id: focusGroup
 
       Pomodoro {}
+
+      Voice {}
     }
   }
 

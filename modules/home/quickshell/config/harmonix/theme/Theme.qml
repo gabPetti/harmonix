@@ -63,16 +63,22 @@ QtObject {
   // the group's own lane.
   readonly property int specialChipHeight: fontSizeSmall + pillInset * 2
 
-  // The music visualizer in the Media pill. Its width is fixed -- bars that
-  // are flat rather than absent when nothing plays -- so starting a track
-  // can't shove the clock off centre.
-  readonly property int visualizerBars: 12
-  readonly property int visualizerBarWidth: 3
-  readonly property int visualizerBarSpacing: 2
-  readonly property int visualizerHeight: 18
-  // What a bar collapses to at silence: a dot on the baseline, so a resting
-  // visualizer still reads as the thing that was moving a moment ago.
-  readonly property int visualizerBarMin: visualizerBarWidth
+  // The spectrum, drawn as one wave along the whole bar (bar/Wave.qml)
+  // rather than as a row of capsules in the media pill. One band per point,
+  // smoothed into a curve by subdividing each span.
+  // Bands narrow enough that a peak is a peak rather than a swell: at a
+  // quarter of this count each band owned some 30px of a 1080p bar, which
+  // rounded the whole spectrum into one rolling ribbon.
+  readonly property int waveBars: 96
+  readonly property int waveSmoothing: 3
+  // How far a full-scale band reaches down the bar from its top edge. Short
+  // of barHeight so the loudest peak still leaves the pills a strip of plain
+  // background to sit against instead of covering the text outright.
+  readonly property real waveHeight: barHeight * 0.72
+  // The wave is behind every pill in the bar, so it is lit well under the
+  // text it passes beneath: this is the level at which it reads as the
+  // bar's material moving rather than as something written over it.
+  readonly property real waveOpacity: 0.55
 
   // The level rule under a volume/brightness/battery pill. Thin enough to
   // read as an underline rather than as a second background.

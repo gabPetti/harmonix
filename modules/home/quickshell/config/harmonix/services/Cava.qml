@@ -5,7 +5,8 @@ import Quickshell.Io
 import Quickshell.Services.Pipewire
 import "../theme"
 
-// Audio spectrum for the bar's visualizer, backed by scripts/visualizer.
+// Audio spectrum for the bar's wave (bar/Wave.qml), backed by
+// scripts/visualizer.
 //
 // Quickshell's PipeWire bindings carry devices, volumes and routes but never
 // samples, so there is nothing here to run an FFT over -- cava taps the sink
@@ -14,7 +15,7 @@ QtObject {
   id: root
 
   readonly property string script: Quickshell.shellPath("scripts/visualizer")
-  readonly property int bars: Theme.visualizerBars
+  readonly property int bars: Theme.waveBars
 
   // One entry per bar, 0..1. Shared instance rather than a fresh array, so
   // the flat state doesn't allocate on every stop.

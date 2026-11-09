@@ -19,6 +19,11 @@ QtObject {
   property string outline: "#6c7086"
   property string shadow: "#11111b"
   property string warning: "#f9e2af"
+  // The two the bar's wave is drawn in (bar/Wave.qml), straight from the
+  // matugen palette rather than derived from the accent: a spectrum that is
+  // one hue with the lightness ramped reads as a shadow, not as colour.
+  property string secondary: "#f5c2e7"
+  property string tertiary: "#cba6f7"
   property string critical: "#f38ba8"
   property string hoverBg: "#313244"
 

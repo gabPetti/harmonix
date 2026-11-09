@@ -5,6 +5,8 @@ Clock 1.0 Clock.qml
 MonthView 1.0 MonthView.qml
 Media 1.0 Media.qml
 Pomodoro 1.0 Pomodoro.qml
+Voice 1.0 Voice.qml
+Wave 1.0 Wave.qml
 UsagePill 1.0 UsagePill.qml
 Cpu 1.0 Cpu.qml
 Ram 1.0 Ram.qml

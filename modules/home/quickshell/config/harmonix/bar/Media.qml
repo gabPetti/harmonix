@@ -5,15 +5,15 @@ import Quickshell.Services.Mpris
 import Quickshell.Widgets
 import "../theme"
 import "../components"
-import "../services"
 
-// The bar's music widget: a live spectrum over MPRIS, dropping a panel with
-// the transport and a seek bar. Prefers whichever player is actually
-// playing, so pausing Spotify to watch a video follows the video.
+// The bar's music widget: one glyph that drops a panel with the transport
+// and a seek bar. Prefers whichever player is actually playing, so pausing
+// Spotify to watch a video follows the video.
 //
-// Only the visualizer is in the bar. The track's text lives in the panel and
-// the tooltip instead: a widget that changes width with every track would
-// drag its neighbours with it on each one.
+// Only the glyph is in the bar. The track's text lives in the panel and the
+// tooltip instead: a widget that changes width with every track would drag
+// its neighbours with it on each one. The spectrum used to be here too and
+// is now the bar's own backdrop (bar/Wave.qml).
 BarPill {
   id: root
 
@@ -27,12 +27,11 @@ BarPill {
   // is open rather than binding to it.
   property real position: 0
 
-  // The spectrum is the point of this pill, so it follows the sound rather
-  // than a player: audio reaches the sink constantly with no MPRIS behind it
-  // (a tab Firefox never registered, anything played straight to PipeWire),
-  // and gating on `player` hid the visualizer outright in those cases --
-  // including every session where nothing had claimed MPRIS yet.
-  visible: root.player !== null || Cava.audible
+  // No player, no pill. The spectrum is what used to need showing for
+  // untracked audio -- a tab Firefox never registered, anything played
+  // straight to PipeWire -- and it is the whole bar's backdrop now, so a
+  // glyph that opens nothing has no reason to be here.
+  visible: root.player !== null
   active: popup.visible
   tooltipText: root.player ? `${root.label}\n${root.player.identity}` : ""
 
@@ -69,17 +68,6 @@ BarPill {
     text: Icons.note
     color: root.player?.isPlaying ? Colors.accent : Colors.fgDim
     font.pixelSize: Theme.iconSize
-
-    Behavior on color {
-      ColorAnimation { duration: Theme.animNormal }
-    }
-  }
-
-  // Keyed to the sound rather than to the player: Cava follows what is
-  // actually reaching the sink, so the bars light up for whatever is audible
-  // even when no player claims to be playing.
-  Visualizer {
-    color: Cava.audible ? Colors.accent : Colors.fgDim
 
     Behavior on color {
       ColorAnimation { duration: Theme.animNormal }

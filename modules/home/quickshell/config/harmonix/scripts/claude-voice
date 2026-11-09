@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+#
+# One voice round trip with Claude: transcribe a recording, ask the `claude`
+# CLI about it, speak the answer back through the default sink.
+#
+# Both models are fetched on first use rather than pinned into the closure:
+# together they are ~200MB of weights that only this one pill needs, and a
+# nix-store copy of them would be rebuilt into every generation.
+#
+# Dependencies:
+#   - whisper-cpp (whisper-cli, whisper-cpp-download-ggml-model)
+#   - piper-tts, pipewire (pw-play)
+#   - claude, curl, libnotify
+#
+# Usage:
+#   claude-voice ask <recording.wav> [volume]
+#                                      Transcribe, ask Claude, speak the reply
+#                                      at volume 0-1 (0 answers silently)
+#   claude-voice fetch                 Download both models and exit
+#
+# Everything it learns goes to stdout as one `key value` line per step, which
+# is what the bar's panel reads (services/ClaudeVoice.qml):
+#   stage <fetching|transcribing|thinking|speaking>
+#   transcript <what you said>
+#   reply <what Claude answered>
+#   error <why it stopped>
+
+set -uo pipefail
+
+CACHE="${XDG_CACHE_HOME:-$HOME/.cache}/harmonix/voice"
+WHISPER_MODEL_NAME="base.en"
+WHISPER_MODEL="$CACHE/ggml-$WHISPER_MODEL_NAME.bin"
+VOICE_NAME="en_US-amy-medium"
+VOICE_MODEL="$CACHE/$VOICE_NAME.onnx"
+VOICE_BASE="https://huggingface.co/rhasspy/piper-voices/resolve/main/en/en_US/amy/medium"
+
+# The cheapest tier: a spoken question is a sentence, the answer is capped at
+# three, and this runs every time the pill is clicked. `haiku` as an alias
+# rather than a pinned id (claude-haiku-4-5-20251001 today) so it follows
+# whatever the cheapest model is called next.
+MODEL=haiku
+
+# Playback level for the spoken reply, 0-1, overridden by the second argument
+# to `ask`. The bar owns the real value (services/ClaudeVoice.qml).
+VOLUME=1
+
+# Claude is talking into a speech synthesiser, not a terminal: markdown and
+# long answers are both unlistenable, and the panel only has room for a few
+# lines of text either way.
+SYSTEM_PROMPT="Your reply is read out loud by a speech synthesiser. Answer in at most three short sentences of plain spoken prose. No markdown, no lists, no code blocks, no emoji."
+
+say() {
+	printf '%s %s\n' "$1" "${2//$'\n'/ }"
+}
+
+notify() {
+	notify-send \
+		--app-name="Claude Voice" \
+		--icon=audio-input-microphone-symbolic \
+		--hint=string:x-canonical-private-synchronous:harmonix-claude-voice \
+		"$1" "${2:-}"
+}
+
+die() {
+	say error "$1"
+	notify "Claude Voice failed" "$1"
+	exit 1
+}
+
+# Named rather than left to fail somewhere downstream: a missing whisper
+# reaches the panel as an empty transcript, which reads as "it didn't hear
+# me" when the real answer is that the system hasn't been rebuilt yet.
+require() {
+	local missing=()
+	local tool
+	for tool in "$@"; do
+		command -v "$tool" >/dev/null 2>&1 || missing+=("$tool")
+	done
+	(( ${#missing[@]} == 0 )) || die "missing ${missing[*]} -- run nixos-rebuild switch"
+}
+
+fetch_models() {
+	mkdir -p "$CACHE" || die "cannot create $CACHE"
+
+	if [[ ! -f $WHISPER_MODEL ]]; then
+		say stage fetching
+		notify "Fetching speech model" "whisper $WHISPER_MODEL_NAME, about 150MB. Only happens once."
+		whisper-cpp-download-ggml-model "$WHISPER_MODEL_NAME" "$CACHE" >/dev/null 2>&1 ||
+			die "could not download the whisper model"
+	fi
+
+	if [[ ! -f $VOICE_MODEL ]]; then
+		say stage fetching
+		notify "Fetching voice" "piper $VOICE_NAME, about 60MB. Only happens once."
+		# --fail so a 404 or a captive-portal page doesn't land as a valid
+		# file that piper then rejects on every single use.
+		curl -fsSL --output "$VOICE_MODEL" "$VOICE_BASE/$VOICE_NAME.onnx" &&
+			curl -fsSL --output "$VOICE_MODEL.json" "$VOICE_BASE/$VOICE_NAME.onnx.json" ||
+			{
+				rm -f "$VOICE_MODEL" "$VOICE_MODEL.json"
+				die "could not download the piper voice"
+			}
+	fi
+}
+
+speak() {
+	local wav
+	wav=$(mktemp --tmpdir harmonix-claude-voice-XXXXXX.wav) || return 1
+	# Synthesised to a file and then played, rather than streamed raw: piper
+	# writes the sample rate into the header, so nothing here has to know
+	# which rate the chosen voice happens to run at.
+	if printf '%s\n' "$1" | piper --model "$VOICE_MODEL" --output-file "$wav" >/dev/null 2>&1; then
+		# Claude's own level, not the system one: this plays over whatever
+		# you were already listening to, and it should be able to sit under
+		# it without turning everything else down.
+		pw-play --volume "$VOLUME" "$wav" >/dev/null 2>&1
+	fi
+	rm -f "$wav"
+}
+
+ask() {
+	local recording=$1
+	[[ -f $recording ]] || die "no recording at $recording"
+
+	require whisper-cli piper claude pw-play
+	fetch_models
+
+	say stage transcribing
+	local transcript
+	transcript=$(whisper-cli \
+		--model "$WHISPER_MODEL" \
+		--language en \
+		--no-timestamps \
+		--no-prints \
+		--file "$recording" 2>/dev/null | tr -s '[:space:]' ' ' | sed 's/^ //; s/ $//')
+
+	# whisper emits bracketed tags -- [BLANK_AUDIO], [SOUND] -- for a clip it
+	# found no speech in. Asking Claude about one wastes a round trip.
+	if [[ -z $transcript || $transcript == \[*\] ]]; then
+		say error "nothing to transcribe"
+		notify "Heard nothing" "The recording had no speech in it."
+		exit 0
+	fi
+
+	say transcript "$transcript"
+
+	say stage thinking
+	local reply complaint errors
+	errors=$(mktemp --tmpdir harmonix-claude-voice-XXXXXX.log)
+	# stdin from /dev/null, and stderr kept out of the answer: the prompt is
+	# an argument, so claude has no stdin to wait on, and left attached to
+	# the shell's it spends three seconds deciding that and then says so --
+	# in a warning that, merged into stdout, got read out as Claude's reply.
+	if ! reply=$(claude --print --model "$MODEL" --append-system-prompt "$SYSTEM_PROMPT" "$transcript" </dev/null 2>"$errors") || [[ -z $reply ]]; then
+		complaint=$(tr -s '[:space:]' ' ' <"$errors")
+		rm -f "$errors"
+		die "claude did not answer: ${complaint:-no output}"
+	fi
+	rm -f "$errors"
+
+	say reply "$reply"
+	notify "Claude" "$reply"
+
+	# A muted voice still notifies and still fills the panel; it just doesn't
+	# say it out loud, so there is nothing to wait through.
+	if [[ $VOLUME == 0 ]]; then
+		return 0
+	fi
+
+	say stage speaking
+	speak "$reply"
+}
+
+case ${1-} in
+	ask)
+		VOLUME=${3:-1}
+		ask "${2?usage: ${0##*/} ask <recording.wav> [volume]}"
+		;;
+	fetch) fetch_models ;;
+	*)
+		printf '%s: %s <ask <recording.wav> [volume]|fetch>\n' "${0##*/}" "${0##*/}" >&2
+		exit 1
+		;;
+esac

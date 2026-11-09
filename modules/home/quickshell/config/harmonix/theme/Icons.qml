@@ -65,6 +65,12 @@ QtObject {
   readonly property string minus: "remove"
   readonly property string plus: "add"
 
+  // The Claude voice pill (bar/Voice.qml). A Material Symbol for the same
+  // reason the pomodoro's is: it sits in the bar next to one.
+  readonly property string voiceSymbol: "assistant"
+  readonly property string record: "󰑊"
+  readonly property string stop: "󰓛"
+
   readonly property var _battery: ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
   readonly property var _batteryCharging: ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰂊", "󰂋", "󰂅", "󰂅"]
   readonly property var _wifi: ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]
