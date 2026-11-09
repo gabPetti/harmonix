@@ -57,7 +57,7 @@ Item {
     const step = width / (count - 1);
     const bands = [];
     for (let band = 0; band < count; band++) {
-      const level = Math.max(0, Math.min(1, levels[band] ?? 0));
+      const level = Math.pow(Math.max(0, Math.min(1, levels[band] ?? 0)), Theme.waveCurve);
       // Measured down from the bar's top edge, with zero *on* it: a silent
       // band has no depth at all, so silence leaves nothing behind rather
       // than a strip of colour along the top.

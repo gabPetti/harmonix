@@ -23,7 +23,7 @@ BARS="${1:-12}"
 # the directory is cleared when the session ends.
 CONFIG="${XDG_RUNTIME_DIR:-/tmp}/harmonix-cava.conf"
 
-cat > "$CONFIG" <<EOF
+cat >"$CONFIG" <<EOF
 [general]
 # Matched to the compositor rather than to cava's 60 default: frames the
 # shell never gets to draw are just wakeups on a laptop battery.
@@ -31,6 +31,13 @@ framerate = 60
 bars = $BARS
 # Rescale to whatever is currently playing, so quiet tracks still move.
 autosens = 1
+
+[smoothing]
+# How much of the previous frame a bar keeps. cava's own default (77) is
+# tuned for a terminal of block characters, where a bar that moves every
+# frame is unreadable; the bar's wave is a smooth surface and can follow the
+# sound far more closely before it turns to noise.
+noise_reduction = 40
 
 [input]
 method = pulse

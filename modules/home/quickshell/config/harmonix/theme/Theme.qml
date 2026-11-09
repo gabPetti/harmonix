@@ -69,12 +69,16 @@ QtObject {
   // Bands narrow enough that a peak is a peak rather than a swell: at a
   // quarter of this count each band owned some 30px of a 1080p bar, which
   // rounded the whole spectrum into one rolling ribbon.
-  readonly property int waveBars: 96
-  readonly property int waveSmoothing: 3
+  readonly property int waveBars: 48
+  readonly property int waveSmoothing: 5
   // How far a full-scale band reaches down the bar from its top edge. Short
   // of barHeight so the loudest peak still leaves the pills a strip of plain
   // background to sit against instead of covering the text outright.
-  readonly property real waveHeight: barHeight * 0.72
+  readonly property real waveHeight: barHeight * 1
+  // Applied to each band before it is drawn. Above 1 it holds the quiet
+  // bands down while leaving the loud ones where they are, so a peak stands
+  // out of the surface instead of riding a swell the whole bar shares.
+  readonly property real waveCurve: 1.4
   // The wave is behind every pill in the bar, so it is lit well under the
   // text it passes beneath: this is the level at which it reads as the
   // bar's material moving rather than as something written over it.
