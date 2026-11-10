@@ -23,6 +23,7 @@
     ../../modules/home/calcure
     ../../modules/home/cursor
     ../../modules/home/stremio
+    ../../modules/home/zap
   ];
 
   services.playerctld.enable = true;

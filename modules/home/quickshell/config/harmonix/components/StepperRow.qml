@@ -89,6 +89,7 @@ RowLayout {
 
   IconButton {
     icon: Icons.minus
+    symbol: true
     size: Theme.stepperButton
     onClicked: root.adjust(-1)
   }
@@ -164,6 +165,7 @@ RowLayout {
 
   IconButton {
     icon: Icons.plus
+    symbol: true
     size: Theme.stepperButton
     onClicked: root.adjust(1)
   }

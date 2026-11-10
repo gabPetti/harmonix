@@ -148,8 +148,6 @@ PanelWindow {
     BarGroup {
       id: toggleGroup
 
-      NightLightToggle {}
-
       Brightness {}
 
       Volume {}
@@ -164,6 +162,8 @@ PanelWindow {
       id: systemGroup
 
       Network {}
+
+      VpnToggle {}
 
       Bluetooth {}
 

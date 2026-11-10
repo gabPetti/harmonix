@@ -14,6 +14,7 @@
     ./network.nix
     ./nix-ld.nix
     ./virtualization.nix
+    ./vpn.nix
     ./xdg.nix
     ./zsh.nix
   ];

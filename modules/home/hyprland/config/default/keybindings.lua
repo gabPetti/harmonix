@@ -83,6 +83,11 @@ hl.bind(
 	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle voice"),
 	{ description = "Toggle Claude voice panel" }
 )
+hl.bind(
+	"SUPER + ALT + L",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle brightness"),
+	{ description = "Toggle Claude voice panel" }
+)
 
 -- ==> SYSTEM CONTROLS
 hl.bind(
@@ -130,7 +135,7 @@ hl.bind(
 )
 
 -- ==> HYPRLOCK
-hl.bind("SUPER + ALT + L", hl.dsp.exec_cmd("hyprlock"), { description = "Lock the system" })
+hl.bind("SUPER + Z", hl.dsp.exec_cmd("hyprlock"), { description = "Lock the system" })
 
 -- ==> WINDOW BINDS
 hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Close window" })

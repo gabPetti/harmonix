@@ -33,6 +33,7 @@ QtObject {
   readonly property string lightMode: "󰖙"
   readonly property string darkMode: "󰖔"
   readonly property string wired: "󰈀"
+  readonly property string vpn: "󰖂"
   readonly property string wifiOff: "󰤮"
   readonly property string bluetoothOff: "󰂲"
   readonly property string bluetoothOn: "󰂯"
@@ -64,6 +65,11 @@ QtObject {
   readonly property string skipSymbol: "fast_forward"
   readonly property string minus: "remove"
   readonly property string plus: "add"
+
+  // The night light schedule's two hour steppers (bar/Brightness.qml), in
+  // Material Symbols because that is what StepperRow's own buttons are.
+  readonly property string bedtimeSymbol: "bedtime"
+  readonly property string sunriseSymbol: "wb_twilight"
 
   // The Claude voice pill (bar/Voice.qml). A Material Symbol for the same
   // reason the pomodoro's is: it sits in the bar next to one.

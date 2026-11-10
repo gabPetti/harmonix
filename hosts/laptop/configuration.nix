@@ -14,10 +14,10 @@
   nix.gc = {
     automatic = true;
     dates = "weekly";
-    options = "--delete-older-than 14d";
+    options = "--delete-older-than 2d";
   };
 
   nixpkgs.config.allowUnfree = true;
-
+  nix.settings.auto-optimise-store = true;
   system.stateVersion = "26.11";
 }

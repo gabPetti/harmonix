@@ -7,7 +7,13 @@
 #
 # Usage:
 #   nightlight toggle   Flip night mode on/off
+#   nightlight on       Turn night mode on (idempotent)
+#   nightlight off      Turn night mode off (idempotent)
 #   nightlight status   Print "state=on" or "state=off"
+#
+# on/off exist for the schedule in services/NightLight.qml: a timer that only
+# had `toggle` would invert the state it meant to set whenever the two had
+# drifted apart.
 
 STATE_FILE="${XDG_RUNTIME_DIR:-/tmp}/hyprsunset-night-mode"
 WARM_TEMP=3500
@@ -20,24 +26,46 @@ status() {
 	fi
 }
 
-toggle() {
-	pkill -x hyprsunset
-
-	if [[ -f $STATE_FILE ]]; then
-		rm -f "$STATE_FILE"
-	else
-		setsid -f hyprsunset -t "$WARM_TEMP" >/dev/null 2>&1
-		touch "$STATE_FILE"
+on() {
+	# Already warm and still running: leave it alone. Restarting hyprsunset
+	# here would flash the screen back to cold and in again every time the
+	# schedule re-asserted a state it was already in.
+	if [[ -f $STATE_FILE ]] && pgrep -x hyprsunset >/dev/null; then
+		status
+		return
 	fi
+
+	# The state file can outlive an hyprsunset that died with its compositor,
+	# and a second instance would fight the first.
+	pkill -x hyprsunset
+	setsid -f hyprsunset -t "$WARM_TEMP" >/dev/null 2>&1
+	touch "$STATE_FILE"
 
 	status
 }
 
+off() {
+	pkill -x hyprsunset
+	rm -f "$STATE_FILE"
+
+	status
+}
+
+toggle() {
+	if [[ -f $STATE_FILE ]]; then
+		off
+	else
+		on
+	fi
+}
+
 case $1 in
 	toggle) toggle ;;
+	on) on ;;
+	off) off ;;
 	status) status ;;
 	*)
-		printf '%s: %s <toggle|status>\n' "${0##*/}" "${0##*/}" >&2
+		printf '%s: %s <toggle|on|off|status>\n' "${0##*/}" "${0##*/}" >&2
 		exit 1
 		;;
 esac
