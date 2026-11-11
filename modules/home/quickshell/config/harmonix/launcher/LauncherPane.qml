@@ -46,13 +46,13 @@ FocusScope {
         spacing: 12
       }
 
-      ModeChip {
+      Chip {
         label: "Apps"
         active: LauncherState.mode === LauncherState.modeApps
         onClicked: LauncherState.open(LauncherState.modeApps)
       }
 
-      ModeChip {
+      Chip {
         label: "Walls"
         active: LauncherState.mode === LauncherState.modeWallpapers
         onClicked: LauncherState.open(LauncherState.modeWallpapers)

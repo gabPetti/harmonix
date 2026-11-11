@@ -6,6 +6,7 @@
 import Quickshell
 import Quickshell.Io
 import "bar"
+import "lock"
 import "services"
 
 ShellRoot {
@@ -19,6 +20,10 @@ ShellRoot {
     }
   }
 
+  // The session lock. One instance for the whole shell -- it builds its own
+  // surface per monitor -- and it draws nothing until something locks it.
+  Lock {}
+
   // Hyprland keybinds reach a bar panel through this, e.g.
   //   qs -c harmonix ipc call panels toggle bluetooth
   // The id is the panel's own panelId; the one on the focused monitor wins.
@@ -31,6 +36,23 @@ ShellRoot {
 
     function close(): void {
       Panels.close();
+    }
+  }
+
+  // Locking, from the SUPER+Z keybind and from the bar's power panel, e.g.
+  //   qs -c harmonix ipc call lock lock
+  // There is deliberately no `unlock`: the only way out of the lock is a
+  // password through PAM, and an IPC call that skipped that would undo the
+  // point of having one.
+  IpcHandler {
+    target: "lock"
+
+    function lock(): void {
+      LockState.lock();
+    }
+
+    function locked(): bool {
+      return LockState.locked;
     }
   }
 

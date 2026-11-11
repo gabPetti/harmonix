@@ -6,44 +6,41 @@ import Quickshell.Widgets
 import "../theme"
 import "../components"
 
-// The bar's music widget: one glyph that drops a panel with the transport
-// and a seek bar. Prefers whichever player is actually playing, so pausing
-// Spotify to watch a video follows the video.
+// The music panel: the transport and a seek bar, dropped from the middle of
+// the bar. Prefers whichever player is actually playing, so pausing Spotify
+// to watch a video follows the video.
 //
-// Only the glyph is in the bar. The track's text lives in the panel and the
-// tooltip instead: a widget that changes width with every track would drag
-// its neighbours with it on each one. The spectrum used to be here too and
-// is now the bar's own backdrop (bar/Wave.qml).
-BarPill {
+// Nothing of it is in the bar any more. It had a pill once, then the pill had
+// only a glyph -- the track's text would have dragged its neighbours around
+// on every song, and the spectrum that was also here became the bar's own
+// backdrop (bar/Wave.qml) -- which left a pill that said nothing the panel
+// behind it didn't. So the panel is reached by its keybind alone, and this
+// item exists only to host it: a panel still has to live inside a bar window
+// to know which monitor it belongs to.
+//
+// It opens with no player too, showing its "Nothing playing" placeholder.
+// Suppressing that was worth it when a click on the pill was the only way in;
+// a keybind that answers with nothing at all is indistinguishable from a
+// keybind that is broken.
+Item {
   id: root
 
   readonly property var players: Mpris.players.values
   readonly property var player: root.players.find(candidate => candidate.isPlaying) ?? root.players[0] ?? null
-  readonly property string label: !root.player ? ""
-    : root.player.trackArtist ? `${root.player.trackArtist} — ${root.player.trackTitle}`
-    : (root.player.trackTitle || root.player.identity)
 
   // MPRIS position is only recomputed when read, so sample it while the popup
   // is open rather than binding to it.
   property real position: 0
 
-  // No player, no pill. The spectrum is what used to need showing for
-  // untracked audio -- a tab Firefox never registered, anything played
-  // straight to PipeWire -- and it is the whole bar's backdrop now, so a
-  // glyph that opens nothing has no reason to be here.
-  visible: root.player !== null
-  active: popup.visible
-  tooltipText: root.player ? `${root.label}\n${root.player.identity}` : ""
+  // Takes no room in the bar and draws nothing: it is an address, not a
+  // widget. Zero width would make it invisible to a layout anyway, which is
+  // why it hangs off the bar window rather than off one of its rows.
+  implicitWidth: 0
+  implicitHeight: 0
 
-  // No panel without a player: the transport and seek bar have nothing to
-  // act on, and an empty popup is worse than none.
-  onClicked: if (root.player) popup.toggle()
-  onMiddleClicked: root.player?.togglePlaying()
-  onScrolled: direction => root.skip(direction)
-
-  // What h and l do anywhere in the panel, and what the pill's scroll wheel
-  // does: step tracks. Bound through the popup's fallbackAdjust, so the seek
-  // slider keeps h and l for scrubbing when the selection is on it.
+  // What h and l do anywhere in the panel: step tracks. Bound through the
+  // popup's fallbackAdjust, so the seek slider keeps h and l for scrubbing
+  // when the selection is on it.
   function skip(direction) {
     if (direction > 0) root.player?.next();
     else root.player?.previous();
@@ -64,22 +61,15 @@ BarPill {
     onTriggered: root.position = root.player?.position ?? 0
   }
 
-  StyledText {
-    text: Icons.note
-    color: root.player?.isPlaying ? Colors.accent : Colors.fgDim
-    font.pixelSize: Theme.iconSize
-
-    Behavior on color {
-      ColorAnimation { duration: Theme.animNormal }
-    }
-  }
-
   BarPopup {
     id: popup
 
     anchorItem: root
     panelId: "media"
     contentWidth: 384
+    // No pill to hang off, so it drops from the middle of the bar -- which is
+    // also where the clock is, the one part of the bar it now reads under.
+    centered: true
     fallbackAdjust: direction => root.skip(direction)
 
     RowLayout {

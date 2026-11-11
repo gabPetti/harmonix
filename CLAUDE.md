@@ -53,20 +53,28 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 
 ### The Quickshell shell
 
-`modules/home/quickshell/config/harmonix` is the whole desktop shell: bar, its popups, and the application/wallpaper launcher that replaced rofi. It is split by concern, one directory per layer:
+`modules/home/quickshell/config/harmonix` is the whole desktop shell: bar, its popups, the application/wallpaper launcher that replaced rofi, and the lock screen that replaced hyprlock. It is split by concern, one directory per layer:
 
 - `theme/` — `Colors` (matugen palette), `Theme` (all sizes/spacing/durations), `Icons` (Nerd Font glyphs). Nothing else hardcodes a size, colour, or codepoint.
-- `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `Fuzzy`.
+- `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `LockState` (locked/PAM), `Fuzzy`.
 - `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …).
-- `bar/`, `launcher/` — the actual widgets, composed from the above.
+- `bar/`, `launcher/`, `lock/` — the actual widgets, composed from the above.
 
 **Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is *not* resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
 
-Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/claude-voice`, and `brightnessctl` writes.
+Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/claude-voice`, `scripts/translate` (plus `wl-copy`/`wl-paste` beside it), `brightnessctl` writes, and the lock screen's `hyprctl devices -j` poll — Hyprland publishes caps lock and the active layout there but emits no event when either changes.
 
 Editing any `.qml` hot-reloads the running shell — watch `qs log --pid $(pgrep -x quickshell)` for errors. Changing `shell.qml`'s `//@ pragma UseQApplication` (needed for system-tray menus) requires `systemctl --user restart quickshell` instead.
 
 Hyprland reaches the launcher over IPC (`qs -c harmonix ipc call launcher apps|wallpapers|toggle|close`), wired to SUPER+A and SUPER+ALT+W in `modules/home/hyprland/config/default/keybindings.lua`.
+
+#### The lock screen
+
+`lock/` is a Wayland session lock (`WlSessionLock`), not a window: Hyprland shows nothing but its surfaces, one per monitor, and `allow_session_lock_restore` (`hyprland/config/default/general.lua`) is what lets them come back if the shell is restarted while locked.
+
+- Locking goes through `LockState`, reached over IPC (`qs -c harmonix ipc call lock lock`, SUPER+Z) or from the bar's power panel. There is deliberately no `unlock` call — the only way out is a password through PAM.
+- Authentication is `PamContext` against `/etc/pam.d/harmonix-lock`, declared by `security.pam.services.harmonix-lock` in `modules/system/hyprland.nix`. **`LockState.lock()` probes for that file first and spawns hyprlock instead if it is missing**, because a session lock whose PAM conversation can't start can only be escaped from a TTY. hyprlock stays installed (and keeps `hyprland/config/hyprlock*`) as that fallback.
+- The whole screen animates off one number, `LockSurface.reveal`; each block takes a slice of it through `stage(index)`, and `LockState.unlocking` runs the same thing backwards before the lock is actually released.
 
 ### Theming via matugen
 

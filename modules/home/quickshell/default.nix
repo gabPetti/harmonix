@@ -2,6 +2,11 @@
 
 let
   quickshell = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
+  # The translation pill's interpreter. argostranslate is a library, not a
+  # program: scripts/translate.py has to be run by a python that has it, and
+  # a bare python3 from PATH cannot import it.
+  translatePython = pkgs.python3.withPackages (ps: [ ps.argostranslate ]);
 in
 {
   # Quickshell is the whole desktop shell here: bar, popups, and the
@@ -31,6 +36,14 @@ in
     # use, rather than pinning ~200MB of them into every generation.
     pkgs.whisper-cpp
     pkgs.piper-tts
+    # wl-paste and wl-copy, for the translation pill: the text it translates
+    # usually comes from the clipboard, and the translation usually goes back
+    # to it (services/Translator.qml).
+    pkgs.wl-clipboard
+    # argos-translate and argospm on PATH, for translating or managing the
+    # language models from a terminal. The pill itself goes through
+    # translatePython above; this is the same code, as commands.
+    pkgs.python3Packages.argostranslate
   ];
 
   harmonix.configLinks."quickshell" = "quickshell";
@@ -44,7 +57,13 @@ in
     Service = {
       # The wallpaper picker reads its directory from here, so the path still
       # follows vars.repoPath instead of being hardcoded in QML.
-      Environment = [ "HARMONIX_WALLPAPERS=${vars.repoPath}/wallpapers" ];
+      Environment = [
+        "HARMONIX_WALLPAPERS=${vars.repoPath}/wallpapers"
+        # Greeted by name on the lock screen, rather than the QML carrying a
+        # hardcoded one.
+        "HARMONIX_FULL_NAME=${vars.fullName}"
+        "HARMONIX_PYTHON=${translatePython}/bin/python3"
+      ];
       ExecStart = "${quickshell}/bin/quickshell -c harmonix";
       Restart = "on-failure";
     };

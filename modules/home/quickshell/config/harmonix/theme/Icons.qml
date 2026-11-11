@@ -77,6 +77,27 @@ QtObject {
   readonly property string record: "󰑊"
   readonly property string stop: "󰓛"
 
+  // The translation pill (bar/Translator.qml) and the two things its panel
+  // does with text that lives outside it. Material Symbols, like the voice
+  // pill it sits beside.
+  readonly property string translateSymbol: "translate"
+  readonly property string pasteSymbol: "content_paste"
+  readonly property string copySymbol: "content_copy"
+  readonly property string clearSymbol: "backspace"
+
+  // The lock screen (lock/). Material Symbols for the two indicators that
+  // sit beside text in a chip, a Nerd Font glyph for the keyhole that stands
+  // on its own in the password field.
+  readonly property string capsLockSymbol: "keyboard_capslock"
+  readonly property string keyboardSymbol: "keyboard"
+  readonly property string submitSymbol: "arrow_forward"
+  readonly property string avatarSymbol: "person"
+  // Spun while PAM has the password, so a conversation that takes a moment
+  // (pam_faildelay sleeps after a wrong one) doesn't read as a dead field.
+  readonly property string progressSymbol: "progress_activity"
+  readonly property string key: "󰌋"
+  readonly property string unlocked: "󰌿"
+
   readonly property var _battery: ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
   readonly property var _batteryCharging: ["󰢟", "󰢜", "󰂆", "󰂇", "󰂈", "󰢝", "󰂉", "󰂊", "󰂋", "󰂅", "󰂅"]
   readonly property var _wifi: ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"]

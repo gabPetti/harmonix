@@ -8,6 +8,9 @@ Rectangle {
   id: root
 
   property string icon: ""
+  // Set when `icon` is a Material Symbols ligature rather than a Nerd Font
+  // codepoint -- see UsageRing.symbol.
+  property bool symbol: false
   property string title: ""
   property string subtitle: ""
   property string trailing: ""
@@ -22,6 +25,10 @@ Rectangle {
   // the keyboard cursor and the pointer read the same.
   readonly property bool navigable: true
   property bool selected: false
+
+  // A RotationAnimation stops wherever it happens to be, which left the
+  // glyph of a row that had been busy sitting at an angle.
+  onBusyChanged: if (!root.busy) glyph.rotation = 0
 
   signal clicked
   signal rightClicked
@@ -48,10 +55,15 @@ Rectangle {
     spacing: 10
 
     StyledText {
+      id: glyph
+
       visible: root.icon !== ""
       text: root.busy ? Icons.spinner : root.icon
       color: root.iconColor
+      // The spinner is a Nerd Font glyph whatever the row's own icon is.
+      font.family: root.symbol && !root.busy ? Theme.symbolFont : Theme.font
       font.pixelSize: Theme.iconSize
+      font.variableAxes: root.symbol && !root.busy ? ({ "FILL": 1, "opsz": Theme.iconSize }) : ({})
 
       RotationAnimation on rotation {
         running: root.busy

@@ -7,8 +7,8 @@ import "../theme"
 // rather than as grouping what sits either side of it.
 //
 // `before`/`after` are the sections it separates. A bar section can collapse
-// on its own (an empty tray, no media player), and a divider left standing
-// next to nothing is worse than no divider at all -- so it tracks them.
+// on its own (an empty tray), and a divider left standing next to nothing is
+// worse than no divider at all -- so it tracks them.
 Rectangle {
   id: root
 

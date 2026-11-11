@@ -140,6 +140,11 @@ QtObject {
   readonly property int stepperButton: 28
   readonly property int stepperField: 54
 
+  // The translation panel's input box (bar/Translator.qml). Three lines or
+  // so at rest -- enough that a pasted paragraph doesn't start out scrolling
+  // -- and it grows with the text from there.
+  readonly property int translateFieldHeight: 78
+
   // The pomodoro panel's clock. Deliberately the largest type in the shell:
   // it is the one number the panel exists to show.
   readonly property int pomodoroReadout: 38
@@ -155,6 +160,75 @@ QtObject {
   // window and the drop animation has one distance to cover either way.
   readonly property int launcherWidth: 820
   readonly property int launcherHeight: 420
+
+  // The lock screen (lock/). Its own scale throughout: the bar is read at a
+  // glance from a screen you are already working at, where the lock owns the
+  // whole display and is read from wherever you left the laptop.
+  readonly property int lockClockSize: 124
+  readonly property int lockDateSize: 22
+  // The card holding the avatar and the password field. Narrow on purpose --
+  // it is one column of content, and a wide one would leave the field
+  // stranded in the middle of it.
+  readonly property int lockCardWidth: 360
+  readonly property int lockCardPadding: 26
+  // Rounder than a popup: the card floats free over the wallpaper instead of
+  // hanging off an edge, and at this size popupRadius reads as square.
+  readonly property int lockRadius: 32
+  readonly property int lockAvatar: 104
+  // Clearance between the avatar's edge and the foot of the spectrum ring,
+  // so a silent ring still reads as a ring around the avatar rather than as
+  // a halo touching it.
+  readonly property int lockSpectrumGap: 9
+  readonly property int lockSpectrumWidth: 3
+  // What a band is at rest and how far a full-scale one reaches outward.
+  readonly property int lockSpectrumFloor: 4
+  readonly property int lockSpectrumReach: 26
+
+  readonly property int lockFieldHeight: 48
+  readonly property int lockDotSize: 11
+  readonly property int lockDotSpacing: 9
+  // Beyond this many characters the dots stop being added rather than
+  // overflowing the field -- the row is feedback that a key landed, not a
+  // character count.
+  readonly property int lockDotMax: 14
+
+  readonly property int lockMediaWidth: 332
+  readonly property int lockArtSize: 64
+  readonly property int lockEdgeMargin: 36
+
+  // How far the wallpaper is pushed back while the lock is up: 0..1 of
+  // MultiEffect's blur, the radius it maps to, and how far the whole image
+  // is darkened under it.
+  readonly property real lockBlur: 0.75
+  readonly property int lockBlurMax: 64
+  readonly property real lockDim: 0.36
+  // The slow push-in the wallpaper never stops making, as a fraction of its
+  // own size. Small enough that it reads as the image breathing rather than
+  // as a zoom going somewhere.
+  readonly property real lockZoom: 0.06
+  readonly property int lockZoomDuration: 40000
+
+  // The drifting colour field behind the content (lock/Aurora.qml): blob
+  // diameter, how long one takes to cross its arc, and how much of it is
+  // left after the blur.
+  readonly property int lockAuroraBlob: 520
+  readonly property int lockAuroraDrift: 24000
+  readonly property real lockAuroraOpacity: 0.22
+  // The field is blurred past all detail, so it is rendered at a fraction of
+  // the screen's resolution and scaled up -- a full-resolution gaussian over
+  // the whole display, every frame, for an image with no edges in it.
+  readonly property int lockAuroraDownscale: 6
+  // Multiplies the blur's reach past the radius MultiEffect caps itself at.
+  readonly property real lockAuroraSpread: 2.5
+
+  // The entrance: how long one element takes to arrive, how far apart the
+  // elements start, and how far they travel on the way in.
+  readonly property int lockReveal: 620
+  readonly property int lockStagger: 90
+  readonly property int lockRise: 28
+  // The exit is the entrance in reverse and deliberately quicker: the
+  // password was already right, and what follows is the desktop.
+  readonly property int lockExit: 360
 
   readonly property int animFast: 110
   readonly property int animNormal: 190

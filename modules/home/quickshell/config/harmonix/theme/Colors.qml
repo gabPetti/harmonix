@@ -40,6 +40,21 @@ QtObject {
   readonly property color hoverSoft: Qt.alpha(hoverBg, 0.55)
   readonly property color outlineSoft: Qt.alpha(outline, 0.35)
 
+  // Two palette colours blended, t running 0..1 from the first to the second.
+  // Wanted wherever a row of things is coloured across a span of the palette
+  // rather than each item picking one token -- the lock screen's spectrum
+  // ring is swept accent -> secondary -> tertiary this way. The tokens are
+  // strings, so each end is read as a colour first.
+  function mix(from, to, t) {
+    const a = Qt.color(from);
+    const b = Qt.color(to);
+    const amount = Math.max(0, Math.min(1, t));
+    return Qt.rgba(a.r + (b.r - a.r) * amount,
+                   a.g + (b.g - a.g) * amount,
+                   a.b + (b.b - a.b) * amount,
+                   a.a + (b.a - a.a) * amount);
+  }
+
   property FileView _file: FileView {
     path: Quickshell.env("HOME") + "/.config/quickshell/harmonix/matugen-colors.json"
     watchChanges: true

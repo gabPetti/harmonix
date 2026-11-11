@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# Front end for scripts/translate.py, which is where the actual translating
+# happens -- this only picks the interpreter that has Argos Translate in it.
+#
+# That interpreter is handed to the shell by the Nix module
+# (modules/home/quickshell/default.nix) as HARMONIX_PYTHON, because
+# argostranslate is a library rather than a program: a bare `python3` from
+# PATH cannot import it.
+#
+# Usage:
+#   translate serve           Read requests on stdin, answer on stdout
+#   translate fetch           Download the pt->en and en->de models (~240MB)
+#   translate once <en|de> [text]
+#                             Translate one line, for use from a terminal
+
+set -uo pipefail
+
+HERE=$(dirname "$(readlink -f "$0")")
+PYTHON=${HARMONIX_PYTHON:-python3}
+
+case ${1-serve} in
+	serve | fetch)
+		exec "$PYTHON" "$HERE/translate.py" "${1-serve}"
+		;;
+	once)
+		lang=${2?usage: ${0##*/} once <en|de> [text]}
+		text=${3-$(cat)}
+		printf '%s\n' "$(jq -nc --arg lang "$lang" --arg text "$text" '{id: 1, lang: $lang, text: $text}')" |
+			"$PYTHON" "$HERE/translate.py" serve |
+			jq -r 'select(.id) | .text // ("error: " + .error)'
+		;;
+	*)
+		printf '%s: %s <serve|fetch|once <en|de> [text]>\n' "${0##*/}" "${0##*/}" >&2
+		exit 1
+		;;
+esac

@@ -1,7 +1,9 @@
 import QtQuick
 import "../theme"
-import "../components"
 
+// A small pill-shaped label that is either on or off: the launcher's two
+// mode tabs, the translation panel's target languages. Narrow enough that a
+// row of them reads as one control rather than as a list.
 Rectangle {
   id: root
 

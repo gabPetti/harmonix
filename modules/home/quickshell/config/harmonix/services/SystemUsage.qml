@@ -84,12 +84,29 @@ QtObject {
     }
 
     const total = values.MemTotal ?? 0;
-    const available = values.MemAvailable ?? 0;
-    if (total > 0) {
-      root.memory = 100 * (1 - available / total);
-      root.memoryTotalGb = total / 1048576;
-      root.memoryUsedGb = (total - available) / 1048576;
-    }
+    if (!(total > 0)) return;
+
+    // Deliberately not MemTotal - MemAvailable: MemAvailable treats file-backed
+    // page cache as reclaimable, and a VM's guest RAM is an mmap'ed backing
+    // file (VMware's .vmem, QEMU with memory-backend-file), so starting an
+    // 8 GiB guest barely moved that number. Count as used everything that is
+    // neither free nor *unmapped* cache -- cache a process has mapped into its
+    // page tables is in use, whatever its backing store.
+    const free = values.MemFree ?? 0;
+    const buffers = values.Buffers ?? 0;
+    const reclaimableSlab = values.SReclaimable ?? 0;
+    const shmem = values.Shmem ?? 0;
+    // Cached includes Shmem and Mapped includes the mapped part of Shmem, so
+    // both terms drop it to avoid counting shared memory twice.
+    const fileCache = Math.max(0, (values.Cached ?? 0) - shmem);
+    const mappedFile = Math.max(0, (values.Mapped ?? 0) - shmem);
+    const idleCache = Math.max(0, fileCache - mappedFile);
+
+    const used = Math.max(0, total - free - buffers - reclaimableSlab - idleCache);
+
+    root.memory = Math.max(0, Math.min(100, 100 * used / total));
+    root.memoryTotalGb = total / 1048576;
+    root.memoryUsedGb = used / 1048576;
   }
 
   function _updateDisk(content) {

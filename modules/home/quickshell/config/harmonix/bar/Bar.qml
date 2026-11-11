@@ -75,17 +75,6 @@ PanelWindow {
 
     BarDivider {
       before: launchGroup
-      after: mediaGroup
-    }
-
-    BarGroup {
-      id: mediaGroup
-
-      Media {}
-    }
-
-    BarDivider {
-      before: mediaGroup
       after: focusGroup
     }
 
@@ -95,6 +84,8 @@ PanelWindow {
       Pomodoro {}
 
       Voice {}
+
+      Translator {}
     }
   }
 
@@ -108,6 +99,12 @@ PanelWindow {
       Clock {}
     }
   }
+
+  // The one panel with no pill to drop from: it is opened by its keybind and
+  // centres itself under the clock. A child of the window rather than of a
+  // row, since it has no width to contribute -- it is here only so the panel
+  // knows which monitor's bar it belongs to.
+  Media {}
 
   RowLayout {
     id: rightRow

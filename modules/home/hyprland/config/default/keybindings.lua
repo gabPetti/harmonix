@@ -88,6 +88,11 @@ hl.bind(
 	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle brightness"),
 	{ description = "Toggle Claude voice panel" }
 )
+hl.bind(
+	"SUPER + ALT + T",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle translate"),
+	{ description = "Toggle translation panel" }
+)
 
 -- ==> SYSTEM CONTROLS
 hl.bind(
@@ -134,8 +139,12 @@ hl.bind(
 	{ description = "Decrease brightness", locked = true }
 )
 
--- ==> HYPRLOCK
-hl.bind("SUPER + Z", hl.dsp.exec_cmd("hyprlock"), { description = "Lock the system" })
+-- ==> LOCK SCREEN
+-- The shell's own lock (quickshell/config/harmonix/lock), not hyprlock: a
+-- Wayland session lock drawn by Quickshell is what lets it share the bar's
+-- palette and components. hyprlock is still installed, for a session where
+-- the shell itself is not running.
+hl.bind("SUPER + Z", hl.dsp.exec_cmd("qs -c harmonix ipc call lock lock"), { description = "Lock the system" })
 
 -- ==> WINDOW BINDS
 hl.bind("SUPER + Q", hl.dsp.window.close(), { description = "Close window" })

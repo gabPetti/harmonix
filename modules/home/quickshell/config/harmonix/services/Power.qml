@@ -54,8 +54,13 @@ QtObject {
     return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
   }
 
+  // The shell's own lock (lock/Lock.qml) rather than hyprlock, which this
+  // used to spawn: a Wayland session lock drawn by the shell is the only way
+  // the lock screen can carry the same palette, the same components and the
+  // same animations as everything else here. hyprlock is still installed as
+  // the fallback for a session where the shell itself is down.
   function lock() {
-    Quickshell.execDetached(["hyprlock"]);
+    LockState.lock();
   }
 
   function logout() {

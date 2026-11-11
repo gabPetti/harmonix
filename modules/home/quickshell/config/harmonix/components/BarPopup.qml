@@ -36,7 +36,8 @@ PanelWindow {
   // Drops from the middle of the bar rather than from the pill that opened
   // it. For a panel too wide to read as hanging off a single pill -- the
   // launcher is most of the bar wide, and under its own pill it would sit
-  // pinned to whichever end of the bar that pill happens to be at.
+  // pinned to whichever end of the bar that pill happens to be at -- or for
+  // one with no pill at all, like media.
   property bool centered: false
 
   default property alias content: column.data
@@ -67,8 +68,8 @@ PanelWindow {
   }
 
   // Nothing signals that a descendant moved in the scene, and the bar does
-  // relay out under an open panel (media collapses, the clock widens), so the
-  // anchor is re-read on a slow tick -- only while a panel is open.
+  // relay out under an open panel (a section collapses, the clock widens), so
+  // the anchor is re-read on a slow tick -- only while a panel is open.
   onAnchorItemChanged: root.updateAnchor()
 
   Component.onCompleted: {
@@ -110,12 +111,21 @@ PanelWindow {
   // sides: under the middle of the pill, or under the middle of the bar.
   readonly property real preferredX: (root.centered ? root.barWidth / 2 : root.anchorPoint.x) - root.implicitWidth / 2
 
+  // Where the top edge goes, which is the bar's underside either way. A pill
+  // panel reads it off the pill, the only thing that knows which row of the
+  // bar it sits in; a centered one measures the bar instead, because its
+  // anchor may be no pill at all -- media's is an empty item. The two agree
+  // to the pixel for a panel that has both, the launcher being the proof.
+  readonly property real attachY: root.centered
+    ? Theme.barMargin + Theme.barHeight - Theme.popupOverlap
+    : root.anchorPoint.y + Theme.popupAttach
+
   // Pulled back when that lands too close to an end to fit. The limits are
   // where the bar's underside stops being straight: a fillet needs bar
   // directly above it.
   margins {
     left: Math.round(Math.max(Theme.barMargin + Theme.barRadius, Math.min(root.preferredX, root.barWidth - Theme.barMargin - Theme.barRadius - root.implicitWidth)))
-    top: Math.round(root.anchorPoint.y) + Theme.popupAttach
+    top: Math.round(root.attachY)
   }
 
   implicitWidth: root.contentWidth + root.padding * 2 + Theme.popupFillet * 2
