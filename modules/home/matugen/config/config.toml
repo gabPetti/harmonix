@@ -38,7 +38,3 @@ output_path = '~/.config/zathura/matugen-colors.conf'
 input_path = '~/.config/matugen/templates/swaync-colors.css'
 output_path = '~/.config/swaync/matugen-colors.css'
 post_hook = "swaync-client -rs"
-
-# [templates.kde_colors]
-# input_path = '~/.config/matugen/templates/kde/color.txt'
-# output_path = '~/.local/state/quickshell/user/generated/color.txt'

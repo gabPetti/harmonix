@@ -20,9 +20,6 @@
     };
   };
 
-  # Blueman provides the graphical interface and tray management daemon
-  services.blueman.enable = true;
-
   # Ensure PipeWire is configured to handle Bluetooth audio codecs (A2DP, LDAC, AAC, AptX)
   services.pipewire = {
     wireplumber.configPackages = [

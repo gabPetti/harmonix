@@ -24,6 +24,12 @@ in
 
   config = {
     virtualisation.docker.enable = cfg.docker.enable;
+
+    # Socket-activated instead of started at boot: the daemon is only needed
+    # while a container is actually running, and dockerd plus containerd sit
+    # on ~130MB of RSS the rest of the time. The first `docker` command pays
+    # a second of startup; nothing else changes.
+    virtualisation.docker.enableOnBoot = false;
     virtualisation.libvirtd.enable = cfg.libvirtd.enable;
     virtualisation.vmware.host.enable = cfg.vmware.enable;
 

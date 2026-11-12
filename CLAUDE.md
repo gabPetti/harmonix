@@ -16,7 +16,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Update flake inputs: `nix flake update`
 - Generate a user's login password hash (`users/<name>/password.txt`, gitignored): `./setup.sh`
 
-**Gotcha: flakes only see git-tracked files.** A newly created `.nix` file fails with *"Path 'x.nix' … is not tracked by Git"* until it is at least `git add`-ed (staging is enough; no commit needed). Always `git add` new modules before evaluating or rebuilding.
+**Gotcha: flakes only see git-tracked files.** A newly created `.nix` file fails with _"Path 'x.nix' … is not tracked by Git"_ until it is at least `git add`-ed (staging is enough; no commit needed). Always `git add` new modules before evaluating or rebuilding.
 
 There is only one host: `laptop` — and `flake.nix` derives both the `nixosConfigurations` attribute name and the `hosts/<name>` path from `vars.hostName`.
 
@@ -35,7 +35,7 @@ The flake (`flake.nix`) builds the host via `nixpkgs.lib.nixosSystem` with Home 
 
 - **Option namespace is `harmonix.*`** for everything this repo defines (`harmonix.configLinks`, `harmonix.swayosd.enable`, `harmonix.virtualisation.*`). Do not introduce a second namespace.
 - **Module signatures declare exactly the arguments they use**, always as a braced pattern ending in `...` — `{ pkgs, ... }:`, `{ config, lib, pkgs, vars, ... }:`, or `{ ... }:` when nothing is needed. Don't carry unused `lib`/`config`/`pkgs` args, and don't use the bare `_:` form.
-- Comments explain *why*, not *what*. Don't leave commented-out code in place of deletion — git history is the archive.
+- Comments explain _why_, not _what_. Don't leave commented-out code in place of deletion — git history is the archive.
 
 ### The dotfile symlink pattern
 
@@ -60,7 +60,7 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 - `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …).
 - `bar/`, `launcher/`, `lock/` — the actual widgets, composed from the above.
 
-**Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is *not* resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
+**Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is _not_ resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
 
 Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/claude-voice`, `scripts/translate` (plus `wl-copy`/`wl-paste` beside it), `brightnessctl` writes, and the lock screen's `hyprctl devices -j` poll — Hyprland publishes caps lock and the active layout there but emits no event when either changes.
 
@@ -90,4 +90,4 @@ The quickshell template is JSON, and `harmonix/theme/Colors.qml` copies every ke
 
 ### Maintenance cadence
 
-Run `nix flake update` roughly monthly, then validate with the `nix eval` command above before switching. (NixOS can do this unattended via `system.autoUpgrade`, but it is deliberately not enabled — unattended upgrades on a daily-driver laptop are left as an opt-in decision.) `nix.gc` is already automatic weekly with a 14-day retention, set in `hosts/laptop/configuration.nix`.
+Run `nix flake update` roughly monthly, then validate with the `nix eval` command above before switching. (NixOS can do this unattended via `system.autoUpgrade`, but it is deliberately not enabled — unattended upgrades on a daily-driver laptop are left as an opt-in decision.) `nix.gc` is already automatic weekly with a 2-day retention, set in `hosts/laptop/configuration.nix`.
