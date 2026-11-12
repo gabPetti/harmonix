@@ -226,9 +226,20 @@ QtObject {
   readonly property int lockReveal: 620
   readonly property int lockStagger: 90
   readonly property int lockRise: 28
-  // The exit is the entrance in reverse and deliberately quicker: the
-  // password was already right, and what follows is the desktop.
-  readonly property int lockExit: 360
+  // The exit is deliberately quicker than the entrance: the password was
+  // already right, and what follows is the desktop. It covers two phases
+  // rather than one, though -- the blocks clearing and then the backdrop
+  // resolving -- which is why it is not as short as a single fade would be.
+  readonly property int lockExit: 460
+  // The share of the exit the backdrop keeps to itself, as a fraction of
+  // `reveal`'s travel: the blocks are gone by the time it starts, so the
+  // wallpaper unblurs and resolves with nothing on top of it.
+  readonly property real lockExitTail: 0.45
+  // How long the resolved frame is held before the lock is actually
+  // released. The exit lands on a wallpaper drawn exactly as hyprpaper draws
+  // it, and this is what guarantees it is on screen -- rather than one frame
+  // short of it -- when the compositor swaps the surface for the session.
+  readonly property int lockSettle: 90
 
   readonly property int animFast: 110
   readonly property int animNormal: 190

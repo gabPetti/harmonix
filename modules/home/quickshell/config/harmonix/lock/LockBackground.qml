@@ -15,6 +15,13 @@ import "../services"
 // Both the blur and the darkening ride `reveal`, so the wallpaper settles
 // back as the content arrives and comes forward again as it leaves. That
 // alone is most of what the unlock feels like.
+//
+// Every one of them -- blur, dim, desaturation, scale, the gradient at the
+// foot -- is written so that at `reveal` 0 this item draws the wallpaper
+// exactly as hyprpaper is drawing it on the desktop. That is what makes both
+// ends of the lock a cut between two identical frames instead of a jump: the
+// compositor swaps the lock surface for the session underneath it and the
+// wallpaper does not move.
 Item {
   id: root
 
@@ -49,13 +56,25 @@ Item {
       // the file's -- the blur that follows would throw the rest away.
       sourceSize.width: root.width
       sourceSize.height: root.height
-      asynchronous: true
       cache: true
+      // Decoded on the GUI thread, which is the one thing in this file worth
+      // blocking for. ext-session-lock has the compositor blank the session
+      // the moment the lock is taken and hold it blank until the surface
+      // commits a frame, so an asynchronous load does not save anyone the
+      // wait -- it just spends it showing black, and then pops the sharp
+      // wallpaper in halfway through the blur animating on. Loading it here
+      // costs the shell one decode at lock time and buys a first frame that
+      // already matches the desktop.
+      asynchronous: false
 
-      // Two scales multiplied: the push-in that never stops, and a touch
-      // more of it while the lock is folded away, so the image eases back as
-      // the content arrives.
-      scale: (1 + Theme.lockZoom * root.zoomPhase) * (1 + Theme.lockZoom * 0.5 * (1 - root.reveal))
+      // The push-in that never stops, plus a touch more of it that the
+      // lock's own arrival adds on top -- and the whole of it multiplied by
+      // `reveal`, so a folded-away lock sits at exactly 1. Scaled up out of
+      // the desktop's own framing rather than settling back into it: the
+      // match at 0 is worth more than the direction the image moves in, and
+      // the breathing is a 40s cycle whose phase at lock time is arbitrary,
+      // so the arrival needs a push of its own to read at all.
+      scale: 1 + Theme.lockZoom * root.reveal * (root.zoomPhase + 0.5 * (1 - root.reveal))
 
       // Out and back rather than looping from 1 to 0: a scale that jumped
       // back to its start would show as a snap every time round.

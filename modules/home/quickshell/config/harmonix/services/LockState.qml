@@ -132,8 +132,14 @@ QtObject {
   // rather than beside the surfaces in lock/Lock.qml, because that file can
   // hold nothing but the surface component itself, and one timer for the
   // session beats one per monitor.
+  //
+  // Theme.lockSettle longer than the animation it is waiting on, so the
+  // frame the exit resolves to is held for a moment before the compositor
+  // swaps the surface out. Timed to the animation exactly, the two raced,
+  // and the lock could be dropped a frame before the wallpaper had finished
+  // coming back to the way the desktop draws it.
   readonly property Timer exit: Timer {
-    interval: Theme.lockExit
+    interval: Theme.lockExit + Theme.lockSettle
     running: root.unlocking
     onTriggered: root.release()
   }
