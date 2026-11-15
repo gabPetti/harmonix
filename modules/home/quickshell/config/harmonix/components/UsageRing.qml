@@ -28,17 +28,14 @@ Item {
   implicitWidth: Theme.ringSize
   implicitHeight: Theme.ringSize
 
-  // Animate the swept angle rather than `value`: the arc then eases on its
-  // own clock instead of stepping with however often SystemUsage polls.
-  property real sweep: Math.max(0, Math.min(1, root.value)) * 360
-
-  Behavior on sweep {
-    NumberAnimation {
-      duration: Theme.animDrift
-      easing.type: Easing.BezierSpline
-      easing.bezierCurve: Theme.easeStandard
-    }
-  }
+  // Stepped with the sampler rather than eased between readings. A Behavior
+  // here cost around 9% of a core permanently: an animation running anywhere
+  // in the bar re-renders the whole surface at 60fps, and easing a 900ms arc
+  // every 2s sampling interval left that running most of the time. At idle it
+  // was spending all of it on sub-pixel travel -- consecutive readings differ
+  // by a fraction of a percent, which is well under a degree of arc at this
+  // size. The readings are discrete anyway, so the dial now says so.
+  readonly property real sweep: Math.max(0, Math.min(1, root.value)) * 360
 
   // Drawn into a texture rather than onto the bar, because it is the input to
   // the mask below; `visible: false` hides the untouched version.

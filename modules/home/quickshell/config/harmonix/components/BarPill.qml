@@ -59,7 +59,13 @@ Rectangle {
       // under the pill instead of an underline through the icon.
       bottomMargin: -(Theme.levelGap + Theme.levelHeight)
     }
-    width: (parent.width - root.padding * 2) * Math.max(0, Math.min(1, root.fill))
+    // Rounded to the pixel grid, which is the only resolution this can
+    // actually show. Unrounded, a fill that creeps -- Pomodoro's progress,
+    // which reapplies every 250ms -- moved the rule by hundredths of a pixel
+    // and retriggered the Behavior below each time, holding the whole bar at
+    // 60fps for the length of a session. Volume and brightness jump several
+    // pixels at once, so they still animate exactly as before.
+    width: Math.round((parent.width - root.padding * 2) * Math.max(0, Math.min(1, root.fill)))
     height: Theme.levelHeight
     radius: height / 2
     color: Colors.accent

@@ -248,10 +248,6 @@ QtObject {
   // to arrive feels like it's dragging.
   readonly property int animEnter: 320
   readonly property int animExit: 200
-  // Paced against SystemUsage's 2s sampler rather than against the eye: at
-  // animNormal a dial jumps and then sits still for most of the interval,
-  // where this keeps it visibly travelling between readings.
-  readonly property int animDrift: 900
 
   // Material 3's emphasized pair as bezierCurve control points, each
   // [x1, y1, x2, y2, 1, 1] -- QML wants the final (1, 1) spelled out. Enter

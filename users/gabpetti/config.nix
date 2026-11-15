@@ -33,6 +33,8 @@ in
       perl
       steam-run
       claude-code
+      gemini-cli
+      thunar
     ];
   };
 }
