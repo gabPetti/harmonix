@@ -25,6 +25,7 @@
     ../../modules/home/stremio
     ../../modules/home/pinta
     ../../modules/home/antigravity
+    ../../modules/home/gnome-calculator
   ];
 
   services.playerctld.enable = true;
