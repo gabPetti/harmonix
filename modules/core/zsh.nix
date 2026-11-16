@@ -13,6 +13,10 @@
     promptInit = ''
       eval "$(${pkgs.starship}/bin/starship init zsh)"
     '';
+    # Re-enter zsh (and thus starship) inside nix-shell / nix develop instead of bash
+    interactiveShellInit = ''
+      ${pkgs.nix-your-shell}/bin/nix-your-shell zsh | source /dev/stdin
+    '';
     shellAliases = {
       cd = "z";
       ls = "eza --icons --group-directories-first";
