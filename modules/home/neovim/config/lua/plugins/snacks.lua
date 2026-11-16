@@ -29,6 +29,12 @@ return {
           explorer = {
             hidden = true, -- dotfiles (.gitignore, .github, …)
             ignored = true, -- git-ignored entries (.env, node_modules, …)
+            -- Full screen instead of a sidebar, and gone once a file is
+            -- picked: the explorer and the file are either/or, never side by
+            -- side. fullscreen stretches the sidebar preset over the whole
+            -- editor, so the tree keeps its keymaps and behaviour.
+            auto_close = true,
+            layout = { fullscreen = true },
           },
           -- Dotfiles are the point of this repo, so find/grep should see them
           -- too; .git is still excluded by the picker's own defaults.
