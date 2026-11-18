@@ -33,7 +33,7 @@ in
       perl
       steam-run
       claude-code
-      gemini-cli
+      antigravity-cli
       thunar
     ];
   };

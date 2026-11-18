@@ -24,7 +24,6 @@
     ../../modules/home/cursor
     ../../modules/home/stremio
     ../../modules/home/pinta
-    ../../modules/home/antigravity
     ../../modules/home/gnome-calculator
   ];
 

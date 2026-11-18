@@ -172,7 +172,6 @@ hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description
 hl.bind("SUPER + K", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
 hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
 
-hl.bind("SUPER + Tab", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
 hl.bind("SUPER + S", hl.dsp.workspace.toggle_special(), { description = "Show special workspace" })
 hl.bind(
 	"SUPER + SHIFT + S",

@@ -123,6 +123,11 @@ QtObject {
     root.announce(finished);
   }
 
+  // The ring that plays alongside the notification: a synthesized two-tone
+  // chime checked in as a wav. pw-play comes with PipeWire itself, which is
+  // already the system's audio server (modules/core).
+  readonly property string ringSound: Quickshell.shellPath("assets/pomodoro-ring.wav")
+
   // swaync is the daemon on the other end of this; notify-send is pulled in
   // by modules/home/quickshell/default.nix. Critical urgency because the
   // notification *is* the timer going off -- one that times out on its own
@@ -130,6 +135,7 @@ QtObject {
   function announce(finished) {
     const work = finished === root.phaseWork;
 
+    Quickshell.execDetached(["pw-play", "--volume", "0.3", root.ringSound]);
     Quickshell.execDetached([
       "notify-send",
       "--app-name=Pomodoro",

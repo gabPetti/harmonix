@@ -95,7 +95,7 @@ hl.config({
 		},
 		screen_shader = shader_path,
 		dim_special = 0.3,
-		rounding = 16,
+		rounding = 24,
 		blur = {
 			special = true,
 			enabled = true,
