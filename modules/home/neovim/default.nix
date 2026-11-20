@@ -18,7 +18,7 @@
     shfmt # Shell / Bash
     nixpkgs-fmt # Nix
     google-java-format # Java
-    prettierd # Web (JS/TS, JSON, YAML, CSS, HTML, Markdown)
+    prettierd # Web (JS/TS, JSON, YAML, CSS, HTML)
     lua-language-server
     nixd # Nix LSP, with NixOS/Home Manager option completion
 

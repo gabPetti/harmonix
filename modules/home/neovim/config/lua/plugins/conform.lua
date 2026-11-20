@@ -42,7 +42,7 @@ return {
         yaml = prettier,
         css = prettier,
         html = prettier,
-        markdown = prettier,
+        -- markdown = prettier,
       },
       -- A function rather than a table so <leader>uf can switch it off for the
       -- session without reloading the config.

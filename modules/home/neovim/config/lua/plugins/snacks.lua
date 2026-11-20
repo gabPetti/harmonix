@@ -75,10 +75,6 @@ $$$        $$$,     $$$ $$,    $$c$$$cc$$$c     `$$$"``$$$,     $$$`$$$"``$$$,  
       -- Overrides nvim 0.11's own grr, which sends references to the quickfix
       -- list; the picker is the better surface for them.
       { "grr", function() Snacks.picker.lsp_references() end, desc = "LSP references" },
-      -- Git
-      { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git branches" },
-      { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git log" },
-      { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git log (file)" },
       -- Buffers / UI
       { "<leader>bD", function() Snacks.bufdelete() end, desc = "Delete buffer (keep layout)" },
       { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss notifications" },
