@@ -102,7 +102,7 @@ $$$        $$$,     $$$ $$,    $$c$$$cc$$$c     `$$$"``$$$,     $$$`$$$"``$$$,  
             -- global cwd keeps a window-local `:lcd` from doing the same.
             count = 99,
             cwd = vim.fn.getcwd(-1, -1),
-            win = { position = "right", width = 0.3 },
+            win = { position = "right", width = 0.4 },
           })
         end,
         desc = "Claude Code (right)",
