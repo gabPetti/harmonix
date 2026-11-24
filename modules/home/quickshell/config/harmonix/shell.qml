@@ -5,6 +5,7 @@
 
 import Quickshell
 import Quickshell.Io
+import "background"
 import "bar"
 import "lock"
 import "services"
@@ -14,6 +15,18 @@ ShellRoot {
     model: Quickshell.screens
 
     Bar {
+      required property var modelData
+
+      screen: modelData
+    }
+  }
+
+  // The desktop quote, standing in for Hyprland's own splash text -- see
+  // background/Background.qml for why.
+  Variants {
+    model: Quickshell.screens
+
+    Background {
       required property var modelData
 
       screen: modelData

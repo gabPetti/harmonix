@@ -13,3 +13,4 @@ singleton ClaudeVoice 1.0 ClaudeVoice.qml
 singleton Vpn 1.0 Vpn.qml
 singleton Translator 1.0 Translator.qml
 singleton LockState 1.0 LockState.qml
+singleton Quotes 1.0 Quotes.qml

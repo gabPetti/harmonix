@@ -55,9 +55,6 @@ BarPill {
     anchorItem: root
     panelId: "pomodoro"
     contentWidth: 320
-    // h and l belong to the phase lengths while the walk is on one; with the
-    // selection on a transport button they step the current phase instead.
-    fallbackAdjust: direction => Pomodoro.setMinutes(Pomodoro.phase, Pomodoro.minutesFor(Pomodoro.phase) + direction)
 
     SectionLabel {
       text: Pomodoro.phaseName
@@ -93,17 +90,37 @@ BarPill {
     }
 
     RowLayout {
+      id: transport
+
       Layout.fillWidth: true
       Layout.topMargin: 2
       spacing: Theme.popupGap
+
+      // One stop in the keyboard walk rather than three: h and l act on
+      // whichever side button they always mean here, so there is nothing to
+      // walk between with j/k first.
+      readonly property bool navigable: true
+      property bool selected: false
+
+      function adjust(direction: int): void {
+        if (direction < 0)
+          Pomodoro.reset();
+        else
+          Pomodoro.skip();
+      }
+
+      function activate(): void {
+        Pomodoro.toggle();
+      }
 
       Item {
         Layout.fillWidth: true
       }
 
       IconButton {
-        icon: Icons.restartSymbol
+        icon: Icons.minus
         symbol: true
+        size: Theme.stepperButton
         tooltipText: "Reset phase"
         onClicked: Pomodoro.reset()
       }
@@ -114,13 +131,15 @@ BarPill {
         size: 42
         iconSize: Theme.iconSizeLarge
         active: Pomodoro.running
+        selected: transport.selected
         tooltipText: Pomodoro.running ? "Pause" : "Start"
         onClicked: Pomodoro.toggle()
       }
 
       IconButton {
-        icon: Icons.skipSymbol
+        icon: Icons.plus
         symbol: true
+        size: Theme.stepperButton
         tooltipText: Pomodoro.phase === Pomodoro.phaseWork ? "Skip to break" : "Skip to focus"
         onClicked: Pomodoro.skip()
       }
