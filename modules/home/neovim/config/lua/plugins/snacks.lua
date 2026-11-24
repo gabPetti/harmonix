@@ -107,6 +107,17 @@ $$$        $$$,     $$$ $$,    $$c$$$cc$$$c     `$$$"``$$$,     $$$`$$$"``$$$,  
         end,
         desc = "Claude Code (right)",
       },
+      {
+        "<leader>ta",
+        function()
+          Snacks.terminal.toggle("agy", {
+            count = 99,
+            cwd = vim.fn.getcwd(-1, -1),
+            win = { position = "right", width = 0.4 },
+          })
+        end,
+        desc = "Antigravity (right)",
+      },
     },
   },
 }
