@@ -22,20 +22,17 @@ in
     # modules that own those.
     pkgs.curl
     pkgs.jq
+    # Animated wallpapers (gif/mp4/webm/mkv/mov): mpvpaper draws them, ffmpeg
+    # pulls a still frame out for matugen to theme from.
+    pkgs.mpvpaper
+    pkgs.ffmpeg
     # The bar's music visualizer. Quickshell's PipeWire bindings expose
     # devices and volumes but not samples, so the spectrum has to come from
     # something that taps the sink monitor itself (scripts/visualizer).
     pkgs.cava
     # notify-send, for the pomodoro timer's end-of-phase notification
-    # (services/Pomodoro.qml) and the Claude voice pill's replies. swaync is
-    # the daemon that renders them.
+    # (services/Pomodoro.qml). swaync is the daemon that renders them.
     pkgs.libnotify
-    # The Claude voice pill (scripts/claude-voice): speech in through
-    # whisper, the answer back out through piper. Neither ships weights --
-    # the script downloads both models to ~/.cache/harmonix/voice on first
-    # use, rather than pinning ~200MB of them into every generation.
-    pkgs.whisper-cpp
-    pkgs.piper-tts
     # wl-paste and wl-copy, for the translation pill: the text it translates
     # usually comes from the clipboard, and the translation usually goes back
     # to it (services/Translator.qml).

@@ -29,7 +29,7 @@ LauncherPane {
     : Wallpapers.switchingMode ? `Switching to ${Wallpapers.light ? "dark" : "light"} mode…`
     : `${root.results.length} wallpaper${root.results.length === 1 ? "" : "s"}  ·  ${Wallpapers.mode}`
   hint: root.searching ? "enter done  ·  esc back to grid"
-    : "hjkl move  ·  enter apply  ·  / search  ·  f fetch  ·  m light/dark  ·  esc close"
+    : "hjkl move  ·  enter apply  ·  f fetch  ·  m light/dark  ·  esc close"
 
   onResultsChanged: root.selection = 0
 

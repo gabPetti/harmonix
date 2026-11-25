@@ -7,7 +7,7 @@ local term = "kitty"
 
 -- ==> SYSTEM BINDS
 hl.bind("SUPER + Return", hl.dsp.exec_cmd(term), { description = "Open terminal" })
-hl.bind("SUPER + L", hl.dsp.focus({ workspace = "empty" }), { description = "Open first empty workspace" })
+hl.bind("SUPER + J", hl.dsp.focus({ workspace = "empty" }), { description = "Open first empty workspace" })
 hl.bind("Print", hl.dsp.exec_cmd("hyprshot -z --clipboard-only -m region"), { description = "Take screenshot" })
 hl.bind("SUPER + C", hl.dsp.exec_cmd("hyprpicker -f hex -a"), { description = "Pick color" })
 hl.bind("SUPER + N", hl.dsp.exec_cmd("swaync-client -t"), { description = "Toggle Sway notification manager" })
@@ -79,14 +79,9 @@ hl.bind(
 	{ description = "Toggle pomodoro panel" }
 )
 hl.bind(
-	"SUPER + ALT + I",
-	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle voice"),
-	{ description = "Toggle Claude voice panel" }
-)
-hl.bind(
 	"SUPER + ALT + L",
 	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle brightness"),
-	{ description = "Toggle Claude voice panel" }
+	{ description = "Toggle brightness panel" }
 )
 hl.bind(
 	"SUPER + ALT + T",
@@ -169,8 +164,8 @@ hl.bind("SUPER + CTRL + K", hl.dsp.focus({ direction = "up" }), { description = 
 hl.bind("SUPER + CTRL + J", hl.dsp.focus({ direction = "down" }), { description = "Previous workspace" })
 hl.bind("SUPER + CTRL + H", hl.dsp.focus({ direction = "left" }), { description = "Next workspace" })
 hl.bind("SUPER + CTRL + L", hl.dsp.focus({ direction = "right" }), { description = "Previous workspace" })
-hl.bind("SUPER + K", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
-hl.bind("SUPER + J", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
+hl.bind("SUPER + L", hl.dsp.focus({ workspace = "e+1" }), { description = "Scroll workspaces forward" })
+hl.bind("SUPER + H", hl.dsp.focus({ workspace = "e-1" }), { description = "Scroll workspaces back" })
 
 hl.bind("SUPER + S", hl.dsp.workspace.toggle_special(), { description = "Show special workspace" })
 hl.bind(

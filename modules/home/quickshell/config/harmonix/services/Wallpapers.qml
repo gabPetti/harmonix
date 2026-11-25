@@ -153,4 +153,11 @@ QtObject {
   function name(path) {
     return path.split("/").pop().replace(/\.[^.]+$/, "").replace(/[-_]/g, " ");
   }
+
+  // Whether a path plays rather than just displays. Mirrored in
+  // scripts/wallpaper's is_animated (there is no process to spare per
+  // thumbnail), so a new extension needs adding in both places.
+  function isAnimated(path) {
+    return /\.(gif|mp4|webm|mkv|mov)$/i.test(path);
+  }
 }

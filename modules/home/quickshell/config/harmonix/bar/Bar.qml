@@ -83,8 +83,6 @@ PanelWindow {
 
       Pomodoro {}
 
-      Voice {}
-
       Translator {}
     }
   }

@@ -71,15 +71,9 @@ QtObject {
   readonly property string bedtimeSymbol: "bedtime"
   readonly property string sunriseSymbol: "wb_twilight"
 
-  // The Claude voice pill (bar/Voice.qml). A Material Symbol for the same
-  // reason the pomodoro's is: it sits in the bar next to one.
-  readonly property string voiceSymbol: "assistant"
-  readonly property string record: "󰑊"
-  readonly property string stop: "󰓛"
-
   // The translation pill (bar/Translator.qml) and the two things its panel
-  // does with text that lives outside it. Material Symbols, like the voice
-  // pill it sits beside.
+  // does with text that lives outside it. Material Symbols, like the
+  // pomodoro pill it sits beside.
   readonly property string translateSymbol: "translate"
   readonly property string pasteSymbol: "content_paste"
   readonly property string copySymbol: "content_copy"

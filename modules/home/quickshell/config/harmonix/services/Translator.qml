@@ -142,7 +142,8 @@ QtObject {
 
   // A singleton builds its object-typed properties on first access, and
   // nothing reads these until they are needed -- without this the daemon
-  // would not exist to be started. Same trap as ClaudeVoice's recorder.
+  // would not exist to be started. Same trap any process whose
+  // lifetime is driven by a property would hit.
   Component.onCompleted: {
     root.daemon;
     root.fetcher;
