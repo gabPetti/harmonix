@@ -94,7 +94,7 @@ The quickshell template is JSON, and `harmonix/theme/Colors.qml` copies every ke
 
 ### Secrets
 
-`.env` (gitignored, mode 600) holds `OPENROUTER_API_KEY` and the `EDUROAM_*` values; `.env.example` documents the expected keys and which module consumes each.
+`.env` (gitignored, mode 600) holds the `EDUROAM_*` and `VPN_IST_*` values and `GITLAB_USER`; `.env.example` documents the expected keys and which module consumes each.
 
 `modules/core/network.nix` passes `${vars.repoPath}/.env` to NetworkManager's `ensureProfiles.environmentFiles`. NetworkManager pipes the generated profile through `envsubst` before writing it to `/etc`, so **any** field in a profile can be a `$VAR` placeholder — which is why the eduroam identity and anonymous identity live in `.env` alongside the password rather than inline. Keep personal data and credentials out of tracked `.nix` files: they would otherwise land in both the Nix store and git history.
 
