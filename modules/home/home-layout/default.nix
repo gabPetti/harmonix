@@ -1,8 +1,6 @@
 # The shape of ~: one top-level folder per *kind* of thing, topics one level
 # down. Declared here so a reinstall recreates it, and so every XDG-aware app
 # (file pickers, browsers' download location, screenshot tools) agrees on it.
-#
-# `harmonix organize` (modules/home/harmonix) is what keeps files in it.
 { config, ... }:
 
 let
@@ -34,7 +32,7 @@ in
   xdg.configFile."user-dirs.dirs".force = true;
 
   # The second level that matters for finding things: where a repo goes is
-  # decided by whose it is (see harmonix organize's [code] groups).
+  # decided by whose it is, not by what it is.
   systemd.user.tmpfiles.rules = map (dir: "d ${home}/${dir} - - - -") [
     "Code/personal"
     "Code/uni"
