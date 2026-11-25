@@ -33,6 +33,24 @@ in
     virtualisation.libvirtd.enable = cfg.libvirtd.enable;
     virtualisation.vmware.host.enable = cfg.vmware.enable;
 
+    # The kernel's aggregate module tree now concatenates a per-module signing
+    # certificate (`<mod>.ko.cer`) for every out-of-tree module. The VMware ones
+    # build through VMware's own makefiles and emit bare `.ko` files, so that
+    # merge step fails the whole modules derivation. Module signatures are not
+    # enforced on this host, so an empty certificate beside each module is
+    # enough to satisfy it. Drop this once the package ships them upstream.
+    boot.kernelPackages = lib.mkIf cfg.vmware.enable (
+      pkgs.linuxPackages.extend (_: kprev: {
+        vmware = kprev.vmware.overrideAttrs (prevAttrs: {
+          postInstall = (prevAttrs.postInstall or "") + ''
+            for ko in "$out"/lib/modules/*/misc/*.ko; do
+              : > "$ko.cer"
+            done
+          '';
+        });
+      })
+    );
+
     # docker-compose ships separately from the daemon, so it follows the same
     # toggle instead of being installed unconditionally.
     environment.systemPackages = lib.optional cfg.docker.enable pkgs.docker-compose;
