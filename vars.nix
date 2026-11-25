@@ -15,6 +15,8 @@ in
   # Login account metadata.
   fullName = "Gabriel Petti Tavares";
   email = "gabpettidev@gmail.com";
+  # Repos whose remote is on this account count as your own (harmonix organize).
+  githubUser = "gabPetti";
 
   # Host identity. flake.nix derives both the attribute name of the
   # nixosConfiguration and the hosts/<name> path from hostName.
