@@ -4,6 +4,7 @@
   imports = [
     # Shared option plumbing used by the app modules below.
     ../../modules/home/config-links.nix
+    ../../modules/home/home-layout
 
     ../../modules/home/ssh
     ../../modules/home/neovim
