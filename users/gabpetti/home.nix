@@ -8,11 +8,11 @@
 
     ../../modules/home/ssh
     ../../modules/home/neovim
+    ../../modules/home/notes
     ../../modules/home/firefox
     ../../modules/home/gtk
     ../../modules/home/starship
     ../../modules/home/vscode
-    ../../modules/home/obsidian
     ../../modules/home/hyprland
     ../../modules/home/quickshell
     ../../modules/home/kitty

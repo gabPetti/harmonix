@@ -54,7 +54,8 @@ in
     "Documents/admin"
     "Documents/books"
 
-    # The one Obsidian vault (modules/home/obsidian).
+    # Notes are written, documents are received: one folder of their own,
+    # so links and search across them stay whole.
     "Notes/uni"
 
     "Pictures/Screenshots"
