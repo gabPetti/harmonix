@@ -4,10 +4,17 @@ import Quickshell
 import Quickshell.Networking as Net
 import "../theme"
 import "../components"
+import "../services"
 
-// Wi-Fi/wired state and a connect menu, straight off NetworkManager through
-// Quickshell's Networking service -- no nmcli polling, and no terminal popup
-// for picking a network.
+// Everything about the link, in one pill: Wi-Fi/wired state and a connect
+// menu straight off NetworkManager through Quickshell's Networking service --
+// no nmcli polling, and no terminal popup for picking a network -- plus the
+// saved VPN profiles, which are the one thing that service can't see
+// (services/Vpn.qml explains why).
+//
+// The two are faces of the same panel rather than two pills: a VPN rides on
+// top of the link, so it is the same question asked one layer up. Tab
+// switches them, as it switches the launcher's two panes.
 BarPill {
   id: root
 
@@ -23,6 +30,13 @@ BarPill {
     .sort((a, b) => (b.connected - a.connected) || (b.signalStrength - a.signalStrength))
     .slice(0, 8)
 
+  // The one profile a click outside the panel can mean without guessing:
+  // whatever is up, or the only one there is. Inherited from the VPN pill
+  // this absorbed, where it was the right-click shortcut.
+  readonly property var quickVpn: Vpn.connected ? Vpn.active[0]
+    : Vpn.connections.length === 1 ? Vpn.connections[0]
+    : null
+
   // The network waiting on a password, if any.
   property var pskTarget: null
 
@@ -34,13 +48,31 @@ BarPill {
   }
 
   active: popup.visible
-  tooltipText: root.wiredUp ? `Wired  ·  ${root.wiredDevice.address}`
-    : !root.wifiOn ? "Wi-Fi off"
-    : root.activeWifi ? `${root.activeWifi.name}  ·  ${root.strength(root.activeWifi)}%`
-    : "Not connected"
+  tooltipText: {
+    const link = root.wiredUp ? `Wired  ·  ${root.wiredDevice.address}`
+      : !root.wifiOn ? "Wi-Fi off"
+      : root.activeWifi ? `${root.activeWifi.name}  ·  ${root.strength(root.activeWifi)}%`
+      : "Not connected";
+
+    return Vpn.connected
+      ? `${link}\nVPN  ·  ${Vpn.active.map(connection => connection.name).join(", ")}`
+      : link;
+  }
 
   onClicked: popup.toggle()
-  onRightClicked: Net.Networking.wifiEnabled = !Net.Networking.wifiEnabled
+  onRightClicked: Net.Networking.wifiEnabled = !root.wifiOn
+  // The gesture the VPN pill answered to, kept: one profile, toggled without
+  // opening anything. With several saved it only ever takes down what is up.
+  onMiddleClicked: {
+    if (root.quickVpn) Vpn.toggle(root.quickVpn);
+  }
+
+  // nmcli monitor only narrates connections changing *state*, so a profile
+  // that was merely added -- by a rebuild writing one into
+  // /etc/NetworkManager -- never announces itself, and the list stays as it
+  // was when the shell started. Opening the panel is the moment the answer
+  // has to be current.
+  onActiveChanged: if (root.active) Vpn.refresh()
 
   function activate(network) {
     if (network.connected) {
@@ -61,12 +93,12 @@ BarPill {
     pskField.text = "";
   }
 
-  // Only scan while the menu is open; a background scan costs battery and
-  // interrupts the active connection on some cards.
+  // Only scan while the Wi-Fi face is showing; a background scan costs
+  // battery and interrupts the active connection on some cards.
   Binding {
     target: root.wifiDevice
     property: "scannerEnabled"
-    value: popup.visible && root.wifiOn
+    value: popup.visible && popup.tab === "wifi" && root.wifiOn
     when: root.wifiDevice !== null
     restoreMode: Binding.RestoreNone
   }
@@ -80,12 +112,23 @@ BarPill {
     font.pixelSize: Theme.iconSize
   }
 
+  // A tunnel being up is worth a glyph of its own, and only then: the link
+  // glyph beside it goes on reporting the link, which is the whole reason
+  // the two were ever separate pills.
+  StyledText {
+    visible: Vpn.connected
+    text: Icons.vpn
+    color: Colors.accent
+    font.pixelSize: Theme.fontSizeSmall
+  }
+
   BarPopup {
     id: popup
 
     anchorItem: root
     panelId: "network"
     contentWidth: 384
+    tabs: ["wifi", "vpn"]
 
     onVisibleChanged: {
       if (!popup.visible) {
@@ -94,110 +137,200 @@ BarPill {
       }
     }
 
-    SectionToggle {
-      text: "Wi-Fi"
-      checked: root.wifiOn
-      onToggled: Net.Networking.wifiEnabled = !root.wifiOn
+    RowLayout {
+      Layout.fillWidth: true
+      spacing: Theme.pillSpacing
+
+      Chip {
+        label: "Wi-Fi"
+        active: popup.tab === "wifi"
+        onClicked: popup.tab = "wifi"
+      }
+
+      Chip {
+        label: "VPN"
+        active: popup.tab === "vpn"
+        onClicked: popup.tab = "vpn"
+      }
+
+      Item {
+        Layout.fillWidth: true
+      }
+
+      // The one piece of the other face worth seeing from this one: that a
+      // tunnel is up changes what every row above it means.
+      StyledText {
+        visible: Vpn.connected && popup.tab === "wifi"
+        text: `${Icons.vpn} on`
+        color: Colors.accent
+        font.pixelSize: Theme.fontSizeSmall
+      }
     }
 
-    ListRow {
-      visible: root.wiredDevice !== null
-      icon: Icons.wired
-      iconColor: root.wiredUp ? Colors.accent : Colors.fgDim
-      active: root.wiredUp
-      title: "Wired"
-      subtitle: root.wiredUp ? root.wiredDevice.address : "Unplugged"
-      onClicked: {
-        if (root.wiredUp) root.wiredDevice.disconnect();
+    ColumnLayout {
+      id: wifiFace
+
+      visible: popup.tab === "wifi"
+      Layout.fillWidth: true
+      spacing: Theme.popupGap
+
+      SectionToggle {
+        text: "Wi-Fi"
+        checked: root.wifiOn
+        onToggled: Net.Networking.wifiEnabled = !root.wifiOn
+      }
+
+      ListRow {
+        visible: root.wiredDevice !== null
+        icon: Icons.wired
+        iconColor: root.wiredUp ? Colors.accent : Colors.fgDim
+        active: root.wiredUp
+        title: "Wired"
+        subtitle: root.wiredUp ? root.wiredDevice.address : "Unplugged"
+        onClicked: {
+          if (root.wiredUp) root.wiredDevice.disconnect();
+        }
+      }
+
+      StyledText {
+        Layout.fillWidth: true
+        visible: root.wifiOn && root.networks.length === 0
+        text: "Scanning…"
+        color: Colors.fgDim
+        font.pixelSize: Theme.fontSizeSmall
+      }
+
+      Repeater {
+        model: root.wifiOn ? root.networks : []
+
+        delegate: ListRow {
+          required property var modelData
+
+          active: modelData.connected
+          busy: modelData.stateChanging
+          icon: Icons.wifi(root.strength(modelData))
+          title: modelData.name || "(hidden)"
+          subtitle: modelData.connected ? "Connected"
+            : modelData.known ? "Saved"
+            : modelData.security === Net.WifiSecurityType.Open ? "Open" : ""
+          trailing: modelData.security === Net.WifiSecurityType.Open
+            ? `${root.strength(modelData)}%`
+            : `${Icons.lock} ${root.strength(modelData)}%`
+          onClicked: root.activate(modelData)
+          onRightClicked: {
+            if (modelData.known) modelData.forget();
+          }
+        }
+      }
+
+      Rectangle {
+        Layout.fillWidth: true
+        visible: root.pskTarget !== null
+        implicitHeight: 36
+        radius: 10
+        color: Colors.bg1
+
+        onVisibleChanged: {
+          if (visible) pskField.forceActiveFocus();
+        }
+
+        RowLayout {
+          anchors.fill: parent
+          anchors.leftMargin: 10
+          anchors.rightMargin: 6
+          spacing: Theme.popupGap
+
+          StyledText {
+            text: Icons.lock
+            color: Colors.fgDim
+          }
+
+          TextInput {
+            id: pskField
+
+            Layout.fillWidth: true
+            color: Colors.fg
+            font.family: Theme.font
+            font.pixelSize: Theme.fontSize
+            echoMode: TextInput.Password
+            selectByMouse: true
+            selectionColor: Colors.accent
+            selectedTextColor: Colors.accentFg
+            verticalAlignment: TextInput.AlignVCenter
+
+            Keys.onReturnPressed: root.submitPsk()
+            Keys.onEnterPressed: root.submitPsk()
+            Keys.onEscapePressed: root.pskTarget = null
+
+            StyledText {
+              anchors.verticalCenter: parent.verticalCenter
+              visible: pskField.text === ""
+              text: root.pskTarget ? `Password for ${root.pskTarget.name}` : ""
+              color: Colors.fgDim
+              font.pixelSize: Theme.fontSizeSmall
+            }
+          }
+
+          IconButton {
+            icon: Icons.check
+            size: 26
+            iconSize: Theme.fontSizeSmall
+            onClicked: root.submitPsk()
+          }
+        }
+      }
+    }
+
+    ColumnLayout {
+      id: vpnFace
+
+      visible: popup.tab === "vpn"
+      Layout.fillWidth: true
+      spacing: Theme.popupGap
+
+      StyledText {
+        Layout.fillWidth: true
+        visible: Vpn.connections.length === 0
+        text: "No VPN profiles in NetworkManager."
+        color: Colors.fgDim
+        font.pixelSize: Theme.fontSizeSmall
+        wrapMode: Text.WordWrap
+      }
+
+      Repeater {
+        model: Vpn.connections
+
+        delegate: ListRow {
+          required property var modelData
+
+          active: modelData.active
+          busy: Vpn.busyUuid === modelData.uuid
+          icon: Icons.vpn
+          title: modelData.name
+          subtitle: modelData.active ? "Connected"
+            : modelData.type === "wireguard" ? "WireGuard" : "OpenVPN"
+          onClicked: Vpn.toggle(modelData)
+        }
+      }
+
+      // nmcli's own words. A tunnel fails for reasons the bar can't
+      // paraphrase -- a wrong password, an unreachable gateway, a missing
+      // plugin -- and guessing between them is worse than quoting it.
+      StyledText {
+        Layout.fillWidth: true
+        visible: Vpn.error !== ""
+        text: Vpn.error
+        color: Colors.critical
+        font.pixelSize: Theme.fontSizeSmall
+        wrapMode: Text.WordWrap
       }
     }
 
     StyledText {
       Layout.fillWidth: true
-      visible: root.wifiOn && root.networks.length === 0
-      text: "Scanning…"
+      text: "tab switch  ·  hjkl walk  ·  q close"
       color: Colors.fgDim
       font.pixelSize: Theme.fontSizeSmall
-    }
-
-    Repeater {
-      model: root.wifiOn ? root.networks : []
-
-      delegate: ListRow {
-        required property var modelData
-
-        active: modelData.connected
-        busy: modelData.stateChanging
-        icon: Icons.wifi(root.strength(modelData))
-        title: modelData.name || "(hidden)"
-        subtitle: modelData.connected ? "Connected"
-          : modelData.known ? "Saved"
-          : modelData.security === Net.WifiSecurityType.Open ? "Open" : ""
-        trailing: modelData.security === Net.WifiSecurityType.Open
-          ? `${root.strength(modelData)}%`
-          : `${Icons.lock} ${root.strength(modelData)}%`
-        onClicked: root.activate(modelData)
-        onRightClicked: {
-          if (modelData.known) modelData.forget();
-        }
-      }
-    }
-
-    Rectangle {
-      Layout.fillWidth: true
-      visible: root.pskTarget !== null
-      implicitHeight: 36
-      radius: 10
-      color: Colors.bg1
-
-      onVisibleChanged: {
-        if (visible) pskField.forceActiveFocus();
-      }
-
-      RowLayout {
-        anchors.fill: parent
-        anchors.leftMargin: 10
-        anchors.rightMargin: 6
-        spacing: Theme.popupGap
-
-        StyledText {
-          text: Icons.lock
-          color: Colors.fgDim
-        }
-
-        TextInput {
-          id: pskField
-
-          Layout.fillWidth: true
-          color: Colors.fg
-          font.family: Theme.font
-          font.pixelSize: Theme.fontSize
-          echoMode: TextInput.Password
-          selectByMouse: true
-          selectionColor: Colors.accent
-          selectedTextColor: Colors.accentFg
-          verticalAlignment: TextInput.AlignVCenter
-
-          Keys.onReturnPressed: root.submitPsk()
-          Keys.onEnterPressed: root.submitPsk()
-          Keys.onEscapePressed: root.pskTarget = null
-
-          StyledText {
-            anchors.verticalCenter: parent.verticalCenter
-            visible: pskField.text === ""
-            text: root.pskTarget ? `Password for ${root.pskTarget.name}` : ""
-            color: Colors.fgDim
-            font.pixelSize: Theme.fontSizeSmall
-          }
-        }
-
-        IconButton {
-          icon: Icons.check
-          size: 26
-          iconSize: Theme.fontSizeSmall
-          onClicked: root.submitPsk()
-        }
-      }
     }
   }
 }

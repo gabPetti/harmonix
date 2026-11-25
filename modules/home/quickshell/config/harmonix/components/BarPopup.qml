@@ -39,6 +39,11 @@ PanelWindow {
   // pinned to whichever end of the bar that pill happens to be at -- or for
   // one with no pill at all, like media.
   property bool centered: false
+  // A panel with more than one face: `tabs` names them and `tab` is the one
+  // showing, switched by Tab and Backtab the way the launcher's two panes
+  // are. Fewer than two leaves both keys inert.
+  property var tabs: []
+  property string tab: root.tabs.length > 0 ? root.tabs[0] : ""
 
   default property alias content: column.data
 
@@ -155,6 +160,18 @@ PanelWindow {
     root.extension = root.shouldShow ? 1 : 0;
   }
 
+  function cycleTab(step: int): void {
+    if (root.tabs.length < 2)
+      return;
+
+    const at = root.tabs.indexOf(root.tab);
+    root.tab = root.tabs[(at + (step || 1) + root.tabs.length) % root.tabs.length];
+  }
+
+  // The walk only sees visible items, so the selection it was holding is
+  // gone along with the face that had it.
+  onTabChanged: if (root.keyNav && root.shouldShow) Qt.callLater(nav.first)
+
   // hjkl, Enter and q, over whatever the panel holds.
   KeyNav {
     id: nav
@@ -164,6 +181,13 @@ PanelWindow {
     container: column
     fallbackAdjust: root.fallbackAdjust
     onDismissed: root.close()
+
+    // Tab is the panel's, not the walk's: KeyNav moves within one face and
+    // has no notion of there being another. Declared as the specific key
+    // handlers rather than as a second Keys.onPressed, which would replace
+    // the one KeyNav does its own work in.
+    Keys.onTabPressed: root.cycleTab(1)
+    Keys.onBacktabPressed: root.cycleTab(-1)
   }
 
   Behavior on extension {

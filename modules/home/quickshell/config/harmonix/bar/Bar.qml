@@ -158,8 +158,6 @@ PanelWindow {
 
       Network {}
 
-      VpnToggle {}
-
       Bluetooth {}
 
       Battery {}

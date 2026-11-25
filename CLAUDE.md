@@ -57,7 +57,7 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 
 - `theme/` — `Colors` (matugen palette), `Theme` (all sizes/spacing/durations), `Icons` (Nerd Font glyphs). Nothing else hardcodes a size, colour, or codepoint.
 - `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `LockState` (locked/PAM), `Fuzzy`.
-- `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …).
+- `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …). `BarPopup` owns the panel behaviour more than one panel needs: where it drops (`centered`) and whether it has more than one face (`tabs`/`tab`, switched with Tab — the network panel's Wi-Fi/VPN).
 - `bar/`, `launcher/`, `lock/` — the actual widgets, composed from the above.
 
 **Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is _not_ resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
