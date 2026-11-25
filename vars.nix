@@ -21,7 +21,9 @@ in
   hostName = "laptop";
   system = "x86_64-linux";
 
-  # Absolute path to this checkout on the running machine.
+  # Absolute path to this checkout on the running machine. Deliberately its
+  # own top-level folder rather than under ~/Repos with other code: it is the
+  # system's source, not a project (modules/home/home-layout).
   #
   # The out-of-store dotfile symlinks and the NetworkManager secrets file
   # resolve through this at runtime, so it has to describe the live filesystem

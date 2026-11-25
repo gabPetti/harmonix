@@ -49,7 +49,7 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 
 - Editing anything under `modules/home/<name>/config` takes effect **immediately** — no rebuild. Only changes to a module's `default.nix` (packages, services, env vars, the link itself) need `nixos-rebuild`.
 - `config.lib.file.mkOutOfStoreSymlink` should appear in exactly one place (`config-links.nix`). Don't reintroduce per-module call sites.
-- Because the symlink target is the checkout, the repo must live at `vars.repoPath`; move it and update that one line.
+- Because the symlink target is the checkout, the repo must live at `vars.repoPath` — `~/harmonix`, deliberately top-level rather than under `~/Repos` with other code. `modules/home/home-layout` warns on activation if the checkout is missing. Moving it means updating that one line.
 
 ### The Quickshell shell
 
