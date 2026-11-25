@@ -8,4 +8,5 @@ modules/home/yazi/config/theme.toml
 wallpapers/wallhaven-*
 # Compiled spell dictionaries; regenerated from the tracked .add files
 modules/home/neovim/config/spell/*.spl
-wallpapa
+wallpapers/*
+!wallpapers/majula.png
