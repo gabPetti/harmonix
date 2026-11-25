@@ -1,0 +1,78 @@
+#!/usr/bin/env bash
+#
+# The bar's chat panel, talking to the Claude Code CLI that is already set up
+# on this machine. No API key of its own: `claude` resolves the credentials in
+# ~/.claude the same way it does in a terminal, so the panel is signed in
+# exactly as long as the terminal is.
+#
+# `serve` is a daemon, not a command per question: with --input-format
+# stream-json the CLI reads one user message per line and keeps the
+# conversation for as long as it is running, which is what lets the panel be
+# closed and reopened mid-thread without resending anything. The bar starts it
+# once (services/Chat.qml), which is also where the event stream is parsed.
+#
+#   in   {"type":"user","message":{"role":"user","content":[{"type":"text","text":"…"}]}}
+#        {"type":"control_request","request_id":"1","request":{"subtype":"interrupt"}}
+#   out  one JSON event per line -- system/init, stream_event, assistant,
+#        result -- as documented for `claude -p --output-format stream-json`.
+#
+# A new thread is a new process: the CLI has no "forget everything" message,
+# and starting one costs about a second.
+#
+# Usage:
+#   chat serve         Read user messages on stdin, stream events on stdout
+#   chat once [text]   Ask one question, print the answer, for use from a
+#                      terminal
+
+set -uo pipefail
+
+CLAUDE=${HARMONIX_CLAUDE:-claude}
+
+# Sonnet at medium effort: this is the bar's quick-question box, not a coding
+# agent, and medium is where it still reasons about a real question without
+# spending a minute on "what was that flag again".
+MODEL=sonnet
+EFFORT=medium
+
+# No tools at all, which is what makes this a chat rather than an agent: the
+# panel has no terminal to approve a permission prompt in, and nothing it asks
+# should be touching the filesystem. The system prompt replaces Claude Code's
+# own, for the same reason -- what is wanted here is an answer, not a plan to
+# edit something.
+SYSTEM="You are the assistant behind a dropdown in a NixOS desktop bar. \
+The person asking is at a Hyprland/Wayland laptop running a Quickshell bar, \
+and the panel they are reading you in is a few hundred pixels wide. Answer in \
+that spirit: lead with the answer, keep it to a few short paragraphs or a \
+tight list, and give a command or a snippet rather than prose describing one. \
+Markdown renders; headings are rarely worth the space. You have no tools \
+here, so say when something would need to be looked up or run."
+
+# --no-session-persistence: a question asked from the bar is not a session the
+# user wants to find in `claude --resume` later, and nothing is written to disk
+# for it.
+common=(
+	--print
+	--model "$MODEL"
+	--effort "$EFFORT"
+	--tools ""
+	--system-prompt "$SYSTEM"
+	--no-session-persistence
+)
+
+case ${1-serve} in
+	serve)
+		exec "$CLAUDE" "${common[@]}" \
+			--input-format stream-json \
+			--output-format stream-json \
+			--include-partial-messages \
+			--verbose
+		;;
+	once)
+		text=${2-$(cat)}
+		exec "$CLAUDE" "${common[@]}" -- "$text"
+		;;
+	*)
+		printf '%s: %s <serve|once [text]>\n' "${0##*/}" "${0##*/}" >&2
+		exit 1
+		;;
+esac

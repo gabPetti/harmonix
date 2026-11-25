@@ -56,15 +56,25 @@ That maps an `~/.config` directory name to a module directory under `modules/hom
 `modules/home/quickshell/config/harmonix` is the whole desktop shell: bar, its popups, the application/wallpaper launcher that replaced rofi, and the lock screen that replaced hyprlock. It is split by concern, one directory per layer:
 
 - `theme/` — `Colors` (matugen palette), `Theme` (all sizes/spacing/durations), `Icons` (Nerd Font glyphs). Nothing else hardcodes a size, colour, or codepoint.
-- `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `LockState` (locked/PAM), `Fuzzy`.
-- `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …). `BarPopup` owns the panel behaviour more than one panel needs: where it drops (`centered`) and whether it has more than one face (`tabs`/`tab`, switched with Tab — the network panel's Wi-Fi/VPN).
+- `services/` — singletons that own state: `Audio` (PipeWire), `Backlight`, `Power` (UPower + session actions), `SystemUsage`, `NightLight`, `Wallpapers`, `Panels` (which popup is open), `LauncherState`, `LockState` (locked/PAM), `Chat` (the conversation with Claude), `Fuzzy`.
+- `components/` — generic UI pieces (`BarPill`, `BarGroup`, `BarPopup`, `ListRow`, `ValueSlider`, …). `BarPopup` owns the panel behaviour more than one panel needs: where it drops (`centered`, `leftAligned`) and whether it has more than one face (`tabs`/`tab`, switched with Tab — the network panel's Wi-Fi/VPN).
 - `bar/`, `launcher/`, `lock/` — the actual widgets, composed from the above.
 
 **Each directory has its own `qmldir`, and cross-directory references use relative imports** (`import "../theme"`). There is no module-path import: `import harmonix.theme` is _not_ resolvable, because the config root isn't on Qt's QML import path. A singleton also only works when it is listed in its directory's `qmldir`.
 
-Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/translate` (plus `wl-copy`/`wl-paste` beside it), `brightnessctl` writes, and the lock screen's `hyprctl devices -j` poll — Hyprland publishes caps lock and the active layout there but emits no event when either changes.
+Device state comes from Quickshell's own services (PipeWire, NetworkManager, BlueZ, UPower, MPRIS, StatusNotifier) rather than from polling CLI tools; the only shell-outs left are `scripts/nightlight`, `scripts/wallpaper`, `scripts/translate` and `scripts/chat` (plus `wl-copy`/`wl-paste` beside them), `brightnessctl` writes, and the lock screen's `hyprctl devices -j` poll — Hyprland publishes caps lock and the active layout there but emits no event when either changes.
 
 Editing any `.qml` hot-reloads the running shell — watch `qs log --pid $(pgrep -x quickshell)` for errors. Changing `shell.qml`'s `//@ pragma UseQApplication` (needed for system-tray menus) requires `systemctl --user restart quickshell` instead.
+
+#### The chat panel
+
+`bar/Chat.qml` is the dropdown at the bar's left end: a conversation with Claude Sonnet at medium effort, held by **the Claude Code CLI already configured on this machine**. There is no API key — `claude` resolves its own credentials out of `~/.claude`, so the panel is signed in exactly as long as a terminal is.
+
+- `scripts/chat serve` is `claude -p --input-format stream-json`, which reads one user message per line and keeps the conversation for as long as it runs — so it is held open for the life of the shell, like the translator's daemon. The flags (model, effort, `--tools ""`, the system prompt that replaces Claude Code's own) all live in that script.
+- `services/Chat.qml` parses the CLI's event stream directly: `stream_event` deltas while a reply arrives, `result` to end the turn. Stopping a reply is the CLI's own `interrupt` control request, which the session survives; an interrupted turn comes back as `error_during_execution`, which is why the service tracks whether the stop was asked for.
+- A new thread is a new process: the CLI has no message for forgetting a conversation.
+- The panel is the one user of `BarPopup.leftAligned`, which pins it to the leftmost point the bar's underside is still straight at instead of centring it under its pill.
+- Reached by SUPER+I (`qs -c harmonix ipc call panels toggle chat`), like every other panel with a `panelId`.
 
 Hyprland reaches the launcher over IPC (`qs -c harmonix ipc call launcher apps|wallpapers|toggle|close`), wired to SUPER+A and SUPER+ALT+W in `modules/home/hyprland/config/default/keybindings.lua`.
 

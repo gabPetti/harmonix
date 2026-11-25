@@ -39,6 +39,11 @@ PanelWindow {
   // pinned to whichever end of the bar that pill happens to be at -- or for
   // one with no pill at all, like media.
   property bool centered: false
+  // Drops from the bar's left end instead of from under the pill. For a
+  // panel wide enough that centring it on its pill would clamp it there
+  // anyway, and whose content is read left-to-right rather than scanned --
+  // the chat panel is both.
+  property bool leftAligned: false
   // A panel with more than one face: `tabs` names them and `tab` is the one
   // showing, switched by Tab and Backtab the way the launcher's two panes
   // are. Fewer than two leaves both keys inert.
@@ -114,7 +119,11 @@ PanelWindow {
 
   // Where the panel would put its left edge if there were room on both
   // sides: under the middle of the pill, or under the middle of the bar.
-  readonly property real preferredX: (root.centered ? root.barWidth / 2 : root.anchorPoint.x) - root.implicitWidth / 2
+  // A left-aligned panel asks for less than the clamp below allows, so it
+  // lands on the limit -- which is the leftmost point the bar's underside is
+  // still straight at, and so the furthest left a fillet can reach.
+  readonly property real preferredX: root.leftAligned ? 0
+    : (root.centered ? root.barWidth / 2 : root.anchorPoint.x) - root.implicitWidth / 2
 
   // Where the top edge goes, which is the bar's underside either way. A pill
   // panel reads it off the pill, the only thing that knows which row of the

@@ -89,6 +89,15 @@ hl.bind(
 	{ description = "Toggle translation panel" }
 )
 
+-- The one panel that isn't behind SUPER + ALT: asking Claude something is a
+-- thing you do mid-sentence, and the panel takes the keyboard to be typed
+-- into rather than walked with hjkl.
+hl.bind(
+	"SUPER + I",
+	hl.dsp.exec_cmd("qs -c harmonix ipc call panels toggle chat"),
+	{ description = "Toggle Claude chat panel" }
+)
+
 -- ==> SYSTEM CONTROLS
 hl.bind(
 	"XF86AudioRaiseVolume",

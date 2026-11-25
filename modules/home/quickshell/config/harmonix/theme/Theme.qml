@@ -145,6 +145,20 @@ QtObject {
   // -- and it grows with the text from there.
   readonly property int translateFieldHeight: 78
 
+  // The chat panel (bar/Chat.qml). Wider than an ordinary bar panel -- it is
+  // read as prose rather than scanned as a list -- and its thread is capped
+  // rather than left to grow: the panel hangs off the bar, so a long
+  // conversation would otherwise run off the bottom of the screen.
+  readonly property int chatWidth: 460
+  readonly property int chatThreadHeight: 380
+  readonly property int chatFieldHeight: 64
+  readonly property int chatBubbleRadius: 16
+  readonly property int chatBubblePadding: 11
+  // How much of the panel a question is allowed to take. Short of the full
+  // width so that a question and an answer are told apart by shape before
+  // either is read.
+  readonly property real chatBubbleMax: 0.85
+
   // The pomodoro panel's clock. Deliberately the largest type in the shell:
   // it is the one number the panel exists to show.
   readonly property int pomodoroReadout: 38

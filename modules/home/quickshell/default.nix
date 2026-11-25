@@ -35,7 +35,8 @@ in
     pkgs.libnotify
     # wl-paste and wl-copy, for the translation pill: the text it translates
     # usually comes from the clipboard, and the translation usually goes back
-    # to it (services/Translator.qml).
+    # to it (services/Translator.qml). wl-copy is also what the chat panel's
+    # copy button uses (services/Chat.qml).
     pkgs.wl-clipboard
     # argos-translate and argospm on PATH, for translating or managing the
     # language models from a terminal. The pill itself goes through
@@ -60,6 +61,11 @@ in
         # hardcoded one.
         "HARMONIX_FULL_NAME=${vars.fullName}"
         "HARMONIX_PYTHON=${translatePython}/bin/python3"
+        # The chat panel is a front end for the Claude Code CLI, which signs
+        # itself in from ~/.claude -- so the bar needs the binary and no
+        # credentials of its own. By store path, not by name: a user service
+        # does not necessarily inherit the login shell's PATH.
+        "HARMONIX_CLAUDE=${pkgs.claude-code}/bin/claude"
       ];
       ExecStart = "${quickshell}/bin/quickshell -c harmonix";
       Restart = "on-failure";

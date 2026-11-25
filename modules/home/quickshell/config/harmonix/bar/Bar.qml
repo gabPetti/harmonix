@@ -66,6 +66,10 @@ PanelWindow {
     BarGroup {
       id: launchGroup
 
+      // First in the bar, because its panel is pinned to the bar's left end
+      // and a dropdown reads as belonging to the pill above its own edge.
+      Chat {}
+
       LauncherButton {}
 
       Workspaces {

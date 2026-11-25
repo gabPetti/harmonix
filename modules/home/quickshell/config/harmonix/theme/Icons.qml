@@ -79,6 +79,12 @@ QtObject {
   readonly property string copySymbol: "content_copy"
   readonly property string clearSymbol: "backspace"
 
+  // The chat pill (bar/Chat.qml) and the three things its panel does to a
+  // thread. Material Symbols, like the pills it sits beside.
+  readonly property string chatSymbol: "forum"
+  readonly property string stopSymbol: "stop"
+  readonly property string newChatSymbol: "add_comment"
+
   // The lock screen (lock/). Material Symbols for the two indicators that
   // sit beside text in a chip, a Nerd Font glyph for the keyhole that stands
   // on its own in the password field.
