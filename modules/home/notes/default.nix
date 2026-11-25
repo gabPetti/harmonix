@@ -3,13 +3,15 @@
 # ~/Notes itself comes from home-layout; nvim creates the file on first save.
 { config, ... }:
 
+let
+  notes = "${config.home.homeDirectory}/Notes";
+in
 {
   xdg.desktopEntries.notes = {
     name = "Notes";
     genericName = "Quick notes";
     comment = "Open ~/Notes/notes.md";
-    exec = "nvim + ${config.home.homeDirectory}/Notes/notes.md";
-    # The launcher wraps Terminal=true entries in kitty itself.
+    exec = ''nvim --cmd "cd ${notes}" ${notes}/notes.md'';
     terminal = true;
     icon = "accessories-text-editor";
     categories = [ "Utility" "TextEditor" ];

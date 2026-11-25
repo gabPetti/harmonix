@@ -42,21 +42,12 @@ in
   xdg.configFile."user-dirs.dirs".force = true;
 
   systemd.user.tmpfiles.rules = map (dir: "d ${home}/${dir} - - - -") [
-    # Where a repo goes is decided by whose it is, not by what it is.
-    "Repos/personal"
-    "Repos/uni"
-    "Repos/forks"
-
     # Inbox is whatever no rule could place; admin is paperwork that outlives
     # any course (enrolment, residence, insurance, transcripts).
     "Documents/Inbox"
     "Documents/uni/archive"
     "Documents/admin"
     "Documents/books"
-
-    # Notes are written, documents are received: one folder of their own,
-    # so links and search across them stay whole.
-    "Notes/uni"
 
     "Pictures/Screenshots"
   ];
